@@ -37,7 +37,7 @@ export const POST = async (req: Request) => {
     await DynamicModel.insertMany(results);
     const rows = await DynamicModel.countDocuments();
 
-    return new Response(JSON.stringify({ message: "Added to mongoDB", rows }), {
+    return new Response(JSON.stringify({ collection: fileName, rows }), {
       status: 200,
     });
   } catch (error) {
