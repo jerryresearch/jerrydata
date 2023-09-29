@@ -3,7 +3,7 @@ import { Readable } from "stream";
 import csv from "csv-parser";
 import mongoose from "mongoose";
 
-export const POST = async (req: Request, res: Response) => {
+export const POST = async (req: Request) => {
   try {
     await connectToDB();
     const data = await req.formData();
