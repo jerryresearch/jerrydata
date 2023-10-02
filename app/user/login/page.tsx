@@ -26,7 +26,7 @@ const Page = () => {
 
   return (
     <main className={`${inter.className} min-h-screen`}>
-      <div className="w-[540px] p-[56px] flex flex-col gap-6">
+      <div className="w-[540px] min-h-screen p-[56px] flex flex-col justify-center gap-6">
         <div>
           <div className="flex gap-[10px]">
             <Image
@@ -60,7 +60,7 @@ const Page = () => {
         </button>
         <div className="w-[438.50px] justify-center items-center gap-[13.93px] inline-flex">
           <div className="w-[195.32px] h-px relative bg-slate-200" />
-          <div className="text-center text-slate-200 text-sm font-normal font-['Inter'] leading-snug">
+          <div className="text-center text-slate-200 text-sm font-normal leading-snug">
             OR
           </div>
           <div className="w-[195.32px] h-px relative bg-slate-200" />
