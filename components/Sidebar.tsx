@@ -2,7 +2,7 @@ import Image from "next/image";
 
 const Sidebar = () => {
   return (
-    <aside className="w-16 bg-gray-900 h-[900px]">
+    <aside className="w-16 bg-gray-900 h-screen fixed">
       <div className="w-16 h-16 flex items-center justify-center">
         <Image
           src="/assets/sidebar-logo.svg"
