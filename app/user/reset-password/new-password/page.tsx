@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import { useState, ChangeEvent, FormEvent } from "react";
+import Button from "@/components/Button";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -74,9 +75,7 @@ const Page = () => {
               onChange={handleChange}
             />
           </div>
-          <button className="bg-blue-600 text-white rounded py-2 border border-slate-200 font-medium">
-            Reset password
-          </button>
+          <Button>Reset password</Button>
         </form>
         <div className="text-sm">
           <span className="text-slate-700">

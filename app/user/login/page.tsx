@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import { useState, ChangeEvent, FormEvent } from "react";
+import Button from "@/components/Button";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -96,9 +97,7 @@ const Page = () => {
               <span className="text-blue-500 underline">Forgot password?</span>
             </div>
           </div>
-          <button className="bg-blue-600 text-white rounded py-2 border border-slate-200 font-medium">
-            Sign In
-          </button>
+          <Button>Sign In</Button>
         </form>
         <div className="text-sm">
           <span className="text-slate-700">Don&apos;t have a account ? </span>
