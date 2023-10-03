@@ -2,6 +2,7 @@ import Button from "@/components/Button";
 import ActionsMenu from "@/components/ActionsMenu";
 import Image from "next/image";
 import React from "react";
+import Link from "next/link";
 
 const Page = () => {
   return (
@@ -38,7 +39,7 @@ const Page = () => {
               className="px-2 py-[10px]"
             />
           </div>
-          <div className="">
+          <Link href="data/new" className="">
             <Button>
               <div className="flex gap-[10px] w-[184px] h-10 py-2 px-4 items-center justify-center">
                 <Image
@@ -50,13 +51,13 @@ const Page = () => {
                 <span>Add New Dataset</span>
               </div>
             </Button>
-          </div>
+          </Link>
         </div>
       </div>
       <section className="px-7 py-4">
         <div className="p-5 flex flex-col bg-white rounded border border-[#EAEDF2] text-sm text-[#17212F]">
           {/* row */}
-          <div className="flex self-stretch items-start rounded bg-[#F8FAFC]">
+          <div className="flex self-stretch items-start rounded bg-[#F8FAFC] border-b">
             <div className="w-[70px] py-5 flex items-center justify-center">
               Type
             </div>
@@ -79,8 +80,8 @@ const Page = () => {
             </div>
           </div>
           {/* row */}
-          <div className="flex self-stretch items-start rounded">
-            <div className="w-[70px] py-5 flex items-center justify-center">
+          <div className="flex self-stretch items-start rounded border-b">
+            <div className="w-[70px] py-[10px] flex items-center justify-center">
               <Image
                 src="/assets/csv.svg"
                 alt="csv file"
@@ -101,8 +102,8 @@ const Page = () => {
             </div>
           </div>
           {/* row */}
-          <div className="flex self-stretch items-start rounded">
-            <div className="w-[70px] py-5 flex items-center justify-center">
+          <div className="flex self-stretch items-start rounded border-b">
+            <div className="w-[70px] py-[10px] flex items-center justify-center">
               <Image
                 src="/assets/xls.svg"
                 alt="xls file"

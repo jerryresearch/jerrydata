@@ -14,7 +14,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import Image from "next/image";
-import Button from "./Button";
 
 const ActionsMenu = () => {
   return (

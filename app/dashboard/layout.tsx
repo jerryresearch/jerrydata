@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className}`}>
         <Sidebar />
-        <main className="pl-16 w-screen">{children}</main>
+        <main className="pl-16">{children}</main>
       </body>
     </html>
   );
