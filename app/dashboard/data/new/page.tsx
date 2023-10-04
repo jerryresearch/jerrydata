@@ -6,28 +6,18 @@ import TableSelection from "@/components/TableSelection";
 import UploadFile from "@/components/UploadFile";
 import ConnectionType from "@/components/ConnectionType";
 import Image from "next/image";
+import EditFields from "@/components/EditFields";
+import AddDatasetInfo from "@/components/AddDatasetInfo";
 
 const Page = () => {
-  const [currentStep, setCurrentStep] = useState(2);
+  const [currentStep, setCurrentStep] = useState(5);
 
   const steps = [
-    {
-      number: 1,
-      title: "Connection Type",
-      content: <ConnectionType />,
-    },
-    {
-      number: 2,
-      title: "Upload File",
-      content: <UploadFile />,
-    },
-    {
-      number: 3,
-      title: "Select Table",
-      content: <TableSelection />,
-    },
-    { number: 4, title: "Edit fields", content: <p>Hello</p> },
-    { number: 5, title: "Add Dataset Info", content: <p>Hello</p> },
+    { number: 1, title: "Connection Type", content: <ConnectionType /> },
+    { number: 2, title: "Upload File", content: <UploadFile /> },
+    { number: 3, title: "Select Table", content: <TableSelection /> },
+    { number: 4, title: "Edit fields", content: <EditFields /> },
+    { number: 5, title: "Add Dataset Info", content: <AddDatasetInfo /> },
   ];
 
   return (
