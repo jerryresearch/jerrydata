@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Inter } from "next/font/google";
 import { useState, ChangeEvent, FormEvent } from "react";
 import Button from "@/components/Button";
+import Link from "next/link";
 import styles from "../styles.module.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -91,7 +92,9 @@ const Page = () => {
             <input type="checkbox" />
             <div className="font-medium">
               <span className="text-slate-700">Remember me</span>{" "}
-              <span className="text-blue-500 underline">Forgot password?</span>
+              <Link href="reset-password" className="text-blue-500 underline">
+                Forgot password?
+              </Link>
             </div>
           </div>
           <div className="lg:w-[420px] h-14">
@@ -100,7 +103,9 @@ const Page = () => {
         </form>
         <div className="lg:w-[420px] h-5 text-sm">
           <span className="text-slate-700">Don&apos;t have a account ? </span>
-          <span className="text-blue-500 underline">Sign up</span>
+          <Link href="register" className="text-blue-500 underline">
+            Sign up
+          </Link>
         </div>
       </div>
       <div className="hidden lg:block flex-1 h-screen">
