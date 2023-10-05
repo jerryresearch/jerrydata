@@ -10,7 +10,7 @@ import EditFields from "@/components/EditFields";
 import AddDatasetInfo from "@/components/AddDatasetInfo";
 
 const Page = () => {
-  const [currentStep, setCurrentStep] = useState(5);
+  const [currentStep, setCurrentStep] = useState(4);
 
   const steps = [
     { number: 1, title: "Connection Type", content: <ConnectionType /> },
@@ -21,7 +21,7 @@ const Page = () => {
   ];
 
   return (
-    <div>
+    <div className="bg-[#F6F8FA] min-h-screen">
       <div className="h-[49px] px-7 py-3 flex justify-between items-center bg-[#DEE8FA]">
         <p className="text-[#17212F] text-lg font-semibold">Add New Dataset</p>
         <div className="flex gap-6 items-center justify-center">
