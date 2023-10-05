@@ -10,7 +10,7 @@ import EditFields from "@/components/EditFields";
 import AddDatasetInfo from "@/components/AddDatasetInfo";
 
 const Page = () => {
-  const [currentStep, setCurrentStep] = useState(4);
+  const [currentStep, setCurrentStep] = useState(5);
 
   const steps = [
     { number: 1, title: "Connection Type", content: <ConnectionType /> },
