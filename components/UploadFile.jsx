@@ -27,7 +27,7 @@ const UploadFile = () => {
             <input type="file" className="hidden" id="fileInput" />
             <label
               htmlFor="fileInput"
-              className="flex justify-center items-center gap-[10px] rounded px-4 py-2 text-sm bg-blue-500 text-white cursor-pointer"
+              className="flex justify-center items-center gap-[10px] rounded px-4 py-2 text-sm bg-primary text-white cursor-pointer"
             >
               Browse
             </label>

@@ -39,13 +39,13 @@ const Page = () => {
             height={48}
           />
         </div>
-        <div className="w-[420px] h-[34px] text-slate-700 font-semibold text-2xl">
+        <div className="lg:w-[420px] h-[34px] text-slate-700 font-semibold text-2xl">
           Welcome back to RaptorIQ
         </div>
-        <div className="w-[420px] h-[50px] text-[#ADB3BB] font-normal text-lg leading-[25.2px]">
+        <div className="lg:w-[420px] h-[50px] text-[#ADB3BB] font-normal text-lg leading-[25.2px]">
           Sign in to your account below.
         </div>
-        <button className="w-[420px] h-[48px] bg-white rounded-md border border-slate-200 py-2 text-slate-700 font-normal flex items-center justify-center gap-2">
+        <button className="lg:w-[420px] h-[48px] bg-white rounded-md border border-slate-200 py-2 text-slate-700 font-normal flex items-center justify-center gap-2">
           <span>
             <Image
               src="/assets/google.svg"
@@ -56,7 +56,7 @@ const Page = () => {
           </span>
           <span className="text-sm">Continue with Google</span>
         </button>
-        <div className="w-[420px] h-[20px] justify-center items-center gap-[13.93px] inline-flex">
+        <div className="lg:w-[420px] h-[20px] justify-center items-center gap-[13.93px] inline-flex">
           <div className="w-[186px] h-px bg-slate-200" />
           <div className="text-center w-[20px] h-[20px] text-[#ADB3BB] text-sm font-normal leading-snug">
             OR
@@ -64,7 +64,7 @@ const Page = () => {
           <div className="w-[186px] h-px bg-slate-200" />
         </div>
         <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
-          <div className="w-[420px] h-[80px] text-[#17212F] text-sm flex flex-col gap-3">
+          <div className="lg:w-[420px] h-[80px] text-[#17212F] text-sm flex flex-col gap-3">
             <div className="font-medium w-full">Email Address</div>
             <input
               type="email"
@@ -75,7 +75,7 @@ const Page = () => {
               onChange={handleChange}
             />
           </div>
-          <div className="w-[420px] h-[80px] text-[#17212F] text-sm flex flex-col gap-3">
+          <div className="lg:w-[420px] h-[80px] text-[#17212F] text-sm flex flex-col gap-3">
             <div className="font-medium w-full">Password</div>
             <input
               type="password"
@@ -87,18 +87,18 @@ const Page = () => {
               onChange={handleChange}
             />
           </div>
-          <div className="w-[420px] h-5 text-[#17212F] text-sm flex gap-[10px]">
+          <div className="lg:w-[420px] h-5 text-[#17212F] text-sm flex gap-[10px]">
             <input type="checkbox" />
             <div className="font-medium">
               <span className="text-slate-700">Remember me</span>{" "}
               <span className="text-blue-500 underline">Forgot password?</span>
             </div>
           </div>
-          <div className="w-[420px] h-14">
+          <div className="lg:w-[420px] h-14">
             <Button>Sign In</Button>
           </div>
         </form>
-        <div className="w-[420px] h-5 text-sm">
+        <div className="lg:w-[420px] h-5 text-sm">
           <span className="text-slate-700">Don&apos;t have a account ? </span>
           <span className="text-blue-500 underline">Sign up</span>
         </div>

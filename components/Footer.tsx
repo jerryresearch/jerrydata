@@ -18,7 +18,7 @@ const Footer = ({ step }: Props) => {
             {step > 1 && (
               <button className="px-4 py-2 rounded bg-[#DEE8FA]">Back</button>
             )}
-            <button className="px-4 py-2 rounded bg-blue-500 text-white">
+            <button className="px-4 py-2 rounded bg-primary text-white">
               Next
             </button>
           </div>
