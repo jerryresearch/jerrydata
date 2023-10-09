@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/popover";
 import Image from "next/image";
 import DeleteModal from "./DeleteModal";
+import Link from "next/link";
 
 const Actions = () => {
   const [open, setOpen] = useState(false);
@@ -23,9 +24,12 @@ const Actions = () => {
         <span className="px-3 py-[12px] flex gap-2 items-center rounded bg-[#F8FAFC] cursor-pointer">
           Explore
         </span>
-        <span className="px-3 py-[12px] flex gap-2 items-center rounded cursor-pointer">
+        <Link
+          href="data/name/edit"
+          className="px-3 py-[12px] flex gap-2 items-center rounded cursor-pointer"
+        >
           Edit
-        </span>
+        </Link>
         <span
           onClick={() => setOpen(true)}
           className="px-3 py-[12px] flex gap-2 items-center rounded cursor-pointer"

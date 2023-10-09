@@ -54,7 +54,7 @@ const TableSelection = () => {
             </div>
           </div>
         </div>
-        <div className="flex px-[10px] py-[14px] w-[486px] h-[316px] overflow-y-auto justify-between items-start self-stretch rounded border border-[#EAEDF2] bg-white">
+        <div className="flex px-[10px] py-[14px] w-[486px] max-h-[316px] overflow-y-auto justify-between items-start self-stretch rounded border border-[#EAEDF2] bg-white">
           <div className="flex flex-col items-start w-[382px] gap-[14px] ">
             {Object.keys(tables).map((table, index) => (
               <div

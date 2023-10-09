@@ -45,6 +45,7 @@ const ConnectionType = () => {
               <ImageCard
                 image={file.image}
                 selected={selectedType === file.name}
+                disabled={false}
               />
             </div>
           ))}
@@ -54,15 +55,11 @@ const ConnectionType = () => {
         <p className="text-[17px] font-medium leading-7">Databases</p>
         <div className="flex gap-6 items-start">
           {data.databases.map((database, index) => (
-            <div
-              key={index}
-              onClick={() => {
-                setSelectedType(database.name);
-              }}
-            >
+            <div key={index}>
               <ImageCard
                 image={database.image}
                 selected={selectedType === database.name}
+                disabled={true}
               />
             </div>
           ))}
@@ -72,15 +69,11 @@ const ConnectionType = () => {
         <p className="text-[17px] font-medium leading-7">Cloud Storage</p>
         <div className="flex gap-6 items-start">
           {data.cloud.map((storage, index) => (
-            <div
-              key={index}
-              onClick={() => {
-                setSelectedType(storage.name);
-              }}
-            >
+            <div key={index}>
               <ImageCard
                 image={storage.image}
                 selected={selectedType === storage.name}
+                disabled={true}
               />
             </div>
           ))}

@@ -1,15 +1,15 @@
+import Image from "next/image";
 import React from "react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import Image from "next/image";
 
 const UploadFile = () => {
   return (
-    <section className="px-7 py-10 flex gap-[40px]">
-      <div className="flex flex-col gap-6 items-start text-sm font-medium">
+    <section className="px-7 py-10 flex gap-[40px] flex-shrink-0">
+      <div className="flex flex-col w-[384px] gap-6 items-start text-sm font-medium">
         <div className="flex gap-[10px]">
           <div className="flex items-center gap-[10px] text-[#17212F]">
             <input type="radio" name="new" id="new" className="accent-black" />
@@ -17,7 +17,7 @@ const UploadFile = () => {
           </div>
           <p className="text-[#ADB3BB] underline">File Guideline</p>
         </div>
-        <div className="flex w-[384px] gap-2 items-start">
+        <div className="flex w-full gap-2 items-start">
           <div className="flex flex-col gap-[6px] flex-[1_0_0] items-start rounded">
             <div className="flex px-3 py-2 items-center self-stretch rounded-[6px] border border-[#EAEDF2] bg-white">
               <p className="text-[#ADB3BB]">File name</p>
@@ -33,10 +33,10 @@ const UploadFile = () => {
             </label>
           </div>
         </div>
-        <div className="flex items-start gap-[10px]">
+        <div className="flex w-[334px] items-start gap-[10px]">
           <div className="flex items-center gap-[10px] text-[#17212F]">
             <input type="radio" name="new" id="new" className="accent-black" />
-            <span>Select a previously uploaded file</span>
+            <span className="text-sm">Select a previously uploaded file</span>
           </div>
           <p className="text-[#ADB3BB] underline">Manage File</p>
         </div>

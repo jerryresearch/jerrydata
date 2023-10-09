@@ -4,13 +4,14 @@ import React from "react";
 type Props = {
   image: string;
   selected: boolean;
+  disabled: boolean;
 };
 
-const ImageCard = ({ image, selected }: Props) => {
+const ImageCard = ({ image, selected, disabled }: Props) => {
   return (
     <div
-      className={`w-[150px] h-[150px] cursor-pointer rounded bg-white border relative flex items-center justify-center shadow-md ${
-        selected && "border border-[#2770EF]"
+      className={`w-[150px] h-[150px] cursor-pointer rounded bg-white border relative flex items-center justify-center ${
+        selected && "border border-[#2770EF] shadow-custom"
       }`}
     >
       {selected && (
