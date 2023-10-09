@@ -1,5 +1,7 @@
+"use client";
+
 import Image from "next/image";
-import React from "react";
+import React, { useState, ChangeEvent } from "react";
 import {
   Popover,
   PopoverContent,
@@ -7,6 +9,26 @@ import {
 } from "@/components/ui/popover";
 
 const UploadFile = () => {
+  const [uploadMessage, setUploadMessage] = useState({
+    message: "",
+    isError: false,
+  });
+  const [uploadProgress, setUploadProgress] = useState(0);
+
+  const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    console.log("HEllo");
+    const fileInput = event.target;
+    const file = fileInput.files?.[0];
+
+    console.log(file);
+
+    if (file) {
+      setUploadMessage({ message: "File upload successful!", isError: false });
+    } else {
+      setUploadMessage({ message: "Error in file", isError: true });
+    }
+  };
+
   return (
     <section className="px-7 py-10 flex gap-[40px] flex-shrink-0">
       <div className="flex flex-col w-[384px] gap-6 items-start text-sm font-medium">
@@ -24,7 +46,13 @@ const UploadFile = () => {
             </div>
           </div>
           <div>
-            <input type="file" className="hidden" id="fileInput" />
+            <input
+              type="file"
+              onChange={handleFileUpload}
+              className="hidden"
+              id="fileInput"
+              name="fileInput"
+            />
             <label
               htmlFor="fileInput"
               className="flex justify-center items-center gap-[10px] rounded px-4 py-2 text-sm bg-primary text-white cursor-pointer"
@@ -33,6 +61,13 @@ const UploadFile = () => {
             </label>
           </div>
         </div>
+        <p
+          className={`${
+            uploadMessage.isError ? "text-[#D30A0A]" : "text-[#1CB87E]"
+          } text-sm font-medium`}
+        >
+          {uploadMessage.message}
+        </p>
         <div className="flex w-[334px] items-start gap-[10px]">
           <div className="flex items-center gap-[10px] text-[#17212F]">
             <input type="radio" name="new" id="new" className="accent-black" />

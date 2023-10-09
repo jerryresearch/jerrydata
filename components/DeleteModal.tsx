@@ -15,7 +15,7 @@ const DeleteModal = ({ open, onClose }: Props) => {
       }`}
     >
       <div className="bg-white flex w-[640px] h-[394px] flex-col gap-6 flex-shrink-0 items-center pb-[34px] text-xl text-[#17212F]">
-        <div className="h-[120px] p-8 flex items-center justify-center gap-[254px] flex-shrink-0 border-b border-[#EAEDF2] bg-[#F8FAFC]">
+        <div className="h-[120px] w-full p-8 flex items-center justify-center gap-[254px] flex-shrink-0 border-b border-[#EAEDF2] bg-[#F8FAFC]">
           <div>
             <p className="text-xl font-semibold">Are you sure?</p>
             <span className="text-base">

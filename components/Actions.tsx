@@ -8,7 +8,11 @@ import Image from "next/image";
 import DeleteModal from "./DeleteModal";
 import Link from "next/link";
 
-const Actions = () => {
+type Props = {
+  name: string;
+};
+
+const Actions = ({ name }: Props) => {
   const [open, setOpen] = useState(false);
 
   const handleCloseModal = () => {
@@ -25,7 +29,7 @@ const Actions = () => {
           Explore
         </span>
         <Link
-          href="data/name/edit"
+          href={`data/${name}/edit`}
           className="px-3 py-[12px] flex gap-2 items-center rounded cursor-pointer"
         >
           Edit

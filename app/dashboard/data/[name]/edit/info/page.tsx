@@ -2,6 +2,7 @@
 
 import AddDatasetInfo from "@/components/AddDatasetInfo";
 import DeleteModal from "@/components/DeleteModal";
+import MenuBar from "@/components/MenuBar";
 import Image from "next/image";
 import React, { useState } from "react";
 
@@ -13,10 +14,7 @@ const Page = () => {
   };
 
   return (
-    <section className="bg-[#F6F8FA] min-h-screen">
-      <div className="flex items-center bg-[#DEE8FA] py-3 px-7">
-        <h1 className="font-semibold text-lg">Edit Dataset</h1>
-      </div>
+    <section>
       <AddDatasetInfo />
       <div className="px-7">
         <button

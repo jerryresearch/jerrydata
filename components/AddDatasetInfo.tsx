@@ -28,7 +28,7 @@ const AddDatasetInfo = () => {
           ></textarea>
         </div>
         <div className="flex items-center gap-4 self-stretch">
-          <label className="text-sm font-medium w-[120px]">Dataset Name</label>
+          <label className="text-sm font-medium w-[120px]">Record Name</label>
           <input
             type="text"
             className="flex flex-[1_0_0] items-center py-[14px] px-3 rounded border border-[#EAEDF2] bg-white"

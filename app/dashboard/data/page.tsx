@@ -17,7 +17,6 @@ const Page = () => {
       rows: "11.7 k",
       columns: 21,
       lastLoad: "8 hours ago",
-      actions: <Actions />,
     },
     {
       image: "/assets/xls.svg",
@@ -27,7 +26,6 @@ const Page = () => {
       rows: "11.7 k",
       columns: 21,
       lastLoad: "8 hours ago",
-      actions: <Actions />,
     },
   ];
   return (
@@ -167,7 +165,7 @@ const Page = () => {
                   {row.lastLoad}
                 </td>
                 <td className="w-[220px] p-5 flex items-center justify-center">
-                  {row.actions}
+                  <Actions name={row.name} />
                 </td>
               </tr>
             ))}
