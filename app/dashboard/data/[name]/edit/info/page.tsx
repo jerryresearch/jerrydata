@@ -19,7 +19,7 @@ const Page = () => {
       <div className="px-7">
         <button
           onClick={() => setOpen(true)}
-          className="flex items-center justify-center px-4 py-2 gap-[10px] bg-[#DEE8FA] rounded"
+          className="flex items-center justify-center px-4 py-2 gap-[10px] bg-white border border-[#DEE8FA] rounded text-[#D30A0A]"
         >
           <Image src="/assets/trash.svg" alt="delete" width={20} height={20} />
           <span>Delete Dataset</span>

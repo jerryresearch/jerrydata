@@ -41,7 +41,11 @@ const UploadFile = () => {
         </div>
         <div className="flex w-full gap-2 items-start">
           <div className="flex flex-col gap-[6px] flex-[1_0_0] items-start rounded">
-            <div className="flex px-3 py-2 items-center self-stretch rounded-[6px] border border-[#EAEDF2] bg-white">
+            <div
+              className={`flex px-3 py-2 items-center self-stretch rounded-[6px] border ${
+                uploadMessage.isError ? "border-[#D30A0A]" : "border-[#EAEDF2]"
+              } bg-white`}
+            >
               <p className="text-[#ADB3BB]">File name</p>
             </div>
           </div>

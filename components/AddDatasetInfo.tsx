@@ -63,7 +63,7 @@ const AddDatasetInfo = () => {
             </PopoverContent>
           </Popover>
         </div>
-        <div className="flex items-center self-stretch gap-4">
+        {/* <div className="flex items-center self-stretch gap-4">
           <label className="w-[120px] text-sm font-medium">
             Default Date Field
           </label>
@@ -88,7 +88,7 @@ const AddDatasetInfo = () => {
               </ul>
             </PopoverContent>
           </Popover>
-        </div>
+        </div> */}
         <div className="flex items-center self-stretch gap-4">
           <label className="w-[120px] text-sm font-medium">
             Default Geo Field

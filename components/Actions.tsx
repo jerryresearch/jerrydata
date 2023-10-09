@@ -29,7 +29,7 @@ const Actions = ({ name }: Props) => {
           Explore
         </span>
         <Link
-          href={`data/${name}/edit`}
+          href={`data/${name}/edit/info`}
           className="px-3 py-[12px] flex gap-2 items-center rounded cursor-pointer"
         >
           Edit
