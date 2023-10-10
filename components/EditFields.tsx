@@ -156,7 +156,7 @@ const EditFields = () => {
                         )}
                       </PopoverTrigger>
                     </div>
-                    <PopoverContent className="w-fit min-w-[122px] p-0 shadow-[0px_2px_4px_-2px_rgba(0, 0, 0, 0.06)_0px_4px_8px_-2px_rgba(0, 0, 0, 0.10)] bg-white rounded">
+                    <PopoverContent className="w-fit min-w-[122px] p-0 shadow-custom bg-white rounded">
                       <ul className="text-sm font-normal p-2 flex flex-col items-start">
                         {/* @ts-ignore */}
                         {fields[field].map((val, index) => (
