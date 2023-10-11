@@ -74,7 +74,7 @@ const Page = () => {
           <span className="text-slate-700">
             Need help in resetting your password? Get in touch at {""}
           </span>
-          <span className="text-blue-500 underline">support@spellmint.com</span>
+          <span className="text-blue-500 underline">support@raptoriq.com</span>
         </div>
       </div>
       <div className="hidden lg:block flex-1 h-screen">

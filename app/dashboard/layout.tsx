@@ -16,7 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className}`}>
+      <body className={`${inter.className} bg-[#F6F8FA] min-h-screen`}>
         <Sidebar />
         <main className="pl-16">{children}</main>
       </body>

@@ -1,20 +1,65 @@
+"use client";
+
 import Button from "@/components/Button";
-import ActionsMenu from "@/components/ActionsMenu";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
+import Actions from "@/components/Actions";
 
 const Page = () => {
+  const [active, setActive] = useState("shared");
+  const rows = [
+    {
+      image: "/assets/csv.svg",
+      name: "Sample - Retail Orders",
+      datatype: "CSV",
+      size: "12 mb",
+      rows: "11.7 k",
+      columns: 21,
+      lastLoad: "8 hours ago",
+    },
+    {
+      image: "/assets/xls.svg",
+      name: "Sample - Retail Orders",
+      datatype: "CSV",
+      size: "12 mb",
+      rows: "11.7 k",
+      columns: 21,
+      lastLoad: "8 hours ago",
+    },
+  ];
   return (
     <section className="h-screen bg-[#F6F8FA] text-sm">
       <div className="px-7 py-5 border-b border-[#EAEDF2] flex justify-between items-center">
         <div className="flex items-center justify-between w-[423px] text-sm">
           <div className="w-[180px] flex px-[5px] py-1 rounded bg-white border border-[#EAEDF2]">
-            <div className="px-[12px] py-[6px]">All</div>
-            <div className="px-[12px] py-[6px]">Mine</div>
-            <div className="px-[12px] py-[6px] bg-blue-500 text-white rounded border border-[#EAEDF2] font-medium">
+            <button
+              className={`px-[12px] py-[6px] ${
+                active === "all" &&
+                "bg-primary text-white rounded border border-[#EAEDF2] font-medium"
+              }`}
+              onClick={() => setActive("all")}
+            >
+              All
+            </button>
+            <button
+              className={`px-[12px] py-[6px] ${
+                active === "mine" &&
+                "bg-primary text-white rounded border border-[#EAEDF2] font-medium"
+              }`}
+              onClick={() => setActive("mine")}
+            >
+              Mine
+            </button>
+            <button
+              className={`px-[12px] py-[6px] ${
+                active === "shared" &&
+                "bg-primary text-white rounded border border-[#EAEDF2] font-medium"
+              }`}
+              onClick={() => setActive("shared")}
+            >
               Shared
-            </div>
+            </button>
           </div>
           <div className="flex gap-2">
             <input type="checkbox" name="scheduled" id="scheduled" />{" "}
@@ -39,7 +84,7 @@ const Page = () => {
               className="px-2 py-[10px]"
             />
           </div>
-          <Link href="data/new" className="">
+          <Link href="data/new/connection-type" className="">
             <Button>
               <div className="flex gap-[10px] w-[184px] h-10 py-2 px-4 items-center justify-center">
                 <Image
@@ -54,79 +99,58 @@ const Page = () => {
           </Link>
         </div>
       </div>
-      <section className="px-7 py-4">
-        <div className="p-5 flex flex-col bg-white rounded border border-[#EAEDF2] text-sm text-[#17212F]">
-          {/* row */}
-          <div className="flex self-stretch items-start rounded bg-[#F8FAFC] border-b">
-            <div className="w-[70px] py-5 flex items-center justify-center">
-              Type
-            </div>
-            <div className="w-[240px] p-5 flex items-center">Name</div>
-            <div className="w-[150px] p-5 flex items-center">Datatype</div>
-            <div className="w-[150px] p-5 flex items-center">Size</div>
-            <div className="w-[150px] p-5 flex items-center">Rows</div>
-            <div className="w-[150px] p-5 flex items-center">Columns</div>
-            <div className="w-[150px] p-5 flex items-center justify-between">
-              <span>Last Load</span>
-              <Image
-                src="/assets/chevron-down.svg"
-                alt="down icon"
-                width={20}
-                height={20}
-              />
-            </div>
-            <div className="w-[220px] p-5 flex items-center justify-center">
-              Action
-            </div>
-          </div>
-          {/* row */}
-          <div className="flex self-stretch items-start rounded border-b">
-            <div className="w-[70px] py-[10px] flex items-center justify-center">
-              <Image
-                src="/assets/csv.svg"
-                alt="csv file"
-                width={26}
-                height={26}
-              />
-            </div>
-            <div className="w-[240px] p-5 flex items-center text-blue-500">
-              Sample - Retail Orders
-            </div>
-            <div className="w-[150px] p-5 flex items-center">CSV</div>
-            <div className="w-[150px] p-5 flex items-center">12 mb</div>
-            <div className="w-[150px] p-5 flex items-center">11.7 k</div>
-            <div className="w-[150px] p-5 flex items-center">21</div>
-            <div className="w-[150px] p-5 flex items-center">8 hours ago</div>
-            <div className="w-[220px] p-5 flex items-center justify-center">
-              <ActionsMenu />
-            </div>
-          </div>
-          {/* row */}
-          <div className="flex self-stretch items-start rounded border-b">
-            <div className="w-[70px] py-[10px] flex items-center justify-center">
-              <Image
-                src="/assets/xls.svg"
-                alt="xls file"
-                width={26}
-                height={26}
-              />
-            </div>
-            <div className="w-[240px] p-5 flex items-center text-blue-500">
-              Sample - Retail Orders
-            </div>
-            <div className="w-[150px] p-5 flex items-center">CSV</div>
-            <div className="w-[150px] p-5 flex items-center">12 mb</div>
-            <div className="w-[150px] p-5 flex items-center">11.7 k</div>
-            <div className="w-[150px] p-5 flex items-center">21</div>
-            <div className="w-[150px] p-5 flex items-center">8 hours ago</div>
-            <div className="w-[220px] p-5 flex items-center justify-center">
-              <ActionsMenu />
-            </div>
-          </div>
+      <section className="w-full px-7 py-4">
+        <div className="p-5 rounded border border-[#EAEDF2] bg-white">
+          <table className="w-full table-auto min-w-max text-left bg-white rounded text-sm text-[#17212F]">
+            {/* row */}
+            <thead>
+              <tr className="rounded bg-[#F8FAFC] border-b font-medium">
+                <th className="p-5 font-medium">Type</th>
+                <th className="p-5 font-medium">Name</th>
+                <th className="p-5 font-medium">Datatype</th>
+                <th className="p-5 font-medium">Size</th>
+                <th className="p-5 font-medium">Rows</th>
+                <th className="p-5 font-medium">Columns</th>
+                <th className="flex justify-between p-5 font-medium">
+                  <span>Last Load</span>
+                  <Image
+                    src="/assets/chevron-down.svg"
+                    alt="down icon"
+                    width={20}
+                    height={20}
+                  />
+                </th>
+                <th className="p-5 font-medium">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, index) => (
+                <tr key={index} className="rounded border-b font-medium">
+                  <td className="p-5">
+                    <Image
+                      src={row.image}
+                      alt="csv file"
+                      width={26}
+                      height={26}
+                    />
+                  </td>
+                  <td className="p-5 text-blue-500">{row.name}</td>
+                  <td className="p-5">{row.datatype}</td>
+                  <td className="p-5">{row.size}</td>
+                  <td className="p-5">{row.rows}</td>
+                  <td className="p-5">{row.columns}</td>
+                  <td className="p-5">{row.lastLoad}</td>
+                  <td className="p-5">
+                    <Actions name={row.name} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </section>
       <div className="flex justify-between items-center px-7 py-2">
-        <div>Showing 1-2 of 2</div>
+        <div className="text-[#ADB3BB]">Showing 1-2 of 2</div>
         <div className="p-[10px] flex justify-center items-center gap-[5px] rounded border border-[#EAEDF2] bg-white">
           <div className="py-[6px] px-3 bg-[#DEE8FA] cursor-pointer">1</div>
           <div className="py-[6px] px-3 cursor-pointer">2</div>

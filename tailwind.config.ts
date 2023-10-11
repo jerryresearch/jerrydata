@@ -16,6 +16,10 @@ module.exports = {
       },
     },
     extend: {
+      boxShadow: {
+        custom:
+          "0px 2px 4px -2px rgba(0, 0, 0, 0.06), 0px 4px 8px -2px rgba(0, 0, 0, 0.10)",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

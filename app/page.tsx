@@ -55,7 +55,7 @@ export default function Home() {
                 onChange={handleFileChange}
                 className="bg-gray-700 p-2 text-white"
               />
-              <button className="bg-blue-500 rounded-md text-white px-4 h-12">
+              <button className="bg-primary rounded-md text-white px-4 h-12">
                 Upload
               </button>
             </div>
