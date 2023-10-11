@@ -99,78 +99,55 @@ const Page = () => {
           </Link>
         </div>
       </div>
-      <section className="px-7 py-4">
-        <table className="p-5 flex flex-col bg-white rounded border border-[#EAEDF2] text-sm text-[#17212F]">
-          {/* row */}
-          <thead>
-            <tr className="flex self-stretch items-start rounded bg-[#F8FAFC] border-b font-medium">
-              <th className="w-[70px] py-5 flex items-center justify-center font-medium">
-                Type
-              </th>
-              <th className="w-[240px] p-5 flex items-center font-medium">
-                Name
-              </th>
-              <th className="w-[150px] p-5 flex items-center font-medium">
-                Datatype
-              </th>
-              <th className="w-[150px] p-5 flex items-center font-medium">
-                Size
-              </th>
-              <th className="w-[150px] p-5 flex items-center font-medium">
-                Rows
-              </th>
-              <th className="w-[150px] p-5 flex items-center font-medium">
-                Columns
-              </th>
-              <th className="w-[150px] p-5 flex items-center justify-between font-medium">
-                <span>Last Load</span>
-                <Image
-                  src="/assets/chevron-down.svg"
-                  alt="down icon"
-                  width={20}
-                  height={20}
-                />
-              </th>
-              <th className="w-[220px] p-5 flex items-center justify-center font-medium">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row, index) => (
-              <tr
-                key={index}
-                className="flex self-stretch items-start rounded border-b font-medium"
-              >
-                <td className="w-[70px] py-[10px] flex items-center justify-center">
+      <section className="w-full px-7 py-4">
+        <div className="p-5 rounded border border-[#EAEDF2] bg-white">
+          <table className="w-full table-auto min-w-max text-left bg-white rounded text-sm text-[#17212F]">
+            {/* row */}
+            <thead>
+              <tr className="rounded bg-[#F8FAFC] border-b font-medium">
+                <th className="p-5 font-medium">Type</th>
+                <th className="p-5 font-medium">Name</th>
+                <th className="p-5 font-medium">Datatype</th>
+                <th className="p-5 font-medium">Size</th>
+                <th className="p-5 font-medium">Rows</th>
+                <th className="p-5 font-medium">Columns</th>
+                <th className="flex justify-between p-5 font-medium">
+                  <span>Last Load</span>
                   <Image
-                    src={row.image}
-                    alt="csv file"
-                    width={26}
-                    height={26}
+                    src="/assets/chevron-down.svg"
+                    alt="down icon"
+                    width={20}
+                    height={20}
                   />
-                </td>
-                <td className="w-[240px] p-5 flex items-center text-blue-500">
-                  {row.name}
-                </td>
-                <td className="w-[150px] p-5 flex items-center">
-                  {row.datatype}
-                </td>
-                <td className="w-[150px] p-5 flex items-center">{row.size}</td>
-                <td className="w-[150px] p-5 flex items-center">{row.rows}</td>
-                <td className="w-[150px] p-5 flex items-center">
-                  {row.columns}
-                </td>
-                <td className="w-[150px] p-5 flex items-center">
-                  {row.lastLoad}
-                </td>
-                <td className="w-[220px] p-5 flex items-center justify-center">
-                  <Actions name={row.name} />
-                </td>
+                </th>
+                <th className="p-5 font-medium">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {rows.map((row, index) => (
+                <tr key={index} className="rounded border-b font-medium">
+                  <td className="p-5">
+                    <Image
+                      src={row.image}
+                      alt="csv file"
+                      width={26}
+                      height={26}
+                    />
+                  </td>
+                  <td className="p-5 text-blue-500">{row.name}</td>
+                  <td className="p-5">{row.datatype}</td>
+                  <td className="p-5">{row.size}</td>
+                  <td className="p-5">{row.rows}</td>
+                  <td className="p-5">{row.columns}</td>
+                  <td className="p-5">{row.lastLoad}</td>
+                  <td className="p-5">
+                    <Actions name={row.name} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </section>
       <div className="flex justify-between items-center px-7 py-2">
         <div className="text-[#ADB3BB]">Showing 1-2 of 2</div>
