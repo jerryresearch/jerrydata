@@ -1,7 +1,7 @@
 "use client";
 
 import Actions from "@/components/Actions";
-import RecentChat from "@/components/RecentChat";
+import RecentChat from "@/components/chat/RecentChat";
 import ReportCard from "@/components/ReportCard";
 import Image from "next/image";
 import React from "react";
