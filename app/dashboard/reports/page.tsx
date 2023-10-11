@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/popover";
 import ReportsActions from "@/components/ReportsActions";
 import AddReportModal from "@/components/AddReportModal";
+import ReportCard from "@/components/ReportCard";
 
 const Page = () => {
   const [reportsCount, setReportsCount] = useState<number>(1);
@@ -17,6 +18,24 @@ const Page = () => {
   const handleCloseModal = () => {
     setOpen(false);
   };
+
+  const reports = [
+    {
+      name: "Spellmint Analytics",
+      chartsCount: 0,
+      lastModified: "0 days",
+      charts: [],
+    },
+    {
+      name: "Hurrae Analytics",
+      chartsCount: 6,
+      lastModified: "2 days",
+      charts: [
+        "Total No. of Website Visitors",
+        "No. of Signups to Hurrae Infinity",
+      ],
+    },
+  ];
 
   return (
     <section className="bg-[#F6F8FA] min-h-screen">
@@ -111,35 +130,9 @@ const Page = () => {
             </div>
           </div>
           <div className="flex py-5 px-7 items-center gap-5">
-            <div className="flex w-[400px] font-medium pt-5 flex-col justify-end items-center flex-shrink-0 rounded-[8px] border border-[#EAEDF2] bg-white">
-              <div className="flex w-[372px] py-5 px-[18px] justify-between items-center rounded  bg-[#F8FAFC]">
-                <p>Spellmint Analytics</p>
-                <ReportsActions />
-              </div>
-              <div className="flex w-full px-8 min-h-[120px] py-5 justify-center items-center gap-8 flex-[1_0_0] border-b border-b-[#EAEDF2]">
-                <p className="text-[#ADB3BB] text-sm">No summary</p>
-              </div>
-              <div className="flex w-full justify-between items-center flex-[1_0_0] py-5 px-8 text-[#ADB3BB] text-sm">
-                <p>No charts</p>
-                <p>Modified 0 days ago</p>
-              </div>
-            </div>
-            <div className="flex w-[400px] font-medium pt-5 flex-col justify-end items-center flex-shrink-0 rounded-[8px] border border-[#EAEDF2] bg-white">
-              <div className="flex w-[372px] py-5 px-[18px] justify-between items-center rounded  bg-[#F8FAFC]">
-                <p>Hurrae Ventures</p>
-                <ReportsActions />
-              </div>
-              <div className="flex w-full py-5 px-8 gap-8 flex-[1_0_0] border-b border-[#EAEDF2]">
-                Total No. of Website Visitors
-              </div>
-              <div className="flex w-full py-5 px-8 gap-8 flex-[1_0_0] border-b border-[#EAEDF2]">
-                No. of Signups to Hurrae Infinity
-              </div>
-              <div className="flex w-full justify-between items-center flex-[1_0_0] py-5 px-8 text-[#ADB3BB] text-sm">
-                <p>6 charts</p>
-                <p>Modified 2 days ago</p>
-              </div>
-            </div>
+            {reports.map((report, index) => (
+              <ReportCard key={index} {...report} />
+            ))}
           </div>
           <AddReportModal open={open} onClose={handleCloseModal} />
         </section>

@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 const navLinks = [
   {
     name: "Home",
-    href: "/dashboard",
+    href: "/dashboard/home",
     active: "/assets/home-active.svg",
     image: "/assets/home.svg",
   },
@@ -47,7 +47,7 @@ const Sidebar = () => {
       <ul className="absolute top-[104px] text-gray-400">
         {navLinks.map((link, index) => (
           <li key={index}>
-            {pathname == link.href ? (
+            {pathname.includes(link.href) ? (
               <Link
                 href={link.href}
                 className="w-16 h-16 flex flex-col gap-[2px] px-[15px] py-[10px] bg-gray-700 text-white items-center justify-center"
