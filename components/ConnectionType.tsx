@@ -31,7 +31,7 @@ const ConnectionType = () => {
   const [selectedType, setSelectedType] = useState("");
 
   return (
-    <section className="px-7 py-10 flex flex-col items-start gap-6 pb-36">
+    <section className="px-7 py-10 flex flex-col items-start gap-6">
       <div className="flex flex-col items-start gap-6">
         <p className="text-[17px] font-medium leading-7">Files</p>
         <div className="flex gap-6 items-start">

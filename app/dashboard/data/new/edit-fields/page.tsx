@@ -7,7 +7,7 @@ import React from "react";
 const Page = () => {
   const currentStep = 4;
   return (
-    <div className="bg-[#F6F8FA] min-h-screen">
+    <div className="bg-[#F6F8FA] overflow-auto flex-1">
       <EditFields />
       <section className="px-7">
         <div className="w-full flex justify-between items-center pl-1 py-2">

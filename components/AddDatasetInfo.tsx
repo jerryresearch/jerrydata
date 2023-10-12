@@ -53,42 +53,16 @@ const AddDatasetInfo = () => {
             </PopoverTrigger>
             <PopoverContent className="w-[364px] bg-white">
               <ul className="">
-                <li className="flex gap-2 items-center py-2 cursor-pointer hover:bg-[#F8FAFC] rounded">
+                <li className="flex gap-2 items-center p-2 cursor-pointer hover:bg-[#F8FAFC] rounded">
                   Order Date
                 </li>
-                <li className="flex gap-2 items-center py-2 cursor-pointer hover:bg-[#F8FAFC] rounded">
+                <li className="flex gap-2 items-center p-2 cursor-pointer hover:bg-[#F8FAFC] rounded">
                   Ship Date
                 </li>
               </ul>
             </PopoverContent>
           </Popover>
         </div>
-        {/* <div className="flex items-center self-stretch gap-4">
-          <label className="w-[120px] text-sm font-medium">
-            Default Date Field
-          </label>
-          <Popover>
-            <PopoverTrigger className="flex py-[14px] px-3 justify-between flex-[1_0_0] items-center border border-[#EAEDF2] bg-white">
-              <span className="flex-[1_0_0] text-start">Ship Date</span>
-              <Image
-                src="/assets/chevron-down.svg"
-                alt="chevron down icon"
-                width={16}
-                height={16}
-              />
-            </PopoverTrigger>
-            <PopoverContent className="w-[364px] bg-white">
-              <ul className="">
-                <li className="flex gap-2 items-center py-2 cursor-pointer hover:bg-[#F8FAFC] rounded">
-                  Order Date
-                </li>
-                <li className="flex gap-2 items-center py-2 cursor-pointer hover:bg-[#F8FAFC] rounded">
-                  Ship Date
-                </li>
-              </ul>
-            </PopoverContent>
-          </Popover>
-        </div> */}
         <div className="flex items-center self-stretch gap-4">
           <label className="w-[120px] text-sm font-medium">
             Default Geo Field
@@ -105,13 +79,13 @@ const AddDatasetInfo = () => {
             </PopoverTrigger>
             <PopoverContent className="w-[364px] bg-white">
               <ul className="">
-                <li className="flex gap-2 items-center py-2 cursor-pointer hover:bg-[#F8FAFC] rounded">
+                <li className="flex gap-2 items-center p-2 cursor-pointer hover:bg-[#F8FAFC] rounded">
                   Country
                 </li>
-                <li className="flex gap-2 items-center py-2 cursor-pointer hover:bg-[#F8FAFC] rounded">
+                <li className="flex gap-2 items-center p-2 cursor-pointer hover:bg-[#F8FAFC] rounded">
                   State
                 </li>
-                <li className="flex gap-2 items-center py-2 cursor-pointer hover:bg-[#F8FAFC] rounded">
+                <li className="flex gap-2 items-center p-2 cursor-pointer hover:bg-[#F8FAFC] rounded">
                   City
                 </li>
               </ul>
@@ -136,10 +110,10 @@ const AddDatasetInfo = () => {
             </PopoverTrigger>
             <PopoverContent className="w-[364px] bg-white">
               <ul className="">
-                <li className="flex gap-2 items-center py-2 cursor-pointer hover:bg-[#F8FAFC] rounded">
+                <li className="flex gap-2 items-center p-2 cursor-pointer hover:bg-[#F8FAFC] rounded">
                   Count of rows (Default)
                 </li>
-                <li className="flex gap-2 items-center py-2 cursor-pointer hover:bg-[#F8FAFC] rounded">
+                <li className="flex gap-2 items-center p-2 cursor-pointer hover:bg-[#F8FAFC] rounded">
                   Sum of Rows
                 </li>
               </ul>

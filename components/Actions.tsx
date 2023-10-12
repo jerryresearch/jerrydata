@@ -30,13 +30,13 @@ const Actions = ({ name }: Props) => {
         </span>
         <Link
           href={`data/${name}/edit/info`}
-          className="px-3 py-[12px] flex gap-2 items-center rounded cursor-pointer"
+          className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
         >
           Edit
         </Link>
         <span
           onClick={() => setOpen(true)}
-          className="px-3 py-[12px] flex gap-2 items-center rounded cursor-pointer"
+          className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
         >
           Delete
         </span>

@@ -16,7 +16,7 @@ const links = [
 
 const Footer = ({ step, onNext, onBack }: Props) => {
   return (
-    <div className="fixed bottom-[12px] left-16 right-7 flex px-7 flex-col items-start gap-6 pb-[54px]">
+    <div className="flex px-7 flex-col items-start gap-6 mb-[54px]">
       <div className="flex p-3 justify-between items-center self-stretch rounded border border-[#EAEDF2] bg-white">
         <div className="flex justify-between items-center flex-[1_0_0]">
           <Link href="/dashboard/data">

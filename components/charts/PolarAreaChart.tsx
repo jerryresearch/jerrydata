@@ -61,7 +61,7 @@ const PloarAreaChart = ({ data }: Props) => {
   };
 
   return (
-    <section className="rounded border border-[#EAEDF2] bg-white w-[426px] flex flex-col text-[10px] font-semibold items-center justify-center gap-[10px] py-4">
+    <section className="rounded border border-[#EAEDF2] bg-white flex flex-col text-[10px] font-semibold items-center justify-center gap-[10px] py-4">
       <div className="flex items-center w-full px-8">
         <header className="flex-1 text-center">Unit Cost by Region</header>
         <div className="justify-self-end">

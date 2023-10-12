@@ -40,7 +40,7 @@ const ChatActions = () => {
         </span>
         <span
           onClick={() => setOpenDeleteModal(true)}
-          className="px-3 py-[12px] text-[#D30A0A] flex gap-2 items-center rounded cursor-pointer"
+          className="px-3 py-[12px] text-[#D30A0A] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
         >
           Delete chat
         </span>
