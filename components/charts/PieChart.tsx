@@ -41,17 +41,9 @@ const PieChart = ({ data }: Props) => {
   };
 
   return (
-    <section className="rounded border border-[#EAEDF2] bg-white flex flex-col text-[10px] font-semibold items-center justify-center gap-[10px] py-4">
-      <div className="flex items-center w-full px-8">
-        <header className="flex-1 text-center">Unit Cost by Region</header>
-        <div className="justify-self-end">
-          <ChartActions />
-        </div>
-      </div>
-      <div className="w-[300px]">
-        <Pie data={chartData} options={options} />
-      </div>
-    </section>
+    <div className="w-3/5">
+      <Pie data={chartData} options={options} />
+    </div>
   );
 };
 

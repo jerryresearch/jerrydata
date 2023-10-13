@@ -178,11 +178,39 @@ const Page = () => {
               </div>
               <LineChart data={data} />
             </section>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <PieChart data={pieData} />
-            <DoughnutChart data={pieData} />
-            <PloarAreaChart data={pieData} />
+            <section className="w-full rounded border border-[#EAEDF2] bg-white flex flex-col text-[10px] py-4 font-semibold items-center justify-center gap-[10px]">
+              <div className="flex items-center w-full px-8">
+                <header className="flex-1 text-base text-center">
+                  Unit Cost by Region
+                </header>
+                <div className="justify-self-end">
+                  <ChartActions />
+                </div>
+              </div>
+              <PieChart data={pieData} />
+            </section>
+            <section className="w-full rounded border border-[#EAEDF2] bg-white flex flex-col text-[10px] py-4 font-semibold items-center justify-center gap-[10px]">
+              <div className="flex items-center w-full px-8">
+                <header className="flex-1 text-base text-center">
+                  Unit Cost by Region
+                </header>
+                <div className="justify-self-end">
+                  <ChartActions />
+                </div>
+              </div>
+              <DoughnutChart data={pieData} />
+            </section>
+            <section className="w-full rounded border border-[#EAEDF2] bg-white flex flex-col text-[10px] py-4 font-semibold items-center justify-center gap-[10px]">
+              <div className="flex items-center w-full px-8">
+                <header className="flex-1 text-base text-center">
+                  Unit Cost by Region
+                </header>
+                <div className="justify-self-end">
+                  <ChartActions />
+                </div>
+              </div>
+              <PloarAreaChart data={pieData} />
+            </section>
           </div>
         </section>
       ) : (
