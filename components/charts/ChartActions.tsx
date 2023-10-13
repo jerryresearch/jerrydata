@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import {
   Popover,
   PopoverContent,
@@ -7,25 +9,42 @@ import {
 import Image from "next/image";
 
 const ChartActions = () => {
+  const [popUpOpen, setPopUpOpen] = useState(false);
+
   return (
-    <Popover>
+    <Popover open={popUpOpen} onOpenChange={setPopUpOpen}>
       <PopoverTrigger>
         <Image src="/assets/ellipsis.svg" alt="more" width={24} height={20} />
       </PopoverTrigger>
       <PopoverContent className="flex flex-col p-2 rounded bg-white w-[171px] text-sm shadow-custom">
-        <span className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer">
+        <span
+          onClick={() => setPopUpOpen(false)}
+          className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
+        >
           Edit chart
         </span>
-        <span className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer">
+        <span
+          onClick={() => setPopUpOpen(false)}
+          className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
+        >
           Save as PNG
         </span>
-        <span className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer">
+        <span
+          onClick={() => setPopUpOpen(false)}
+          className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
+        >
           Save as PDF
         </span>
-        <span className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer">
+        <span
+          onClick={() => setPopUpOpen(false)}
+          className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
+        >
           Duplicate
         </span>
-        <span className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer text-[#D30A0A]">
+        <span
+          onClick={() => setPopUpOpen(false)}
+          className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer text-[#D30A0A]"
+        >
           Delete
         </span>
       </PopoverContent>

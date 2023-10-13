@@ -199,7 +199,7 @@ const Page = () => {
             </div>
           </div>
           {showChart ? (
-            <div className="flex p-[14px] gap-6 flex-col items-center overflow-auto flex-[1_0_0] self-stretch rounded border border-[#EAEDF2] bg-white">
+            <div className="flex p-[14px] gap-6 flex-col items-center overflow-auto flex-[1_0_0] 2xl:justify-center self-stretch rounded border border-[#EAEDF2] bg-white">
               <h1 className="font-semibold text-lg">Unit Cost by Region</h1>
               <BarChart data={data} />
             </div>
