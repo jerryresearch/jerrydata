@@ -16,6 +16,14 @@ module.exports = {
       },
     },
     extend: {
+      screens: {
+        xs: "360px",
+        sm: "576px",
+        md: "768px",
+        lg: "992px",
+        xl: "1200px",
+        "2xl": "1440px",
+      },
       boxShadow: {
         custom:
           "0px 2px 4px -2px rgba(0, 0, 0, 0.06), 0px 4px 8px -2px rgba(0, 0, 0, 0.10)",
