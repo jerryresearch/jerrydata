@@ -20,7 +20,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <section>
+    <section className="flex flex-col h-screen bg-[#F6F8FA]">
       <Header currentStep={currentStep} />
       {children}
       <Footer step={currentStep} onNext={handleNext} onBack={handleBack} />

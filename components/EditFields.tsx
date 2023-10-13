@@ -66,119 +66,126 @@ const EditFields = () => {
         </div>
       </div>
       {/* table */}
-      <table className="flex flex-col items-start self-stretch p-5 rounded border border-[#EAEDF2] bg-white">
-        {/* row */}
-        <thead>
-          <tr className="flex items-start self-stretch rounded bg-[#F8FAFC]">
-            <th className="flex items-center justify-center gap-2 w-[50px] py-5 text-sm text-[#17212F]">
-              NP
-            </th>
-            <th className="flex items-center gap-2 w-[240px] p-5 text-sm text-[#17212F]">
-              Name
-            </th>
-            <th className="flex items-center justify-between w-[220px] p-5 text-sm text-[#17212F]">
-              <span>Column Type</span>
-              <Image
-                src="/assets/info-icon.svg"
-                alt="info"
-                width={20}
-                height={20}
-              />
-            </th>
-            <th className="flex items-center justify-between w-[220px] p-5 text-sm text-[#17212F]">
-              <span>Default Aggregate</span>
-              <Image
-                src="/assets/info-icon.svg"
-                alt="info"
-                width={20}
-                height={20}
-              />
-            </th>
-            <th className="flex items-center justify-between w-[220px] p-5 text-sm text-[#17212F]">
-              <span>Default Field Type</span>
-              <Image
-                src="/assets/info-icon.svg"
-                alt="info"
-                width={20}
-                height={20}
-              />
-            </th>
-            <th className="flex items-center justify-between w-[220px] p-5 text-sm text-[#17212F]">
-              <span>Default Geo Type</span>
-              <Image
-                src="/assets/info-icon.svg"
-                alt="info"
-                width={20}
-                height={20}
-              />
-            </th>
-            <th className="flex items-center gap-2 w-[120px] p-5 text-sm text-[#17212F]">
-              Hidden
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row, index) => (
-            <tr
-              key={index}
-              className="flex items-start self-stretch text-sm text-[#17212F] font-medium"
-            >
-              <td className="flex items-center justify-center gap-2 w-[50px] py-5">
-                {row.number}
-              </td>
-              <td className="flex items-center gap-[11px] w-[240px] p-5">
-                <Image src={row.image} width={20} height={20} alt={row.name} />
-                {row.name}
-              </td>
-              {Object.keys(fields).map((field, ind) => (
-                <td key={ind}>
-                  <Popover>
-                    <div className="flex items-center justify-between w-[220px] p-5">
-                      <span className={`${disabled && "text-[#ADB3BB]"}`}>
-                        {/* @ts-ignore */}
-                        {fields[field][0]}
-                      </span>
-                      <PopoverTrigger>
-                        {disabled ? (
-                          <Image
-                            src="/assets/chevron-down-disabled.svg"
-                            alt="chevron down icon"
-                            width={16}
-                            height={16}
-                          />
-                        ) : (
-                          <Image
-                            src="/assets/chevron-down.svg"
-                            alt="chevron down icon"
-                            width={16}
-                            height={16}
-                          />
-                        )}
-                      </PopoverTrigger>
-                    </div>
-                    <PopoverContent className="w-fit min-w-[122px] p-0 shadow-custom bg-white rounded">
-                      <ul className="text-sm font-normal p-2 flex flex-col items-start">
-                        {/* @ts-ignore */}
-                        {fields[field].map((val, index) => (
-                          <li
-                            key={index}
-                            className="flex gap-2 items-center w-fit px-3 py-[6px] cursor-pointer hover:bg-[#F8FAFC] rounded"
-                          >
-                            {val}
-                          </li>
-                        ))}
-                      </ul>
-                    </PopoverContent>
-                  </Popover>
-                </td>
-              ))}
-              <td className="flex items-center gap-2 w-[120px] p-5">
-                <Switch />
-              </td>
+      <div className="w-full p-5 rounded border border-[#EAEDF2] bg-white">
+        <table className="w-full table-auto min-w-max text-left bg-white rounded text-sm text-[#17212F]">
+          {/* row */}
+          <thead>
+            <tr className="rounded bg-[#F8FAFC]">
+              <th className="p-5 font-medium text-sm text-[#17212F]">NP</th>
+              <th className="p-5 font-medium text-sm text-[#17212F]">Name</th>
+              <th className="p-5 font-medium text-sm text-[#17212F]">
+                <div className="flex items-center justify-between">
+                  <span>Column Type</span>
+                  <Image
+                    src="/assets/info-icon.svg"
+                    alt="info"
+                    width={20}
+                    height={20}
+                  />
+                </div>
+              </th>
+              <th className="p-5 font-medium text-sm text-[#17212F]">
+                <div className="flex items-center justify-between">
+                  <span>Default Aggregate</span>
+                  <Image
+                    src="/assets/info-icon.svg"
+                    alt="info"
+                    width={20}
+                    height={20}
+                  />
+                </div>
+              </th>
+              <th className="p-5 font-medium text-sm text-[#17212F]">
+                <div className="flex items-center justify-between">
+                  <span>Default Field Type</span>
+                  <Image
+                    src="/assets/info-icon.svg"
+                    alt="info"
+                    width={20}
+                    height={20}
+                  />
+                </div>
+              </th>
+              <th className="p-5 font-medium text-sm text-[#17212F]">
+                <div className="flex items-center justify-between">
+                  <span>Default Geo Type</span>
+                  <Image
+                    src="/assets/info-icon.svg"
+                    alt="info"
+                    width={20}
+                    height={20}
+                  />
+                </div>
+              </th>
+              <th className="p-5 font-medium text-sm text-[#17212F]">Hidden</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {rows.map((row, index) => (
+              <tr
+                key={index}
+                className="text-sm text-[#17212F] font-medium border-b border-b-[#EAEDF2]"
+              >
+                <td className="p-5 font-medium">{row.number}</td>
+                <td className="flex items-center gap-[11px] p-5">
+                  <Image
+                    src={row.image}
+                    width={20}
+                    height={20}
+                    alt={row.name}
+                  />
+                  {row.name}
+                </td>
+                {Object.keys(fields).map((field, ind) => (
+                  <td key={ind}>
+                    <Popover modal={true}>
+                      <div className="flex items-center justify-between p-5">
+                        <span className={`${disabled && "text-[#ADB3BB]"}`}>
+                          {/* @ts-ignore */}
+                          {fields[field][0]}
+                        </span>
+                        <PopoverTrigger>
+                          {disabled ? (
+                            <Image
+                              src="/assets/chevron-down-disabled.svg"
+                              alt="chevron down icon"
+                              width={16}
+                              height={16}
+                            />
+                          ) : (
+                            <Image
+                              src="/assets/chevron-down.svg"
+                              alt="chevron down icon"
+                              width={16}
+                              height={16}
+                            />
+                          )}
+                        </PopoverTrigger>
+                      </div>
+                      <PopoverContent className="w-fit min-w-[122px] p-0 shadow-custom bg-white rounded">
+                        <ul className="text-sm font-normal p-2 flex flex-col items-start">
+                          {/* @ts-ignore */}
+                          {fields[field].map((val, index) => (
+                            <li
+                              key={index}
+                              className="flex gap-2 items-center w-full px-3 py-[6px] cursor-pointer hover:bg-[#F8FAFC] rounded"
+                            >
+                              {val}
+                            </li>
+                          ))}
+                        </ul>
+                      </PopoverContent>
+                    </Popover>
+                  </td>
+                ))}
+                <td className="p-5">
+                  <Switch />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </section>
   );
 };

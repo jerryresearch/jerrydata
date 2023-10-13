@@ -13,6 +13,7 @@ import ShareChatModal from "./ShareModal";
 const ChatActions = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openShareModal, setOpenShareModal] = useState(false);
+  const [popUpOpen, setPopUpOpen] = useState(false);
 
   const handleCloseDeleteModal = () => {
     setOpenDeleteModal(false);
@@ -23,7 +24,7 @@ const ChatActions = () => {
   };
 
   return (
-    <Popover>
+    <Popover open={popUpOpen} onOpenChange={setPopUpOpen}>
       <PopoverTrigger>
         <Image src="/assets/ellipsis.svg" alt="more" width={24} height={20} />
       </PopoverTrigger>
@@ -33,14 +34,20 @@ const ChatActions = () => {
         className="flex flex-col p-2 rounded bg-white w-[151px] text-sm shadow-custom"
       >
         <span
-          onClick={() => setOpenShareModal(true)}
+          onClick={() => {
+            setPopUpOpen(false);
+            setOpenShareModal(true);
+          }}
           className="px-3 py-[6px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
         >
           Share chat
         </span>
         <span
-          onClick={() => setOpenDeleteModal(true)}
-          className="px-3 py-[12px] text-[#D30A0A] flex gap-2 items-center rounded cursor-pointer"
+          onClick={() => {
+            setPopUpOpen(false);
+            setOpenDeleteModal(true);
+          }}
+          className="px-3 py-[12px] text-[#D30A0A] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
         >
           Delete chat
         </span>

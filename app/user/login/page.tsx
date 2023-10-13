@@ -28,9 +28,9 @@ const Page = () => {
   };
 
   return (
-    <main className={`${inter.className} lg:flex`}>
+    <main className={`${inter.className} lg:flex bg-[#F6F8FA]`}>
       <div
-        className={`lg:w-[540px] h-screen p-4 lg:p-[60px] relative flex flex-col justify-center gap-6 overflow-y-auto ${styles.scrollbar}`}
+        className={`w-full lg:w-[540px] h-screen px-8 lg:px-[60px] py-10 relative flex flex-col 2xl:justify-center gap-3 md:gap-6 overflow-y-auto ${styles.scrollbar}`}
       >
         <div>
           <Image
@@ -38,12 +38,13 @@ const Page = () => {
             alt="RaptorIQ logo"
             width={220}
             height={48}
+            className="w-36 h-10 md:h-12 md:w-[220px]"
           />
         </div>
-        <div className="lg:w-[420px] h-[34px] text-slate-700 font-semibold text-2xl">
+        <div className="lg:w-[420px] text-slate-700 font-semibold text-lg md:text-2xl">
           Welcome back to RaptorIQ
         </div>
-        <div className="lg:w-[420px] h-[50px] text-[#ADB3BB] font-normal text-lg leading-[25.2px]">
+        <div className="lg:w-[420px] text-[#ADB3BB] font-normal text-base md:text-lg leading-[25.2px]">
           Sign in to your account below.
         </div>
         <button className="lg:w-[420px] h-[48px] bg-white rounded-md border border-slate-200 py-2 text-slate-700 font-normal flex items-center justify-center gap-2">

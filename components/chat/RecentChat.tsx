@@ -1,4 +1,5 @@
 import React from "react";
+import ChatActions from "./ChatActions";
 
 type Props = {
   name: string;
@@ -20,7 +21,9 @@ const RecentChat = ({ name, lastModified }: Props) => {
           <tr>
             <td className="font-medium p-5 text-primary">{name}</td>
             <td className="font-medium p-5">{lastModified} ago</td>
-            <td className="font-medium p-5">Action</td>
+            <td className="font-medium p-5">
+              <ChatActions />
+            </td>
           </tr>
         </tbody>
       </table>

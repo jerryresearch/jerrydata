@@ -88,13 +88,13 @@ const Page = () => {
                 </PopoverTrigger>
                 <PopoverContent className="w-[204px] p-0 shadow-custom bg-white rounded">
                   <ul className="text-sm font-normal p-2 flex flex-col items-start">
-                    <li className="flex gap-2 items-center w-fit px-3 py-[6px] cursor-pointer hover:bg-[#F8FAFC] rounded">
+                    <li className="flex gap-2 items-center w-full px-3 py-[6px] cursor-pointer hover:bg-[#F8FAFC] rounded">
                       Last modified date
                     </li>
-                    <li className="flex gap-2 items-center w-fit px-3 py-[6px] cursor-pointer hover:bg-[#F8FAFC] rounded">
+                    <li className="flex gap-2 items-center w-full px-3 py-[6px] cursor-pointer hover:bg-[#F8FAFC] rounded">
                       Title, A to Z
                     </li>
-                    <li className="flex gap-2 items-center w-fit px-3 py-[6px] cursor-pointer hover:bg-[#F8FAFC] rounded">
+                    <li className="flex gap-2 items-center w-full px-3 py-[6px] cursor-pointer hover:bg-[#F8FAFC] rounded">
                       Title, Z to A
                     </li>
                   </ul>

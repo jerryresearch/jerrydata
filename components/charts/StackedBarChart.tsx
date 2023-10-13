@@ -85,17 +85,9 @@ const StackedBarChart = ({ data }: Props) => {
   };
 
   return (
-    <section className="rounded border border-[#EAEDF2] bg-white w-[650px] h-[340px] flex flex-col text-[10px] font-semibold items-center justify-center gap-[10px]">
-      <div className="flex items-center w-full px-8">
-        <header className="flex-1 text-center">Unit Cost by Region</header>
-        <div className="justify-self-end">
-          <ChartActions />
-        </div>
-      </div>
-      <div className="w-[440px] h-[236px]">
-        <Bar data={chartData} options={chartOptions} />
-      </div>
-    </section>
+    <div className="w-4/5 mx-auto">
+      <Bar data={chartData} options={chartOptions} />
+    </div>
   );
 };
 

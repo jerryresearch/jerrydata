@@ -29,9 +29,9 @@ const Page = () => {
   };
 
   return (
-    <main className={`${inter.className} lg:flex`}>
+    <main className={`${inter.className} lg:flex bg-[#F6F8FA]`}>
       <div
-        className={`lg:w-[540px] lg:h-screen p-6 lg:p-[60px] relative flex flex-col gap-6 overflow-y-auto ${styles.scrollbar}`}
+        className={`lg:w-[540px] lg:h-screen px-8 py-10 lg:p-[60px] relative flex flex-col gap-3 md:gap-6 overflow-y-auto ${styles.scrollbar}`}
       >
         <div>
           <Image
@@ -39,12 +39,13 @@ const Page = () => {
             alt="RaptorIQ logo"
             width={220}
             height={48}
+            className="w-36 h-10 md:h-12 md:w-[220px]"
           />
         </div>
-        <div className="lg:w-[420px] h-[34px] text-slate-700 font-semibold text-2xl">
+        <div className="lg:w-[420px] text-slate-700 font-semibold text-lg md:text-2xl">
           Create your RaptorIQ account
         </div>
-        <div className="lg:w-[420px] h-[50px] text-[#ADB3BB] font-normal text-lg leading-[25.2px]">
+        <div className="lg:w-[420px] text-[#ADB3BB] font-normal text-base md:text-lg leading-[25.2px]">
           Let&apos;s get started! Fill in the form below to create your free
           RaptorIQ account.
         </div>

@@ -12,9 +12,13 @@ import LineChart from "@/components/charts/LineChart";
 import PieChart from "@/components/charts/PieChart";
 import DoughnutChart from "@/components/charts/DoughnutGraph";
 import PloarAreaChart from "@/components/charts/PolarAreaChart";
+import { usePathname } from "next/navigation";
+import ChartActions from "@/components/charts/ChartActions";
 
 const Page = () => {
   const [chartCount, setChartCount] = useState(1);
+  const pathname = usePathname();
+
   const [open, setOpen] = useState(false);
 
   const handleCloseModal = () => {
@@ -112,28 +116,101 @@ const Page = () => {
           >
             Share Report
           </button>
-          <button className="inline-flex h-full py-2 px-4 justify-center items-center gap-[10px] flex-shrink-0 rounded bg-primary text-white">
+          <Link
+            href={`${pathname}/new`}
+            className="inline-flex h-full py-2 px-4 justify-center items-center gap-[10px] flex-shrink-0 rounded bg-primary text-white"
+          >
             Add Chart
-          </button>
+          </Link>
           <ShareChartModal open={open} onClose={handleCloseModal} />
         </div>
       </div>
       {chartCount > 0 ? (
         <section className="my-6 px-7 flex flex-col gap-6">
-          <div className="flex justify-between">
+          <div className="grid grid-cols-4 gap-6">
             <AnalyticCard name="Key Analytic 1" value="324" />
             <AnalyticCard name="Key Analytic 2" value="40 Hours" />
             <AnalyticCard name="Key Analytic 3" value="23" />
             <AnalyticCard name="Key Analytic 4" value="43 Million" />
           </div>
-          <div className="flex flex-wrap gap-5 justify-around">
-            <BarChart data={data} />
-            <StackedBarChart data={data} />
-            <HorizontalBarChart data={horizontalData} />
-            <LineChart data={data} />
-            <PieChart data={pieData} />
-            <DoughnutChart data={pieData} />
-            <PloarAreaChart data={pieData} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <section className="w-full rounded border border-[#EAEDF2] bg-white flex flex-col text-[10px] py-4 font-semibold items-center justify-center gap-[10px]">
+              <div className="flex items-center w-full px-8">
+                <header className="flex-1 text-base text-center">
+                  Unit Cost by Region
+                </header>
+                <div className="justify-self-end">
+                  <ChartActions />
+                </div>
+              </div>
+              <BarChart data={data} />
+            </section>
+            <section className="w-full rounded border border-[#EAEDF2] bg-white flex flex-col text-[10px] py-4 font-semibold items-center justify-center gap-[10px]">
+              <div className="flex items-center w-full px-8">
+                <header className="flex-1 text-base text-center">
+                  Unit Cost by Region
+                </header>
+                <div className="justify-self-end">
+                  <ChartActions />
+                </div>
+              </div>
+              <StackedBarChart data={data} />
+            </section>
+            <section className="w-full rounded border border-[#EAEDF2] bg-white flex flex-col text-[10px] py-4 font-semibold items-center justify-center gap-[10px]">
+              <div className="flex items-center w-full px-8">
+                <header className="flex-1 text-base text-center">
+                  Unit Cost by Region
+                </header>
+                <div className="justify-self-end">
+                  <ChartActions />
+                </div>
+              </div>
+              <HorizontalBarChart data={horizontalData} />
+            </section>
+            <section className="w-full rounded border border-[#EAEDF2] bg-white flex flex-col text-[10px] py-4 font-semibold items-center justify-center gap-[10px]">
+              <div className="flex items-center w-full px-8">
+                <header className="flex-1 text-base text-center">
+                  Unit Cost by Region
+                </header>
+                <div className="justify-self-end">
+                  <ChartActions />
+                </div>
+              </div>
+              <LineChart data={data} />
+            </section>
+            <section className="w-full rounded border border-[#EAEDF2] bg-white flex flex-col text-[10px] py-4 font-semibold items-center justify-center gap-[10px]">
+              <div className="flex items-center w-full px-8">
+                <header className="flex-1 text-base text-center">
+                  Unit Cost by Region
+                </header>
+                <div className="justify-self-end">
+                  <ChartActions />
+                </div>
+              </div>
+              <PieChart data={pieData} />
+            </section>
+            <section className="w-full rounded border border-[#EAEDF2] bg-white flex flex-col text-[10px] py-4 font-semibold items-center justify-center gap-[10px]">
+              <div className="flex items-center w-full px-8">
+                <header className="flex-1 text-base text-center">
+                  Unit Cost by Region
+                </header>
+                <div className="justify-self-end">
+                  <ChartActions />
+                </div>
+              </div>
+              <DoughnutChart data={pieData} />
+            </section>
+            <section className="w-full rounded border border-[#EAEDF2] bg-white flex flex-col text-[10px] py-4 font-semibold items-center justify-center gap-[10px]">
+              <div className="flex items-center w-full px-8">
+                <header className="flex-1 text-base text-center">
+                  Unit Cost by Region
+                </header>
+                <div className="justify-self-end">
+                  <ChartActions />
+                </div>
+              </div>
+              <PloarAreaChart data={pieData} />
+            </section>
           </div>
         </section>
       ) : (

@@ -28,9 +28,9 @@ const Page = () => {
   };
 
   return (
-    <main className={`${inter.className} lg:flex`}>
+    <main className={`${inter.className} lg:flex  bg-[#F6F8FA]`}>
       <div
-        className={`lg:w-[540px] h-screen p-4 lg:p-[60px] relative flex flex-col justify-center gap-6 overflow-y-auto ${styles.scrollbar}`}
+        className={`lg:w-[540px] h-screen px-8 py-10 lg:p-[60px] relative flex flex-col md:justify-center gap-6 overflow-y-auto ${styles.scrollbar}`}
       >
         <div className="flex gap-[10px]">
           <Image
@@ -38,17 +38,18 @@ const Page = () => {
             alt="RaptorIQ logo"
             width={220}
             height={48}
+            className="w-36 h-10 md:h-12 md:w-[220px]"
           />
         </div>
-        <div className="w-[420px] h-[34px] text-slate-700 font-semibold text-2xl">
+        <div className="lg:w-[420px] text-slate-700 font-semibold text-lg md:text-2xl">
           Reset your password
         </div>
-        <div className="w-[420px] h-[50px] text-[#ADB3BB] font-normal text-lg leading-[25.2px]">
+        <div className="lg:w-[420px] text-[#ADB3BB] font-normal text-base md:text-lg leading-[25.2px]">
           Please enter a new password below to reset your RaptorIQ account
           password.
         </div>
         <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
-          <div className="w-[420px] h-[80px] text-[#17212F] text-sm flex flex-col gap-3">
+          <div className="lg:w-[420px] h-[80px] text-[#17212F] text-sm flex flex-col gap-3">
             <div className="font-medium w-full">New password</div>
             <input
               type="password"
@@ -60,7 +61,7 @@ const Page = () => {
               onChange={handleChange}
             />
           </div>
-          <div className="w-[420px] h-[80px] text-[#17212F] text-sm flex flex-col gap-3">
+          <div className="lg:w-[420px] h-[80px] text-[#17212F] text-sm flex flex-col gap-3">
             <div className="font-medium w-full">Confirm new password</div>
             <input
               type="password"
@@ -72,11 +73,11 @@ const Page = () => {
               onChange={handleChange}
             />
           </div>
-          <div className="w-[420px] h-14">
+          <div className="lg:w-[420px] h-14">
             <Button>Reset password</Button>
           </div>
         </form>
-        <div className="w-[420px] text-sm">
+        <div className="lg:w-[420px] text-sm">
           <span className="text-slate-700">
             Need help in resetting your password? Get in touch at {""}
           </span>
