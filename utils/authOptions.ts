@@ -3,6 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import User from "@/models/User";
 import { verifyPassword } from "./verifyPassword";
+import { connectToDB } from "./mongoose";
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -29,9 +30,9 @@ export const authOptions: NextAuthOptions = {
         if (!credentials?.email || !credentials.password) {
           return null;
         }
+        await connectToDB();
         // Logic to look up the user from the credentials supplied
         const user = await User.find({ email: credentials.email });
-
         if (user) {
           // Any object returned will be saved in `user` property of the JWT
           const isValid = await verifyPassword(
