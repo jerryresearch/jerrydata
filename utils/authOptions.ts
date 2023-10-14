@@ -1,6 +1,8 @@
 import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
+import User from "@/models/User";
+import { verifyPassword } from "./verifyPassword";
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -23,33 +25,32 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Username", type: "text", placeholder: "jsmith" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
-        // Add logic here to look up the user from the credentials supplied
-        const user = { id: "1", name: "J Smith", email: "jsmith@example.com" };
-        // let user = await User.find({ email: credentials.email });
-        console.log(credentials);
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials.password) {
+          return null;
+        }
+        // Logic to look up the user from the credentials supplied
+        const user = await User.find({ email: credentials.email });
 
         if (user) {
           // Any object returned will be saved in `user` property of the JWT
-          //   const isValid = await verifyPassword(
-          //     credentials.password,
-          //     user[0].password
-          //   );
-          //   if (!isValid) {
-          //     return null;
-          //   }
+          const isValid = await verifyPassword(
+            credentials.password,
+            user[0].password
+          );
+          if (!isValid) {
+            return null;
+          }
           //   const isVerified = user[0].email_verified;
           //   if (!isVerified) {
           //     throw new Error("User is not verified.");
           //     return;
           //   }
-          //   return {
-          // email: user[0].email,
-          // username: user[0].username,
-          // userId: user[0]._id,
-          //   };
-
-          return user;
+          return {
+            email: user[0].email,
+            username: user[0].username,
+            userId: user[0]._id,
+          } as any;
         } else {
           // If you return null then an error will be displayed advising the user to check their details.
           return null;
@@ -74,10 +75,31 @@ export const authOptions: NextAuthOptions = {
     //   }
     //   return true;
     // },
+    session: ({ session, token }) => {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.id,
+          randomKey: token.randomKey,
+        },
+      };
+    },
+    jwt: ({ token, user }) => {
+      if (user) {
+        const u = user as unknown as any;
+        return {
+          ...token,
+          id: u.id,
+          randomKey: u.randomKey,
+        };
+      }
+      return token;
+    },
   },
   pages: {
     signIn: "/user/login",
-    error: "/login", //redirection page
+    error: "/user/login", //redirection page
   },
 
   secret: process.env.NEXT_PUBLIC_SECRET,

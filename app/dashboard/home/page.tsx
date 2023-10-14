@@ -5,8 +5,12 @@ import RecentChat from "@/components/chat/RecentChat";
 import ReportCard from "@/components/ReportCard";
 import Image from "next/image";
 import React from "react";
+import { useSession } from "next-auth/react";
 
-const page = () => {
+const Page = () => {
+  const { data: session } = useSession();
+  console.log(session);
+
   const reports = [
     {
       name: "Spellmint Analytics",
@@ -135,4 +139,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

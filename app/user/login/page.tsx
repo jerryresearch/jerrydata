@@ -8,6 +8,7 @@ import Link from "next/link";
 import styles from "../styles.module.css";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,6 +19,7 @@ const initialState = {
 
 const Page = () => {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [data, setData] = useState(initialState);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -27,11 +29,20 @@ const Page = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // sign in with credentials
-    signIn("credentials", {
-      ...data,
-      // redirect user to requested page or dashboard/home on login
-      callbackUrl: searchParams.get("callbackUrl") || "/dashboard/home",
-    });
+    try {
+      const res = await signIn("credentials", {
+        ...data,
+        redirect: false,
+      });
+      if (res?.error) {
+        alert("Invalid credentials");
+        return;
+      }
+      router.replace(searchParams.get("callbackUrl") || "/dashboard/home");
+    } catch (error) {
+      alert("Error!!!");
+      console.log(error);
+    }
   };
 
   return (
