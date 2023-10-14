@@ -6,6 +6,8 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import Button from "@/components/Button";
 import Link from "next/link";
 import styles from "../styles.module.css";
+import { signIn } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,6 +17,7 @@ const initialState = {
 };
 
 const Page = () => {
+  const searchParams = useSearchParams();
   const [data, setData] = useState(initialState);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -23,8 +26,12 @@ const Page = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(data);
-    setData(initialState);
+    // sign in with credentials
+    signIn("credentials", {
+      ...data,
+      // redirect user to requested page or dashboard/home on login
+      callbackUrl: searchParams.get("callbackUrl") || "/dashboard/home",
+    });
   };
 
   return (
