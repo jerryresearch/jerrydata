@@ -9,7 +9,6 @@ import { useSession } from "next-auth/react";
 
 const Page = () => {
   const { data: session } = useSession();
-  console.log(session);
 
   const reports = [
     {

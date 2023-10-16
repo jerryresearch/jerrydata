@@ -32,12 +32,12 @@ export const authOptions: NextAuthOptions = {
         }
         await connectToDB();
         // Logic to look up the user from the credentials supplied
-        const user = await User.find({ email: credentials.email });
+        const user = await User.findOne({ email: credentials.email });
         if (user) {
           // Any object returned will be saved in `user` property of the JWT
           const isValid = await verifyPassword(
             credentials.password,
-            user[0].password
+            user.password
           );
           if (!isValid) {
             return null;
@@ -48,9 +48,9 @@ export const authOptions: NextAuthOptions = {
           //     return;
           //   }
           return {
-            email: user[0].email,
-            username: user[0].username,
-            userId: user[0]._id,
+            email: user.email,
+            fullName: user.fullName,
+            userId: user._id,
           } as any;
         } else {
           // If you return null then an error will be displayed advising the user to check their details.
@@ -80,9 +80,8 @@ export const authOptions: NextAuthOptions = {
       return {
         ...session,
         user: {
-          ...session.user,
-          id: token.id,
-          randomKey: token.randomKey,
+          // @ts-ignore
+          ...token.user,
         },
       };
     },
@@ -91,8 +90,7 @@ export const authOptions: NextAuthOptions = {
         const u = user as unknown as any;
         return {
           ...token,
-          id: u.id,
-          randomKey: u.randomKey,
+          user: { ...u, randomKey: u.randomKey },
         };
       }
       return token;
@@ -103,5 +101,5 @@ export const authOptions: NextAuthOptions = {
     error: "/user/login", //redirection page
   },
 
-  secret: process.env.NEXT_PUBLIC_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
 };
