@@ -21,6 +21,7 @@ const Page = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [data, setData] = useState(initialState);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, [e.target.name]: e.target.value });
@@ -28,6 +29,7 @@ const Page = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     // sign in with credentials
     try {
       const res = await signIn("credentials", {
@@ -117,7 +119,7 @@ const Page = () => {
             </div>
           </div>
           <div className="lg:w-[420px] h-14">
-            <Button>Sign In</Button>
+            <Button isLoading={isLoading}>Sign In</Button>
           </div>
         </form>
         <div className="lg:w-[420px] h-5 text-sm">

@@ -85,7 +85,7 @@ const Page = () => {
             />
           </div>
           <Link href="data/new/connection-type" className="">
-            <Button>
+            <Button isLoading={false}>
               <div className="flex gap-[10px] w-[184px] h-10 py-2 px-4 items-center justify-center">
                 <Image
                   src="/assets/plus-icon.svg"

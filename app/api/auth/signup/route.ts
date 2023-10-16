@@ -23,12 +23,11 @@ export async function POST(req: Request) {
       password: hashed_password,
     });
 
-    console.log(user);
-
     return NextResponse.json({
       user: {
-        name: user.fullName,
+        fullName: user.fullName,
         email: user.email,
+        userId: user._id,
       },
     });
   } catch (error: any) {
