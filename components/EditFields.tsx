@@ -97,7 +97,7 @@ const EditFields = () => {
               </th>
               <th className="p-5 font-medium text-sm text-[#17212F]">
                 <div className="flex items-center justify-between">
-                  <span>Default Field Type</span>
+                  <span>Date Field Type</span>
                   <Image
                     src="/assets/info-icon.svg"
                     alt="info"

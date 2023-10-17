@@ -11,7 +11,6 @@ export async function POST(req: Request) {
       password: string;
     };
 
-    console.log(fullName, email, password);
     const salt = await bcrypt.genSalt(10);
     const hashed_password = await bcrypt.hash(password, salt);
 
