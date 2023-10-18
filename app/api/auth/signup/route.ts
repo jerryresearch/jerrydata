@@ -12,8 +12,11 @@ export async function POST(req: Request) {
       password: string;
     };
 
+    // connect to DB
+    await connectToDB();
+
     // check if user email already exists
-    const userAlreadyExists = await User.find({ email });
+    const userAlreadyExists = await User.findOne({ email });
     if (userAlreadyExists) {
       return NextResponse.json(
         { user: null, message: "Email already exists" },
@@ -25,9 +28,6 @@ export async function POST(req: Request) {
     const salt = await bcrypt.genSalt(10);
     const hashed_password = await bcrypt.hash(password, salt);
 
-    // connect to DB
-    await connectToDB();
-
     // create new user in DB
     const user = await User.create({
       fullName,
@@ -35,7 +35,7 @@ export async function POST(req: Request) {
       password: hashed_password,
     });
 
-    const { password: newPassword, rest } = user;
+    const { password: newPassword, ...rest } = user;
 
     // send the new user details except password
     return NextResponse.json(
