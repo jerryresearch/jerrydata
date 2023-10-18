@@ -3,17 +3,17 @@ import ReportsActions from "./ReportsActions";
 import Link from "next/link";
 
 type Props = {
-  name: string;
+  title: string;
   chartsCount: number;
   lastModified: string;
   charts: string[];
 };
 
-const ReportCard = ({ name, chartsCount, lastModified, charts }: Props) => {
+const ReportCard = ({ title, chartsCount, lastModified, charts }: Props) => {
   return (
     <div className="flex w-[400px] h-[260px] font-medium pt-5 flex-col justify-end items-center flex-shrink-0 rounded-[8px] border border-[#EAEDF2] bg-white">
       <div className="flex w-[372px] py-5 px-[18px] justify-between items-center rounded  bg-[#F8FAFC]">
-        <Link href={`reports/${name}`}>{name}</Link>
+        <Link href={`reports/${title}`}>{title}</Link>
         <ReportsActions />
       </div>
       {charts.length > 0 ? (

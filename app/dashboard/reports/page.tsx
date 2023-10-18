@@ -12,7 +12,7 @@ import AddReportModal from "@/components/AddReportModal";
 import ReportCard from "@/components/ReportCard";
 
 const Page = () => {
-  const [reportsCount, setReportsCount] = useState<number>(1);
+  const [reportsCount, setReportsCount] = useState<number>(0);
   const [open, setOpen] = useState(false);
 
   const handleCloseModal = () => {
@@ -21,13 +21,13 @@ const Page = () => {
 
   const reports = [
     {
-      name: "Spellmint Analytics",
+      title: "Spellmint Analytics",
       chartsCount: 0,
       lastModified: "0 days",
       charts: [],
     },
     {
-      name: "Hurrae Analytics",
+      title: "Hurrae Analytics",
       chartsCount: 6,
       lastModified: "2 days",
       charts: [
