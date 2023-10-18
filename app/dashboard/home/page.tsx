@@ -1,32 +1,35 @@
-"use client";
-
+import Image from "next/image";
 import Actions from "@/components/Actions";
 import RecentChat from "@/components/chat/RecentChat";
 import ReportCard from "@/components/ReportCard";
-import Image from "next/image";
-import React from "react";
-import { useSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/utils/authOptions";
+import getReports from "@/lib/getReports";
 
-const Page = () => {
-  const { data: session } = useSession();
+const Page = async () => {
+  const session = await getServerSession(authOptions);
+  // @ts-ignore
+  const reportsData: Promise<Reports[]> = getReports(session?.user?._id);
 
-  const reports = [
-    {
-      name: "Spellmint Analytics",
-      chartsCount: 0,
-      lastModified: "0 days",
-      charts: [],
-    },
-    {
-      name: "Hurrae Analytics",
-      chartsCount: 6,
-      lastModified: "2 days",
-      charts: [
-        "Total No. of Website Visitors",
-        "No. of Signups to Hurrae Infinity",
-      ],
-    },
-  ];
+  const reports = await reportsData;
+
+  // const reports = [
+  //   {
+  //     title: "Spellmint Analytics",
+  //     chartsCount: 0,
+  //     lastModified: "0 days",
+  //     charts: [],
+  //   },
+  //   {
+  //     title: "Hurrae Analytics",
+  //     chartsCount: 6,
+  //     lastModified: "2 days",
+  //     charts: [
+  //       "Total No. of Website Visitors",
+  //       "No. of Signups to Hurrae Infinity",
+  //     ],
+  //   },
+  // ];
 
   const rows = [
     {

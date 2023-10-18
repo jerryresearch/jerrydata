@@ -1,0 +1,102 @@
+"use client";
+
+import React, { useState } from "react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import AddReportModal from "@/components/AddReportModal";
+import ReportCard from "@/components/ReportCard";
+import Image from "next/image";
+
+type Report = {
+  title: string;
+  chartsCount: number;
+  lastModified: string;
+  charts: string[];
+  createdBy: string;
+};
+
+type Props = {
+  reports: Report[];
+};
+
+const Reports = ({ reports }: Props) => {
+  const [open, setOpen] = useState(false);
+
+  const handleCloseModal = () => {
+    setOpen(false);
+  };
+
+  return (
+    <section>
+      <div className="flex py-5 px-7 justify-between items-center border-b border-b-[#EAEDF2]">
+        <div>
+          <Popover>
+            <PopoverTrigger>
+              <div className="flex items-center justify-between w-[204px] py-2 px-3 flex-shrink-0 rounded border border-[#EAEDF2] bg-white">
+                <span>Last modified date</span>
+
+                <Image
+                  src="/assets/chevron-down.svg"
+                  alt="chevron down icon"
+                  width={16}
+                  height={16}
+                />
+              </div>
+            </PopoverTrigger>
+            <PopoverContent className="w-[204px] p-0 shadow-custom bg-white rounded">
+              <ul className="text-sm font-normal p-2 flex flex-col items-start">
+                <li className="flex gap-2 items-center w-full px-3 py-[6px] cursor-pointer hover:bg-[#F8FAFC] rounded">
+                  Last modified date
+                </li>
+                <li className="flex gap-2 items-center w-full px-3 py-[6px] cursor-pointer hover:bg-[#F8FAFC] rounded">
+                  Title, A to Z
+                </li>
+                <li className="flex gap-2 items-center w-full px-3 py-[6px] cursor-pointer hover:bg-[#F8FAFC] rounded">
+                  Title, Z to A
+                </li>
+              </ul>
+            </PopoverContent>
+          </Popover>
+        </div>
+        <div className="flex gap-[10px] items-center">
+          <div className="flex w-[380px] pr-[100px] pl-2 flex-col items-start rounded border border-[#EAEDF2] bg-white">
+            <div className="flex py-[10px] px-2 gap-2 items-center self-stretch">
+              <Image
+                src="/assets/search-icon.svg"
+                alt="search icon"
+                width={16}
+                height={16}
+              />
+              <input
+                type="text"
+                name="search"
+                placeholder="Search Data"
+                className="focus:outline-none"
+              />
+            </div>
+          </div>
+          <button
+            onClick={() => setOpen(true)}
+            className="flex h-[40px] py-2 px-4 items-center justify-center gap-[10px] bg-primary text-white rounded"
+          >
+            Add report
+          </button>
+          <button className="flex h-[40px] py-2 px-4 items-center justify-center gap-[10px] bg-[#17212F] text-white rounded">
+            Auto Generate Report
+          </button>
+        </div>
+      </div>
+      <div className="flex py-5 px-7 items-center gap-5">
+        {reports.map((report, index) => (
+          <ReportCard key={index} {...report} />
+        ))}
+      </div>
+      <AddReportModal open={open} onClose={handleCloseModal} />
+    </section>
+  );
+};
+
+export default Reports;
