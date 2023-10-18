@@ -1,11 +1,14 @@
 import type { NextAuthOptions } from "next-auth";
+import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import User from "@/models/User";
-import { verifyPassword } from "./verifyPassword";
 import { connectToDB } from "./mongoose";
+import clientPromise from "./mongodb";
+import { verifyPassword } from "./verifyPassword";
+import User from "@/models/User";
 
 export const authOptions: NextAuthOptions = {
+  adapter: MongoDBAdapter(clientPromise),
   session: {
     strategy: "jwt",
   },
@@ -26,7 +29,7 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Username", type: "text", placeholder: "jsmith" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         if (!credentials?.email || !credentials.password) {
           return null;
         }
@@ -34,7 +37,6 @@ export const authOptions: NextAuthOptions = {
         // Logic to look up the user from the credentials supplied
         const user = await User.findOne({ email: credentials.email });
         if (user) {
-          // Any object returned will be saved in `user` property of the JWT
           const isValid = await verifyPassword(
             credentials.password,
             user.password
@@ -47,10 +49,11 @@ export const authOptions: NextAuthOptions = {
           //     throw new Error("User is not verified.");
           //     return;
           //   }
+          // Any object returned will be saved in `user` property of the JWT
           return {
-            email: user.email,
+            _id: user._id,
             fullName: user.fullName,
-            userId: user._id,
+            email: user.email,
           } as any;
         } else {
           // If you return null then an error will be displayed advising the user to check their details.
@@ -62,9 +65,18 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    // async signIn(user, account, profile) {
-    //   //
-    //   // const existingUser = await User.findOne({ email: user.user.email });
+    // @ts-ignore
+    // async signIn({ user, account, profile }) {
+    //   console.log(user);
+    //   console.log(account);
+    //   console.log(profile);
+    //   return {
+    //     user,
+    //     account,
+    //     profile,
+    //   };
+
+    //   const existingUser = await User.findOne({ email: user.user.email });
     //   if (!existingUser) {
     //     //TODO Create a new user in your database
     //     try {
