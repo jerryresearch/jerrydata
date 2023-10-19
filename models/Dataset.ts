@@ -29,6 +29,7 @@ const DatasetSchema = new mongoose.Schema({
   lastLoad: {
     type: String,
     required: true,
+    default: new Date(),
   },
   addedBy: {
     type: mongoose.Schema.Types.ObjectId,
