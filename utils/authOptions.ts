@@ -115,3 +115,28 @@ export const authOptions: NextAuthOptions = {
 
   secret: process.env.NEXTAUTH_SECRET,
 };
+
+// callbacks: {
+//   session: async (session) => {
+//     if (!session) return;
+
+//     const client = await connectToDatabase();
+//     const usersCollection = client.db().collection('users');
+
+//     const userData = await usersCollection.findOne({
+//       email: session.user.email,
+//     });
+
+//     return {
+//       session: {
+//         user: {
+//           id: userData._id,
+//           firstname: userData.firstname,
+//           lastname: userData.lastname,
+//           username: userData.username,
+//           email: userData.email
+//         }
+//       }
+//     };
+//   },
+// },

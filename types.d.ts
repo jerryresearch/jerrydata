@@ -1,4 +1,4 @@
-type Report = {
+type Reports = {
   title: string;
   chartsCount: number;
   lastModified: string;

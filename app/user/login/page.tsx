@@ -38,12 +38,14 @@ const Page = () => {
       });
       if (res?.error) {
         alert("Invalid credentials");
+        setIsLoading(false);
         return;
       }
       router.replace(searchParams.get("callbackUrl") || "/dashboard/home");
     } catch (error) {
       alert("Error!!!");
       console.log(error);
+      setIsLoading(false);
     }
   };
 
@@ -67,7 +69,10 @@ const Page = () => {
         <div className="lg:w-[420px] text-[#ADB3BB] font-normal text-base md:text-lg leading-[25.2px]">
           Sign in to your account below.
         </div>
-        <button className="lg:w-[420px] h-[48px] bg-white rounded-md border border-slate-200 py-2 text-slate-700 font-normal flex items-center justify-center gap-2">
+        <button
+          onClick={() => signIn("google", { callbackUrl: "/dashboard/home" })}
+          className="lg:w-[420px] h-[48px] bg-white rounded-md border border-slate-200 py-2 text-slate-700 font-normal flex items-center justify-center gap-2"
+        >
           <span>
             <Image
               src="/assets/google.svg"

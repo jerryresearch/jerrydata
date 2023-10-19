@@ -2,14 +2,7 @@ import React from "react";
 import ReportsActions from "./ReportsActions";
 import Link from "next/link";
 
-type Props = {
-  title: string;
-  chartsCount: number;
-  lastModified: string;
-  charts: string[];
-};
-
-const ReportCard = ({ title, chartsCount, lastModified, charts }: Props) => {
+const ReportCard = ({ title, chartsCount, lastModified, charts }: Reports) => {
   return (
     <div className="flex w-[400px] h-[260px] font-medium pt-5 flex-col justify-end items-center flex-shrink-0 rounded-[8px] border border-[#EAEDF2] bg-white">
       <div className="flex w-[372px] py-5 px-[18px] justify-between items-center rounded  bg-[#F8FAFC]">

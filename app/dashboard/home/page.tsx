@@ -7,9 +7,10 @@ import { authOptions } from "@/utils/authOptions";
 import getReports from "@/lib/getReports";
 
 const Page = async () => {
-  const session = await getServerSession(authOptions);
-  // @ts-ignore
-  const reportsData: Promise<Reports[]> = getReports(session?.user?._id);
+  const session: any = await getServerSession(authOptions);
+  const reportsData: Promise<Reports[]> = getReports(
+    session?.user?._id || session?.user?.id
+  );
 
   const reports = await reportsData;
 

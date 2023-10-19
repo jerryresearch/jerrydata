@@ -41,6 +41,7 @@ const Page = () => {
       const user = await res.json();
       if (!res.ok) {
         alert(user.message);
+        setIsLoading(false);
         return;
       }
 
@@ -53,6 +54,7 @@ const Page = () => {
     } catch (error: any) {
       setIsLoading(false);
       alert(error);
+      setIsLoading(false);
     }
   };
 
@@ -77,7 +79,10 @@ const Page = () => {
           Let&apos;s get started! Fill in the form below to create your free
           RaptorIQ account.
         </div>
-        <button className="lg:w-[420px] h-[48px] bg-white rounded-md border border-slate-200 py-2 text-slate-700 font-normal flex items-center justify-center gap-2">
+        <button
+          onClick={() => signIn("google", { callbackUrl: "/dashboard/home" })}
+          className="lg:w-[420px] h-[48px] bg-white rounded-md border border-slate-200 py-2 text-slate-700 font-normal flex items-center justify-center gap-2"
+        >
           <span>
             <Image
               src="/assets/google.svg"
