@@ -5,14 +5,22 @@ import ReportCard from "@/components/ReportCard";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/authOptions";
 import getReports from "@/lib/getReports";
+import Datasets from "@/components/data/Datasets";
+import getDatasets from "@/lib/getDatasets";
 
 const Page = async () => {
   const session: any = await getServerSession(authOptions);
+
   const reportsData: Promise<Reports[]> = getReports(
     session?.user?._id || session?.user?.id
   );
 
+  const datasetsData: Promise<Dataset[]> = getDatasets(
+    session?.user?._id || session?.user?.id
+  );
+
   const reports = await reportsData;
+  const datasets = await datasetsData;
 
   // const reports = [
   //   {
@@ -31,27 +39,6 @@ const Page = async () => {
   //     ],
   //   },
   // ];
-
-  const rows = [
-    {
-      image: "/assets/csv.svg",
-      name: "Sample - Retail Orders",
-      datatype: "CSV",
-      size: "12 mb",
-      rows: "11.7 k",
-      columns: 21,
-      lastLoad: "8 hours ago",
-    },
-    {
-      image: "/assets/xls.svg",
-      name: "Sample - Retail Orders",
-      datatype: "CSV",
-      size: "12 mb",
-      rows: "11.7 k",
-      columns: 21,
-      lastLoad: "8 hours ago",
-    },
-  ];
 
   return (
     <section className="bg-[#F6F8FA] min-h-screen">
@@ -76,54 +63,7 @@ const Page = async () => {
       </div>
       <div className="flex flex-col p-6 justify-center items-start gap-6">
         <h1 className="text-base font-medium">Recent Datasets</h1>
-        <div className="p-5 w-full rounded border border-[#EAEDF2] bg-white">
-          <table className="w-full table-auto min-w-max text-left bg-white rounded text-sm text-[#17212F]">
-            {/* row */}
-            <thead>
-              <tr className="rounded bg-[#F8FAFC] border-b font-medium">
-                <th className="p-5 font-medium">Type</th>
-                <th className="p-5 font-medium">Name</th>
-                <th className="p-5 font-medium">Datatype</th>
-                <th className="p-5 font-medium">Size</th>
-                <th className="p-5 font-medium">Rows</th>
-                <th className="p-5 font-medium">Columns</th>
-                <th className="flex justify-between p-5 font-medium">
-                  <span>Last Load</span>
-                  <Image
-                    src="/assets/chevron-down.svg"
-                    alt="down icon"
-                    width={20}
-                    height={20}
-                  />
-                </th>
-                <th className="p-5 font-medium">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row, index) => (
-                <tr key={index} className="rounded border-b font-medium">
-                  <td className="p-5">
-                    <Image
-                      src={row.image}
-                      alt="csv file"
-                      width={26}
-                      height={26}
-                    />
-                  </td>
-                  <td className="p-5 text-blue-500">{row.name}</td>
-                  <td className="p-5">{row.datatype}</td>
-                  <td className="p-5">{row.size}</td>
-                  <td className="p-5">{row.rows}</td>
-                  <td className="p-5">{row.columns}</td>
-                  <td className="p-5">{row.lastLoad}</td>
-                  <td className="p-5">
-                    <Actions name={row.name} />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Datasets datasets={datasets} />
       </div>
       <div className="flex flex-col p-6 justify-center items-start gap-6">
         <h1 className="text-base font-medium">Recent Chats</h1>

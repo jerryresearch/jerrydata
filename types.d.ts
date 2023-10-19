@@ -5,3 +5,12 @@ type Reports = {
   charts: string[];
   createdBy: string;
 };
+
+type Dataset = {
+  name: string;
+  datatype: string;
+  size: string;
+  rows: number;
+  columns: number;
+  lastLoad: string;
+};
