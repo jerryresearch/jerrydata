@@ -2,6 +2,7 @@ import Image from "next/image";
 import React from "react";
 import Actions from "../Actions";
 import { formatLastLoad, formatRows, formatSize } from "@/lib/formatDatasets";
+import Link from "next/link";
 
 type Props = {
   datasets: Dataset[];
@@ -43,7 +44,9 @@ const Datasets = ({ datasets }: Props) => {
                   height={26}
                 />
               </td>
-              <td className="p-5 text-blue-500">{row.name}</td>
+              <td className="p-5 text-blue-500">
+                <Link href={`data/${row.name}`}>{row.name}</Link>
+              </td>
               <td className="p-5">{row.datatype}</td>
               <td className="p-5">{formatSize(row.size)}</td>
               <td className="p-5">{formatRows(row.rows)}</td>
