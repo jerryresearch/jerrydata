@@ -3,11 +3,12 @@ import mongoose, { models } from "mongoose";
 const DatasetSchema = new mongoose.Schema({
   fileUrl: {
     type: String,
-    required: true,
+  },
+  key: {
+    type: String,
   },
   name: {
     type: String,
-    required: true,
   },
   datatype: {
     type: String,
@@ -16,19 +17,15 @@ const DatasetSchema = new mongoose.Schema({
   },
   size: {
     type: String,
-    required: true,
   },
   rows: {
     type: Number,
-    required: true,
   },
   columns: {
     type: Number,
-    required: true,
   },
   lastLoad: {
     type: String,
-    required: true,
     default: new Date(),
   },
   addedBy: {
