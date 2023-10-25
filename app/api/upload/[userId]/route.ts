@@ -2,13 +2,10 @@ import mongoose from "mongoose";
 import Dataset from "@/models/Dataset";
 import { connectToDB } from "../../../../utils/mongoose";
 import { NextResponse } from "next/server";
-import {
-  S3Client,
-  PutObjectCommand,
-  // GetObjectCommand,
-} from "@aws-sdk/client-s3";
-// import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import crypto from "crypto";
+import csv from "csv-parser";
+import { Readable } from "stream";
 
 type Props = {
   params: {
@@ -61,6 +58,7 @@ export const POST = async (req: Request, { params: { userId } }: Props) => {
     const file: File | null = data.get("file") as unknown as File;
     const fileName = file.name.split(".")[0];
     const datatype = data.get("datatype");
+    const size = file.size;
 
     // generate random file name to avoid replacing old file with same name
     const randomFileName = (bytes = 32) =>
@@ -82,11 +80,37 @@ export const POST = async (req: Request, { params: { userId } }: Props) => {
     const command = new PutObjectCommand(params);
     await s3.send(command);
 
+    const bufferStream = new Readable();
+    bufferStream.push(buffer);
+    bufferStream.push(null);
+
+    let headers: string[] = [];
+    let rows: number = 0;
+
+    await new Promise((resolve, reject) => {
+      bufferStream
+        .pipe(csv())
+        .on("headers", (fileHeaders) => {
+          headers = fileHeaders;
+        })
+        .on("end", (rowCount: number) => {
+          rows = rowCount;
+          resolve(rowCount);
+        })
+        .on("error", (error) => {
+          reject(error);
+        });
+    });
+
     // store in database
     const dataset = await Dataset.create({
       name: fileName,
       key,
       datatype,
+      size,
+      rows,
+      columns: headers.length,
+      headers,
       addedBy: userId,
     });
     return NextResponse.json(dataset, { status: 200 });
