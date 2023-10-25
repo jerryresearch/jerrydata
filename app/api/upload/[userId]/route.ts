@@ -92,10 +92,13 @@ export const POST = async (req: Request, { params: { userId } }: Props) => {
         .pipe(csv())
         .on("headers", (fileHeaders) => {
           headers = fileHeaders;
+          console.log(headers);
         })
-        .on("end", (rowCount: number) => {
-          rows = rowCount;
-          resolve(rowCount);
+        .on("data", () => {
+          rows += 1;
+        })
+        .on("end", () => {
+          resolve(rows);
         })
         .on("error", (error) => {
           reject(error);
