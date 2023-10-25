@@ -36,20 +36,18 @@ const Page = () => {
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const fileInput = event.target;
     const file = fileInput.files?.[0];
+    // @ts-ignore
+    const userId = session?.user?._id || session?.user?.id;
     setIsLoading(true);
     try {
       if (file && id == "") {
         const formData = new FormData();
         formData.append("file", file);
         formData.append("datatype", searchParams.get("type") || "");
-        const res = await fetch(
-          // @ts-ignore
-          `http://localhost:3000/api/upload/${session?.user?._id}`,
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
+        const res = await fetch(`http://localhost:3000/api/upload/${userId}`, {
+          method: "POST",
+          body: formData,
+        });
         const response = await res.json();
         if (!res.ok) {
           alert(response.message);

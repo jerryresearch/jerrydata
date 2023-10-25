@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Switch } from "./ui/switch";
 import {
@@ -7,7 +9,14 @@ import {
 } from "@/components/ui/popover";
 import Image from "next/image";
 
-const AddDatasetInfo = () => {
+type Props = {
+  dataset: {
+    name: string;
+    description: string;
+  };
+};
+
+const AddDatasetInfo = ({ dataset }: Props) => {
   return (
     <section className="flex items-start gap-[60px] py-10 px-7 text-[#17212F]">
       <div className="flex flex-col gap-6 items-start w-[500px] flex-shrink-0">
@@ -15,7 +24,7 @@ const AddDatasetInfo = () => {
           <label className="text-sm font-medium w-[120px]">Dataset Name</label>
           <input
             type="text"
-            placeholder="1000 Sales Record"
+            placeholder={dataset.name || ""}
             className="flex flex-[1_0_0] items-center py-[14px] px-3 rounded border border-[#EAEDF2] bg-white"
           />
         </div>
@@ -24,6 +33,7 @@ const AddDatasetInfo = () => {
           <textarea
             name="description"
             id="description"
+            placeholder={dataset.description}
             className="flex-[1_0_0] h-[120px] py-[14px] px-3 rounded border border-[#EAEDF2] bg-white"
           ></textarea>
         </div>

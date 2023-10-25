@@ -1,5 +1,6 @@
 import Pagination from "@/components/Pagination";
 import Data from "@/components/data/Data";
+import { formatLastLoad, formatRows, formatSize } from "@/lib/formatDatasets";
 import getRecords from "@/lib/getRecords";
 import { authOptions } from "@/utils/authOptions";
 import { getServerSession } from "next-auth";
@@ -21,7 +22,6 @@ const Page = async ({
   searchParams?: { [key: string]: any };
 }) => {
   const session: any = await getServerSession(authOptions);
-  console.log(searchParams);
   const pageNo = parseInt(searchParams?.page || "1");
   const id = searchParams?.id || "";
 
@@ -30,6 +30,18 @@ const Page = async ({
     id,
     pageNo
   );
+
+  const userId = session?.user?._id || session?.user?.id;
+  const datasetId = searchParams?.id;
+
+  const res = await fetch(
+    `http://localhost:3000/api/dataset/${userId}/${datasetId}`
+  );
+  if (!res.ok) {
+    console.log("error");
+  }
+  const dataset = await res.json();
+
   const { records, totalRecords, currentPage, totalPages } = await recordsData;
 
   const row = {
@@ -53,28 +65,30 @@ const Page = async ({
       <div className="flex px-7 py-5  flex-col justify-center items-start gap-[10px] border-b border-[#EAEDF2] bg-[#F6F8FA]">
         <div className="flex gap-2">
           <Image src={row.image} alt="file image" width={26} height={26} />
-          <h1>{row.name}</h1>
+          <h1>{dataset.name}</h1>
         </div>
         <div className="flex items-start gap-[10px] text-[#ADB3BB]">
-          <p>{row.size}</p>
+          <p>{formatSize(dataset.size)}</p>
           <p>|</p>
-          <p>{row.rows}</p>
+          <p>{formatRows(dataset.rows)}</p>
           <p>|</p>
-          <p>{row.columns}</p>
+          <p>{dataset.columns}</p>
           <p>|</p>
-          <p>{`Created by ${row.createdBy} ${row.createdAt}`}</p>
+          <p>{`Created by ${session?.user?.fullName} ${dataset.createdAt}`}</p>
           <p>|</p>
-          <p>{`Modified ${row.createdAt}`}</p>
+          <p>{`Modified ${dataset.updatedAt}`}</p>
           <p>|</p>
-          <p>{`Last completed data load ${row.lastLoad}`}</p>
+          <p>{`Last completed data load ${formatLastLoad(
+            dataset.lastLoad
+          )}`}</p>
         </div>
       </div>
-      <Data records={records} />
+      <Data headers={dataset.headers} records={records} />
       <Pagination
         name={params.name}
         id={id}
         length={records.length}
-        totalRecords={totalRecords}
+        totalRecords={dataset.rows}
         currentPage={currentPage}
         totalPages={totalPages}
       />

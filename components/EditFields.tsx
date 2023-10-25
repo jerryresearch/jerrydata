@@ -128,12 +128,12 @@ const EditFields = () => {
               >
                 <td className="p-5 font-medium">{row.number}</td>
                 <td className="flex items-center gap-[11px] p-5">
-                  <Image
+                  {/* <Image
                     src={row.image}
                     width={20}
                     height={20}
                     alt={row.name}
-                  />
+                  /> */}
                   {row.name}
                 </td>
                 {Object.keys(fields).map((field, ind) => (

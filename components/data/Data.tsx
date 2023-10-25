@@ -2,9 +2,10 @@ import React from "react";
 
 type Props = {
   records: any[];
+  headers: string[];
 };
 
-const Data = ({ records }: Props) => {
+const Data = ({ records, headers }: Props) => {
   return (
     <section className="flex px-7 py-5 items-center gap-[10px] bg-[#F6F8FA]">
       <section className="w-full overflow-x-auto p-5 rounded border border-[#EAEDF2] bg-white">
