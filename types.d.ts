@@ -7,6 +7,7 @@ type Reports = {
 };
 
 type Dataset = {
+  _id: string;
   name: string;
   datatype: string;
   size: string;

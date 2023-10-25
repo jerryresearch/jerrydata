@@ -24,6 +24,11 @@ const DatasetSchema = new mongoose.Schema({
   columns: {
     type: Number,
   },
+  headers: [
+    {
+      type: String,
+    },
+  ],
   lastLoad: {
     type: String,
     default: new Date(),
