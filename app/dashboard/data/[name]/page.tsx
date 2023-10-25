@@ -1,6 +1,8 @@
 import Pagination from "@/components/Pagination";
 import Data from "@/components/data/Data";
 import getRecords from "@/lib/getRecords";
+import { authOptions } from "@/utils/authOptions";
+import { getServerSession } from "next-auth";
 import Image from "next/image";
 import React from "react";
 
@@ -18,9 +20,16 @@ const Page = async ({
   params: { name: string };
   searchParams?: { [key: string]: any };
 }) => {
+  const session: any = await getServerSession(authOptions);
+  console.log(searchParams);
   const pageNo = parseInt(searchParams?.page || "1");
+  const id = searchParams?.id || "";
 
-  const recordsData: Promise<Result> = getRecords(pageNo);
+  const recordsData: Promise<Result> = getRecords(
+    session?.user?._id || session?.user?.id,
+    id,
+    pageNo
+  );
   const { records, totalRecords, currentPage, totalPages } = await recordsData;
 
   const row = {
@@ -63,6 +72,7 @@ const Page = async ({
       <Data records={records} />
       <Pagination
         name={params.name}
+        id={id}
         length={records.length}
         totalRecords={totalRecords}
         currentPage={currentPage}

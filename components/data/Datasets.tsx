@@ -45,7 +45,9 @@ const Datasets = ({ datasets }: Props) => {
                 />
               </td>
               <td className="p-5 text-blue-500">
-                <Link href={`data/${row.name}`}>{row.name}</Link>
+                <Link href={`data/${row.name}?id=${row._id}&page=1`}>
+                  {row.name}
+                </Link>
               </td>
               <td className="p-5">{row.datatype}</td>
               <td className="p-5">{formatSize(row.size)}</td>

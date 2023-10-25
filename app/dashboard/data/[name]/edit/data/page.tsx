@@ -1,6 +1,5 @@
 import Pagination from "@/components/Pagination";
 import Data from "@/components/data/Data";
-import Image from "next/image";
 import React from "react";
 
 const page = () => {
@@ -64,7 +63,7 @@ const page = () => {
   return (
     <section>
       <Data records={rows} />
-      <Pagination />
+      {/* <Pagination /> */}
     </section>
   );
 };

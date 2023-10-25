@@ -4,6 +4,7 @@ import React from "react";
 
 type Props = {
   name: string;
+  id: string;
   length: number;
   totalRecords: number;
   currentPage: number;
@@ -12,6 +13,7 @@ type Props = {
 
 const Pagination = ({
   name,
+  id,
   length,
   totalRecords,
   currentPage,
@@ -27,7 +29,7 @@ const Pagination = ({
       <div className="p-[10px] flex justify-center items-center gap-[5px] rounded border border-[#EAEDF2] bg-white">
         {currentPage != 1 && (
           <Link
-            href={`${name}/?page=${currentPage - 1}`}
+            href={`${name}/?id=${id}&page=${currentPage - 1}`}
             className="py-[6px] px-3 cursor-pointer"
           >
             <Image
@@ -39,20 +41,20 @@ const Pagination = ({
           </Link>
         )}
         <Link
-          href={`${name}/?page=${currentPage}`}
+          href={`${name}/?id=${id}&page=${currentPage}`}
           className="py-[6px] px-3 bg-[#DEE8FA] cursor-pointer"
         >
           {currentPage}
         </Link>
         <Link
-          href={`${name}/?page=${currentPage + 1}`}
+          href={`${name}/?id=${id}&page=${currentPage + 1}`}
           className="py-[6px] px-3 cursor-pointer"
         >
           {currentPage + 1}
         </Link>
         {currentPage != totalPages && (
           <Link
-            href={`${name}/?page=${currentPage + 1}`}
+            href={`${name}/?id=${id}&page=${currentPage + 1}`}
             className="py-[6px] px-3 cursor-pointer"
           >
             <Image

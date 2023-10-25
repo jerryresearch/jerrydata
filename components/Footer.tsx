@@ -2,19 +2,12 @@ import Link from "next/link";
 
 type Props = {
   step: number;
-  onNext: () => void;
-  onBack: () => void;
+  nextHref: string;
+  backHref: string;
+  nextDisabled: boolean;
 };
 
-const links = [
-  { next: "upload-file", back: "/dashboard/data" },
-  { next: "select-table", back: "connection-type" },
-  { next: "edit-fields", back: "upload-file" },
-  { next: "add-dataset-info", back: "select-table" },
-  { next: "/dashboard/data", back: "edit-fields" },
-];
-
-const Footer = ({ step, onNext, onBack }: Props) => {
+const Footer = ({ step, nextHref, backHref, nextDisabled }: Props) => {
   return (
     <div className="flex px-7 flex-col items-start gap-6 mb-[54px]">
       <div className="flex p-3 justify-between items-center self-stretch rounded border border-[#EAEDF2] bg-white">
@@ -26,18 +19,15 @@ const Footer = ({ step, onNext, onBack }: Props) => {
           </Link>
           <div className="flex items-center gap-3">
             {step > 1 && (
-              <Link
-                href={links[step - 1].back}
-                onClick={onBack}
-                className="px-4 py-2 rounded bg-[#DEE8FA]"
-              >
+              <Link href={backHref} className="px-4 py-2 rounded bg-[#DEE8FA]">
                 Back
               </Link>
             )}
             <Link
-              href={links[step - 1].next}
-              onClick={onNext}
-              className="px-4 py-2 rounded bg-primary text-white"
+              href={nextHref}
+              className={`px-4 py-2 rounded bg-primary text-white ${
+                nextDisabled && "opacity-50 pointer-events-none"
+              }`}
             >
               Next
             </Link>
