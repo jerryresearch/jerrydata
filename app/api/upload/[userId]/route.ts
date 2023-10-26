@@ -84,14 +84,20 @@ export const POST = async (req: Request, { params: { userId } }: Props) => {
     bufferStream.push(buffer);
     bufferStream.push(null);
 
-    let headers: string[] = [];
+    let headers: any[] = [];
     let rows: number = 0;
 
     await new Promise((resolve, reject) => {
       bufferStream
         .pipe(csv())
         .on("headers", (fileHeaders) => {
-          headers = fileHeaders;
+          headers = fileHeaders.map((header: string) => {
+            return {
+              name: header,
+              datatype: "String",
+              isDisabled: false,
+            };
+          });
           console.log(headers);
         })
         .on("data", () => {

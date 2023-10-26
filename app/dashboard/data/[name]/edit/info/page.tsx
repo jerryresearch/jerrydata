@@ -15,7 +15,7 @@ const Page = () => {
 
   return (
     <section>
-      <AddDatasetInfo />
+      {/* <AddDatasetInfo /> */}
       <div className="px-7">
         <button
           onClick={() => setOpen(true)}

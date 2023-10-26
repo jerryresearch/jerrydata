@@ -62,7 +62,7 @@ const page = () => {
   ];
   return (
     <section>
-      <Data records={rows} />
+      <Data records={rows} headers={[]} />
       {/* <Pagination /> */}
     </section>
   );

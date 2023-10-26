@@ -27,7 +27,19 @@ const DatasetSchema = new mongoose.Schema(
     },
     headers: [
       {
-        type: String,
+        name: {
+          type: String,
+          required: true,
+        },
+        datatype: {
+          type: String,
+          enum: ["String", "Date", "Location", "Number"],
+          default: "String",
+        },
+        isDisabled: {
+          type: Boolean,
+          default: false,
+        },
       },
     ],
     lastLoad: {
