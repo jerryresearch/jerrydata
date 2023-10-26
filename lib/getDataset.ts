@@ -6,6 +6,5 @@ export default async function getDataset(userId: string, datasetId: string) {
   if (!res.ok) {
     console.log("error");
   }
-  const dataset = await res.json();
-  return dataset;
+  return res.json();
 }

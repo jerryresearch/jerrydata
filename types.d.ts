@@ -12,6 +12,13 @@ type Dataset = {
   datatype: string;
   size: string;
   rows: number;
+  headers: [
+    {
+      name: string;
+      datatype: string;
+      isDisabled: boolean;
+    }
+  ];
   columns: number;
   lastLoad: string;
 };

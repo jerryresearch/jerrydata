@@ -2,39 +2,81 @@
 
 import Image from "next/image";
 import React, { useState, ChangeEvent } from "react";
+import { useSession } from "next-auth/react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { usePathname, useRouter } from "next/navigation";
 
-const UploadFile = () => {
+type Props = {
+  id: string;
+  type: string;
+  dataset: Dataset;
+  handleDelete: () => void;
+};
+
+const UploadFile = ({ id, type, dataset, handleDelete }: Props) => {
+  const { data: session } = useSession();
+  const pathName = usePathname();
+  const router = useRouter();
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const [uploadMessage, setUploadMessage] = useState({
     message: "",
     isError: false,
   });
-  const [uploadProgress, setUploadProgress] = useState(0);
 
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
-    console.log("HEllo");
     const fileInput = event.target;
     const file = fileInput.files?.[0];
-
-    console.log(file);
-
-    if (file) {
-      setUploadMessage({ message: "File upload successful!", isError: false });
-    } else {
-      setUploadMessage({ message: "Error in file", isError: true });
+    // @ts-ignore
+    const userId = session?.user?._id || session?.user?.id;
+    setIsLoading(true);
+    try {
+      if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("datatype", type);
+        const res = await fetch(`http://localhost:3000/api/upload/${userId}`, {
+          method: "POST",
+          body: formData,
+        });
+        const response = await res.json();
+        if (!res.ok) {
+          alert(response.message);
+          console.log("error");
+          setIsLoading(false);
+          return;
+        }
+        console.log("response", response);
+        setUploadMessage({
+          message: "File upload successful!",
+          isError: false,
+        });
+        router.replace(`${pathName}?type=${type}&id=${response._id}`);
+      } else {
+        setUploadMessage({ message: "Error in file", isError: true });
+      }
+      setIsLoading(false);
+    } catch (error) {
+      console.log("catch");
+      alert(error);
     }
   };
 
   return (
-    <section className="px-7 py-10 flex gap-[40px] flex-shrink-0">
+    <form className="flex-1 px-7 py-10 flex gap-[40px] flex-shrink-0">
       <div className="flex flex-col w-[384px] gap-6 items-start text-sm font-medium">
         <div className="flex gap-[10px]">
           <div className="flex items-center gap-[10px] text-[#17212F]">
-            <input type="radio" name="new" id="new" className="accent-black" />
+            <input
+              type="radio"
+              name="file-radio"
+              id="new"
+              className="accent-black"
+            />
             <span>Upload a new file</span>
           </div>
           <p className="text-[#ADB3BB] underline">File Guideline</p>
@@ -46,7 +88,7 @@ const UploadFile = () => {
                 uploadMessage.isError ? "border-[#D30A0A]" : "border-[#EAEDF2]"
               } bg-white`}
             >
-              <p className="text-[#ADB3BB]">File name</p>
+              <p className="text-[#ADB3BB]">{`${dataset.name}`}</p>
             </div>
           </div>
           <div>
@@ -59,12 +101,31 @@ const UploadFile = () => {
             />
             <label
               htmlFor="fileInput"
-              className="flex justify-center items-center gap-[10px] rounded px-4 py-2 text-sm bg-primary text-white cursor-pointer"
+              className={`flex justify-center items-center gap-[10px] rounded px-4 py-2 text-sm bg-primary text-white cursor-pointer ${
+                isLoading && "opacity-50 pointer-events-none"
+              }`}
             >
               Browse
             </label>
           </div>
         </div>
+        {dataset._id != "string" && (
+          <div className="flex p-2 bg-gray-300 gap-2">
+            <p>{dataset.name}</p>
+            <Image
+              src="/assets/trash.svg"
+              alt="delete file"
+              width={16}
+              height={16}
+              className="cursor-pointer"
+              onClick={() => {
+                handleDelete();
+                router.replace(`${pathName}?type=${type}`);
+                setUploadMessage({ message: "", isError: false });
+              }}
+            />
+          </div>
+        )}
         <p
           className={`${
             uploadMessage.isError ? "text-[#D30A0A]" : "text-[#1CB87E]"
@@ -74,7 +135,12 @@ const UploadFile = () => {
         </p>
         <div className="flex w-[334px] items-start gap-[10px]">
           <div className="flex items-center gap-[10px] text-[#17212F]">
-            <input type="radio" name="new" id="new" className="accent-black" />
+            <input
+              type="radio"
+              name="file-radio"
+              id="new"
+              className="accent-black"
+            />
             <span className="text-sm">Select a previously uploaded file</span>
           </div>
           <p className="text-[#ADB3BB] underline">Manage File</p>
@@ -108,13 +174,23 @@ const UploadFile = () => {
       <div className="flex flex-col gap-6">
         <div className="flex items-start gap-[10px] text-sm font-medium">
           <div className="flex items-center gap-2 text-[#17212F]">
-            <input type="radio" name="new" id="new" className="accent-black" />
+            <input
+              type="radio"
+              name="radio-option"
+              id="new"
+              className="accent-black"
+            />
             <span>Create new dataset</span>
           </div>
         </div>
         <div className="flex items-start gap-[10px] text-sm font-medium">
           <div className="flex items-center gap-2 text-[#17212F]">
-            <input type="radio" name="new" id="new" className="accent-black" />
+            <input
+              type="radio"
+              name="radio-option"
+              id="new"
+              className="accent-black"
+            />
             <span>Add to an existing dataset</span>
           </div>
         </div>
@@ -178,7 +254,7 @@ const UploadFile = () => {
           <p>Uploaded file has to have same schema as the existing data</p>
         </div>
       </div>
-    </section>
+    </form>
   );
 };
 

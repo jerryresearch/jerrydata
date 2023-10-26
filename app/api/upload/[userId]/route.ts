@@ -98,7 +98,6 @@ export const POST = async (req: Request, { params: { userId } }: Props) => {
               isDisabled: false,
             };
           });
-          console.log(headers);
         })
         .on("data", () => {
           rows += 1;
