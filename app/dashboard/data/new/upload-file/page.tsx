@@ -1,5 +1,3 @@
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
 import UploadFile from "@/components/UploadFile";
 import deleteDataset from "@/lib/datasets/deleteDataset";
 import getDataset from "@/lib/getDataset";
@@ -13,7 +11,6 @@ const Page = async ({
   params: { name: string };
   searchParams?: { [key: string]: any };
 }) => {
-  const currentStep = 2;
   const id = searchParams?.id || "";
   const type = searchParams?.type || "";
 
@@ -39,7 +36,6 @@ const Page = async ({
 
   if (id) {
     const datasetData: Promise<Dataset> = getDataset(userId, id);
-    console.log("Hello");
     dataset = await datasetData;
   }
 
@@ -49,21 +45,12 @@ const Page = async ({
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#F6F8FA]">
-      <Header currentStep={currentStep} />
-      <UploadFile
-        handleDelete={handleDelete}
-        dataset={dataset}
-        id={id}
-        type={type}
-      />
-      <Footer
-        step={currentStep}
-        nextHref={`select-table?id=${id}`}
-        backHref={`connection-type?type=${type}`}
-        nextDisabled={id == ""}
-      />
-    </div>
+    <UploadFile
+      handleDelete={handleDelete}
+      dataset={dataset}
+      id={id}
+      type={type}
+    />
   );
 };
 

@@ -11,6 +11,9 @@ const DatasetSchema = new mongoose.Schema(
     name: {
       type: String,
     },
+    description: {
+      type: String,
+    },
     datatype: {
       type: String,
       enum: ["CSV", "XLS"],

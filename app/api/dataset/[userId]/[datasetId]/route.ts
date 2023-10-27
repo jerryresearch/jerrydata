@@ -3,6 +3,7 @@ import { connectToDB } from "@/utils/mongoose";
 import { NextResponse } from "next/server";
 import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import Dataset from "@/models/Dataset";
+import { TURBO_TRACE_DEFAULT_MEMORY_LIMIT } from "next/dist/shared/lib/constants";
 
 type Props = {
   params: {
@@ -31,6 +32,43 @@ export async function GET(
       );
     }
     return NextResponse.json(dataset, { status: 200 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ message: error }, { status: 500 });
+  }
+}
+
+export async function PUT(
+  req: Request,
+  { params: { userId, datasetId } }: Props
+) {
+  try {
+    await connectToDB();
+    if (!userId || !mongoose.isValidObjectId(userId)) {
+      return NextResponse.json({ message: "Invalid session" }, { status: 403 });
+    }
+    if (!datasetId || !mongoose.isValidObjectId(datasetId)) {
+      return NextResponse.json({ message: "Invalid request" }, { status: 400 });
+    }
+    const dataset = await Dataset.findOne({ _id: datasetId, addedBy: userId });
+    if (!dataset) {
+      return NextResponse.json(
+        { message: "Dataset not found" },
+        { status: 404 }
+      );
+    }
+    const body = await req.json();
+    if (!body) {
+      return NextResponse.json(
+        { message: "Nothing to update" },
+        { status: 400 }
+      );
+    }
+    const updatedDataset = await Dataset.findByIdAndUpdate(datasetId, body, {
+      new: true,
+      runValidators: true,
+    });
+    return NextResponse.json(updatedDataset, { status: 200 });
   } catch (error) {
     console.log(error);
     return NextResponse.json({ message: error }, { status: 500 });

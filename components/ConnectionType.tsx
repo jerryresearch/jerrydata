@@ -1,21 +1,24 @@
+"use client";
+
 import React, { useState } from "react";
 import ImageCard from "./ImageCard";
+import Header from "./Header";
+import Footer from "./Footer";
 
 const data = {
   files: [
-    { name: "csv", image: "/assets/csv-file.svg", selected: false },
-    { name: "xls", image: "/assets/xls-file.svg", selected: false },
+    { name: "CSV", image: "/assets/csv-file.svg" },
+    { name: "XLS", image: "/assets/xls-file.svg" },
   ],
   databases: [
-    { name: "mysql", image: "/assets/mysql.svg", selected: false },
-    { name: "sql-server", image: "/assets/sql-server.svg", selected: false },
+    { name: "mysql", image: "/assets/mysql.svg" },
+    { name: "sql-server", image: "/assets/sql-server.svg" },
     {
       name: "google-analytics",
       image: "/assets/google-analytics.svg",
-      selected: false,
     },
-    { name: "oracle", image: "/assets/oracle.svg", selected: false },
-    { name: "mariadb", image: "/assets/mariadb.svg", selected: false },
+    { name: "oracle", image: "/assets/oracle.svg" },
+    { name: "mariadb", image: "/assets/mariadb.svg" },
   ],
   cloud: [
     {
@@ -23,63 +26,79 @@ const data = {
       image: "/assets/amazon-redshift.svg",
       selected: false,
     },
-    { name: "snowflake", image: "/assets/snowflake.svg", selected: false },
+    { name: "snowflake", image: "/assets/snowflake.svg" },
   ],
 };
 
-const ConnectionType = () => {
-  const [selectedType, setSelectedType] = useState("");
+type Props = {
+  id: string;
+  type: string;
+};
+
+const ConnectionType = ({ id, type }: Props) => {
+  const [selectedType, setSelectedType] = useState(type);
+  const currentStep = 1;
 
   return (
-    <section className="px-7 py-10 flex flex-col items-start gap-6">
-      <div className="flex flex-col items-start gap-6">
-        <p className="text-[17px] font-medium leading-7">Files</p>
-        <div className="flex gap-6 items-start">
-          {data.files.map((file, index) => (
-            <div
-              key={index}
-              onClick={() => {
-                setSelectedType(file.name);
-              }}
-            >
-              <ImageCard
-                image={file.image}
-                selected={selectedType === file.name}
-                disabled={false}
-              />
-            </div>
-          ))}
+    <div className="flex flex-col min-h-screen bg-[#F6F8FA]">
+      <Header currentStep={currentStep} />
+      <section className="px-7 py-10 flex-1 flex flex-col items-start gap-6">
+        <div className="flex flex-col items-start gap-6">
+          <p className="text-[17px] font-medium leading-7">Files</p>
+          <div className="flex gap-6 items-start">
+            {data.files.map((file, index) => (
+              <div
+                key={index}
+                onClick={() => {
+                  setSelectedType(file.name);
+                }}
+              >
+                <ImageCard
+                  image={file.image}
+                  selected={selectedType === file.name}
+                  disabled={false}
+                />
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-      <div className="flex flex-col items-start gap-6">
-        <p className="text-[17px] font-medium leading-7">Databases</p>
-        <div className="flex gap-6 items-start">
-          {data.databases.map((database, index) => (
-            <div key={index}>
-              <ImageCard
-                image={database.image}
-                selected={selectedType === database.name}
-                disabled={true}
-              />
-            </div>
-          ))}
+        <div className="flex flex-col items-start gap-6">
+          <p className="text-[17px] font-medium leading-7">Databases</p>
+          <div className="flex gap-6 items-start">
+            {data.databases.map((database, index) => (
+              <div key={index}>
+                <ImageCard
+                  image={database.image}
+                  selected={selectedType === database.name}
+                  disabled={true}
+                />
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-      <div className="flex flex-col items-start gap-6">
-        <p className="text-[17px] font-medium leading-7">Cloud Storage</p>
-        <div className="flex gap-6 items-start">
-          {data.cloud.map((storage, index) => (
-            <div key={index}>
-              <ImageCard
-                image={storage.image}
-                selected={selectedType === storage.name}
-                disabled={true}
-              />
-            </div>
-          ))}
+        <div className="flex flex-col items-start gap-6">
+          <p className="text-[17px] font-medium leading-7">Cloud Storage</p>
+          <div className="flex gap-6 items-start">
+            {data.cloud.map((storage, index) => (
+              <div key={index}>
+                <ImageCard
+                  image={storage.image}
+                  selected={selectedType === storage.name}
+                  disabled={true}
+                />
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+      <Footer
+        step={currentStep}
+        nextDisabled={selectedType == ""}
+        nextHref={`upload-file/?type=${selectedType}`}
+        backHref=""
+        id={id}
+      />
+    </div>
   );
 };
 
