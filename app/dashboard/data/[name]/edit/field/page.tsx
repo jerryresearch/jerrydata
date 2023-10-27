@@ -2,7 +2,7 @@ import EditFields from "@/components/EditFields";
 import React from "react";
 
 const page = () => {
-  return <EditFields />;
+  // return <EditFields />;
 };
 
 export default page;

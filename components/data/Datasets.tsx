@@ -6,9 +6,10 @@ import Link from "next/link";
 
 type Props = {
   datasets: Dataset[];
+  userId: string;
 };
 
-const Datasets = ({ datasets }: Props) => {
+const Datasets = ({ datasets, userId }: Props) => {
   return (
     <div className="p-5 w-full rounded border border-[#EAEDF2] bg-white">
       <table className="w-full table-auto min-w-max text-left bg-white rounded text-sm text-[#17212F]">
@@ -55,7 +56,7 @@ const Datasets = ({ datasets }: Props) => {
               <td className="p-5">{row.columns}</td>
               <td className="p-5">{formatLastLoad(row.lastLoad)}</td>
               <td className="p-5">
-                <Actions name={row.name} />
+                <Actions userId={userId} id={row._id} name={row.name} />
               </td>
             </tr>
           ))}

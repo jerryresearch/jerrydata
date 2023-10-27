@@ -12,9 +12,11 @@ import Link from "next/link";
 
 type Props = {
   name: string;
+  id: string;
+  userId: string;
 };
 
-const Actions = ({ name }: Props) => {
+const Actions = ({ name, id, userId }: Props) => {
   const [open, setOpen] = useState(false);
   const [popUpOpen, setPopUpOpen] = useState(false);
 
@@ -45,12 +47,17 @@ const Actions = ({ name }: Props) => {
             setPopUpOpen(false);
             setOpen(true);
           }}
-          className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
+          className="px-3 py-[12px] text-[#D30A0A] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
         >
           Delete
         </span>
       </PopoverContent>
-      <DeleteModal open={open} onClose={handleCloseModal} />
+      <DeleteModal
+        userId={userId}
+        id={id}
+        open={open}
+        onClose={handleCloseModal}
+      />
     </Popover>
   );
 };

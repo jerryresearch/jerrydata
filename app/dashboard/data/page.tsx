@@ -9,32 +9,12 @@ import getDatasets from "@/lib/getDatasets";
 
 const Page = async () => {
   const session: any = await getServerSession(authOptions);
+  const userId = session?.user?._id || session?.user?.id;
 
-  const datasetsData: Promise<Dataset[]> = getDatasets(
-    session?.user?._id || session?.user?.id
-  );
+  const datasetsData: Promise<Dataset[]> = getDatasets(userId);
 
   const datasets = await datasetsData;
-  const rows = [
-    {
-      image: "/assets/csv.svg",
-      name: "Sample - Retail Orders",
-      datatype: "CSV",
-      size: "12 mb",
-      rows: "11.7 k",
-      columns: 21,
-      lastLoad: "8 hours ago",
-    },
-    {
-      image: "/assets/xls.svg",
-      name: "Sample - Retail Orders",
-      datatype: "CSV",
-      size: "12 mb",
-      rows: "11.7 k",
-      columns: 21,
-      lastLoad: "8 hours ago",
-    },
-  ];
+
   return (
     <section className="h-screen bg-[#F6F8FA] text-sm">
       <div className="px-7 py-5 border-b border-[#EAEDF2] flex justify-between items-center">
@@ -79,7 +59,7 @@ const Page = async () => {
         </div>
       </div>
       <section className="w-full px-7 py-4">
-        <Datasets datasets={datasets} />
+        <Datasets datasets={datasets} userId={userId} />
       </section>
       <div className="flex justify-between items-center px-7 py-2">
         <div className="text-[#ADB3BB]">Showing 1-2 of 2</div>
