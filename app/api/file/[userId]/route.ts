@@ -66,7 +66,7 @@ export const GET = async (request: Request, { params: { userId } }: Props) => {
 
     await new Promise((resolve, reject) => {
       fileData
-        .pipe(csv({ skipLines: start - 1 }))
+        .pipe(csv())
         .on("data", (row: any) => {
           records.push(row);
         })

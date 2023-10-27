@@ -7,7 +7,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import Image from "next/image";
-import DeleteModal from "./DeleteModal";
+import DeleteModal from "../DeleteModal";
 import Link from "next/link";
 
 type Props = {
@@ -30,12 +30,13 @@ const Actions = ({ name, id, userId }: Props) => {
         <Image src="/assets/ellipsis.svg" alt="more" width={24} height={20} />
       </PopoverTrigger>
       <PopoverContent className="flex flex-col p-2 rounded bg-white w-[122px] text-sm shadow-custom">
-        <span
+        <Link
+          href={`data/${name}?id=${id}&page=1`}
           onClick={() => setPopUpOpen(false)}
           className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
         >
           Explore
-        </span>
+        </Link>
         <Link
           href={`data/${name}/edit/info`}
           className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"

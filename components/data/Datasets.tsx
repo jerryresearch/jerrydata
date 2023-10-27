@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React from "react";
-import Actions from "../Actions";
+import Actions from "./Actions";
 import { formatLastLoad, formatRows, formatSize } from "@/lib/formatDatasets";
 import Link from "next/link";
 

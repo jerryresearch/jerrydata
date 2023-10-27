@@ -22,4 +22,6 @@ type Dataset = {
   ];
   columns: number;
   lastLoad: string;
+  createdAt: string;
+  updatedAt: string;
 };

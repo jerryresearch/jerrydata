@@ -2,7 +2,13 @@ import React from "react";
 
 type Props = {
   records: any[];
-  headers: string[];
+  headers: [
+    {
+      name: string;
+      datatype: string;
+      isDisabled: boolean;
+    }
+  ];
 };
 
 const Data = ({ records, headers }: Props) => {
@@ -12,12 +18,12 @@ const Data = ({ records, headers }: Props) => {
         <table className="w-full table-auto min-w-max text-left">
           <thead>
             <tr className="bg-[#F6F8FA]">
-              {Object.keys(records[0]).map((head: string, index: number) => (
+              {headers.map((head, index: number) => (
                 <th
                   key={index}
                   className="text-[#17212F] rounded bg-[F8FAFC] font-medium p-5 gap-2"
                 >
-                  {head}
+                  {head.name}
                 </th>
               ))}
             </tr>

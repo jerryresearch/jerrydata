@@ -1,6 +1,7 @@
 import Pagination from "@/components/Pagination";
 import Data from "@/components/data/Data";
 import { formatLastLoad, formatRows, formatSize } from "@/lib/formatDatasets";
+import getDataset from "@/lib/getDataset";
 import getRecords from "@/lib/getRecords";
 import { authOptions } from "@/utils/authOptions";
 import { getServerSession } from "next-auth";
@@ -22,26 +23,15 @@ const Page = async ({
   searchParams?: { [key: string]: any };
 }) => {
   const session: any = await getServerSession(authOptions);
+  const userId = session?.user?._id || session?.user?.id;
+
   const pageNo = parseInt(searchParams?.page || "1");
   const id = searchParams?.id || "";
 
-  const recordsData: Promise<Result> = getRecords(
-    session?.user?._id || session?.user?.id,
-    id,
-    pageNo
-  );
+  const recordsData: Promise<Result> = getRecords(userId, id, pageNo);
+  const datasetData: Promise<Dataset> = getDataset(userId, id);
 
-  const userId = session?.user?._id || session?.user?.id;
-  const datasetId = searchParams?.id;
-
-  const res = await fetch(
-    `http://localhost:3000/api/dataset/${userId}/${datasetId}`
-  );
-  if (!res.ok) {
-    console.log("error");
-  }
-  const dataset = await res.json();
-
+  const dataset = await datasetData;
   const { records, totalRecords, currentPage, totalPages } = await recordsData;
 
   const row = {
@@ -74,9 +64,11 @@ const Page = async ({
           <p>|</p>
           <p>{dataset.columns}</p>
           <p>|</p>
-          <p>{`Created by ${session?.user?.fullName} ${dataset.createdAt}`}</p>
+          <p>{`Created by ${session?.user?.fullName} ${formatLastLoad(
+            dataset.createdAt
+          )}`}</p>
           <p>|</p>
-          <p>{`Modified ${dataset.updatedAt}`}</p>
+          <p>{`Modified ${formatLastLoad(dataset.updatedAt)}`}</p>
           <p>|</p>
           <p>{`Last completed data load ${formatLastLoad(
             dataset.lastLoad

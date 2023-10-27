@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Actions from "@/components/Actions";
 import RecentChat from "@/components/chat/RecentChat";
 import ReportCard from "@/components/ReportCard";
 import { getServerSession } from "next-auth";
@@ -10,35 +9,13 @@ import getDatasets from "@/lib/getDatasets";
 
 const Page = async () => {
   const session: any = await getServerSession(authOptions);
+  const userId = session?.user?._id || session?.user?.id;
 
-  const reportsData: Promise<Reports[]> = getReports(
-    session?.user?._id || session?.user?.id
-  );
-
-  const datasetsData: Promise<Dataset[]> = getDatasets(
-    session?.user?._id || session?.user?.id
-  );
+  const reportsData: Promise<Reports[]> = getReports(userId);
+  const datasetsData: Promise<Dataset[]> = getDatasets(userId);
 
   const reports = await reportsData;
   const datasets = await datasetsData;
-
-  // const reports = [
-  //   {
-  //     title: "Spellmint Analytics",
-  //     chartsCount: 0,
-  //     lastModified: "0 days",
-  //     charts: [],
-  //   },
-  //   {
-  //     title: "Hurrae Analytics",
-  //     chartsCount: 6,
-  //     lastModified: "2 days",
-  //     charts: [
-  //       "Total No. of Website Visitors",
-  //       "No. of Signups to Hurrae Infinity",
-  //     ],
-  //   },
-  // ];
 
   return (
     <section className="bg-[#F6F8FA] min-h-screen">
@@ -63,7 +40,7 @@ const Page = async () => {
       </div>
       <div className="flex flex-col p-6 justify-center items-start gap-6">
         <h1 className="text-base font-medium">Recent Datasets</h1>
-        <Datasets datasets={datasets} />
+        <Datasets userId={userId} datasets={datasets} />
       </div>
       <div className="flex flex-col p-6 justify-center items-start gap-6">
         <h1 className="text-base font-medium">Recent Chats</h1>
