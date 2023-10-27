@@ -1,71 +1,47 @@
-import Pagination from "@/components/Pagination";
-import Data from "@/components/data/Data";
+import EditDatasetData from "@/components/data/edit/EditDatasetData";
+import getDataset from "@/lib/getDataset";
+import getRecords from "@/lib/getRecords";
+import { authOptions } from "@/utils/authOptions";
+import { getServerSession } from "next-auth";
 import React from "react";
 
-const page = () => {
-  const rows = [
-    {
-      orderId: "CA-2016-152156",
-      orderDate: "2020-11-08",
-      shipDate: "2020-11-09",
-      shipMode: "Second Class",
-      customerId: "CG-12520",
-      customerName: "Claire Gute",
-      segment: "Claire Gute",
-      city: "Henderson",
-      state: "Kentucky",
-    },
-    {
-      orderId: "CA-2016-152156",
-      orderDate: "2020-11-08",
-      shipDate: "2020-11-09",
-      shipMode: "Second Class",
-      customerId: "CG-12520",
-      customerName: "Claire Gute",
-      segment: "Claire Gute",
-      city: "Henderson",
-      state: "Kentucky",
-    },
-    {
-      orderId: "CA-2016-152156",
-      orderDate: "2020-11-08",
-      shipDate: "2020-11-09",
-      shipMode: "Second Class",
-      customerId: "CG-12520",
-      customerName: "Claire Gute",
-      segment: "Claire Gute",
-      city: "Henderson",
-      state: "Kentucky",
-    },
-    {
-      orderId: "CA-2016-152156",
-      orderDate: "2020-11-08",
-      shipDate: "2020-11-09",
-      shipMode: "Second Class",
-      customerId: "CG-12520",
-      customerName: "Claire Gute",
-      segment: "Claire Gute",
-      city: "Henderson",
-      state: "Kentucky",
-    },
-    {
-      orderId: "CA-2016-152156",
-      orderDate: "2020-11-08",
-      shipDate: "2020-11-09",
-      shipMode: "Second Class",
-      customerId: "CG-12520",
-      customerName: "Claire Gute",
-      segment: "Claire Gute",
-      city: "Henderson",
-      state: "Kentucky",
-    },
-  ];
+type Result = {
+  records: any[];
+  totalRecords: number;
+  currentPage: number;
+  totalPages: number;
+};
+
+const Page = async ({
+  params,
+  searchParams,
+}: {
+  params: { name: string };
+  searchParams?: { [key: string]: any };
+}) => {
+  const session: any = await getServerSession(authOptions);
+  const userId = session?.user?._id || session?.user?.id;
+
+  const pageNo = parseInt(searchParams?.page || "1");
+  const id = searchParams?.id || "";
+
+  const recordsData: Promise<Result> = getRecords(userId, id, pageNo);
+  const datasetData: Promise<Dataset> = getDataset(userId, id);
+
+  const dataset = await datasetData;
+  const { records, totalRecords, currentPage, totalPages } = await recordsData;
+
   return (
-    <section>
-      <Data records={rows} headers={[]} />
-      {/* <Pagination /> */}
-    </section>
+    <EditDatasetData
+      dataset={dataset}
+      userId={userId}
+      records={records}
+      name={params.name}
+      totalPages={totalPages}
+      currentPage={currentPage}
+      userName={session?.user?.fullName}
+    />
   );
 };
 
-export default page;
+export default Page;

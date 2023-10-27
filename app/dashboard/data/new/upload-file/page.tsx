@@ -32,6 +32,8 @@ const Page = async ({
     ],
     columns: 0,
     lastLoad: "string",
+    createdAt: "string",
+    updatedAt: "string",
   };
 
   if (id) {

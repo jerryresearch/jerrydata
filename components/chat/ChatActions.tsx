@@ -52,7 +52,7 @@ const ChatActions = () => {
           Delete chat
         </span>
       </PopoverContent>
-      <DeleteModal open={openDeleteModal} onClose={handleCloseDeleteModal} />
+      {/* <DeleteModal open={openDeleteModal} onClose={handleCloseDeleteModal} /> */}
       <ShareChatModal open={openShareModal} onClose={handleCloseShareModal} />
     </Popover>
   );

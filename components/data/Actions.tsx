@@ -38,7 +38,7 @@ const Actions = ({ name, id, userId }: Props) => {
           Explore
         </Link>
         <Link
-          href={`data/${name}/edit/info`}
+          href={`data/${name}/edit/info?id=${id}`}
           className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
         >
           Edit

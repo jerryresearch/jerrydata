@@ -57,7 +57,7 @@ const Actions = () => {
           Delete
         </span>
       </PopoverContent>
-      <DeleteModal open={open} onClose={handleCloseModal} />
+      {/* <DeleteModal open={open} onClose={handleCloseModal} /> */}
     </Popover>
   );
 };
