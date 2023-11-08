@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import ImageCard from "./ImageCard";
 import Header from "./Header";
 import Footer from "./Footer";
+import { useRouter } from "next/navigation";
 
 const data = {
   files: [
@@ -38,6 +39,14 @@ type Props = {
 const ConnectionType = ({ id, type }: Props) => {
   const [selectedType, setSelectedType] = useState(type);
   const currentStep = 1;
+
+  const router = useRouter();
+
+  const handleNext = () => {
+    router.push(`upload-file/?type=${selectedType}`);
+  };
+
+  const handleBack = () => {};
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F6F8FA]">
@@ -94,9 +103,8 @@ const ConnectionType = ({ id, type }: Props) => {
       <Footer
         step={currentStep}
         nextDisabled={selectedType == ""}
-        nextHref={`upload-file/?type=${selectedType}`}
-        backHref=""
-        id={id}
+        handleBack={handleBack}
+        handleNext={handleNext}
       />
     </div>
   );

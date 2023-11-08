@@ -31,7 +31,7 @@ const Actions = ({ name, id, userId }: Props) => {
       </PopoverTrigger>
       <PopoverContent className="flex flex-col p-2 rounded bg-white w-[122px] text-sm shadow-custom">
         <Link
-          href={`data/${name}?id=${id}&page=1`}
+          href={`data/${name}/edit/data?id=${id}`}
           onClick={() => setPopUpOpen(false)}
           className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
         >

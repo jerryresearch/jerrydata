@@ -4,6 +4,8 @@ import Image from "next/image";
 import React, { useState } from "react";
 import Footer from "./Footer";
 import Header from "./Header";
+import { useRouter } from "next/navigation";
+import updateDataset from "@/lib/datasets/updateDataset";
 
 type Props = {
   name: string;
@@ -22,9 +24,14 @@ type Props = {
 const TableSelection = ({ userId, id, datatype, name, headers }: Props) => {
   const currentStep = 3;
 
+  const router = useRouter();
+
   const [expanded, setExpanded] = useState(false);
   const [myHeaders, setMyHeaders] = useState(headers);
+  const [isUpdated, setIsUpdated] = useState(false);
+
   const handleHeaderChange = (name: string) => {
+    setIsUpdated(true);
     const h = myHeaders.map((header) => {
       if (header.name == name) {
         header.isDisabled = !header.isDisabled;
@@ -33,6 +40,21 @@ const TableSelection = ({ userId, id, datatype, name, headers }: Props) => {
     });
     // @ts-ignore
     setMyHeaders(h);
+  };
+
+  const handleBack = () => {
+    router.push(`upload-file?id=${id}&type=${datatype}`);
+  };
+
+  const handleNext = async () => {
+    if (isUpdated) {
+      const res = await updateDataset(userId, id, { headers: myHeaders });
+      if (!res?.ok) {
+        alert("error updating");
+        return;
+      }
+    }
+    router.push(`edit-fields?id=${id}`);
   };
 
   return (
@@ -127,13 +149,10 @@ const TableSelection = ({ userId, id, datatype, name, headers }: Props) => {
         </section>
       </div>
       <Footer
-        updates={{ headers: myHeaders }}
         step={currentStep}
-        nextHref={`edit-fields?id=${id}`}
-        backHref={`upload-file?id=${id}&type=${datatype}`}
         nextDisabled={false}
-        userId={userId}
-        id={id}
+        handleBack={handleBack}
+        handleNext={handleNext}
       />
     </div>
   );

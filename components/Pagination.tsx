@@ -3,21 +3,19 @@ import Link from "next/link";
 import React from "react";
 
 type Props = {
-  name: string;
-  id: string;
   length: number;
   totalRecords: number;
   currentPage: number;
   totalPages: number;
+  href: string;
 };
 
 const Pagination = ({
-  name,
-  id,
   length,
   totalRecords,
   currentPage,
   totalPages,
+  href,
 }: Props) => {
   const start = (currentPage - 1) * 100 + 1;
   const end = start - 1 + length;
@@ -29,7 +27,7 @@ const Pagination = ({
       <div className="p-[10px] flex justify-center items-center gap-[5px] rounded border border-[#EAEDF2] bg-white">
         {currentPage != 1 && (
           <Link
-            href={`${name}/?id=${id}&page=${currentPage - 1}`}
+            href={`${href}&page=${currentPage - 1}`}
             className="py-[6px] px-3 cursor-pointer"
           >
             <Image
@@ -41,20 +39,20 @@ const Pagination = ({
           </Link>
         )}
         <Link
-          href={`${name}/?id=${id}&page=${currentPage}`}
+          href={`${href}&page=${currentPage}`}
           className="py-[6px] px-3 bg-[#DEE8FA] cursor-pointer"
         >
           {currentPage}
         </Link>
         <Link
-          href={`${name}/?id=${id}&page=${currentPage + 1}`}
+          href={`${href}&page=${currentPage + 1}`}
           className="py-[6px] px-3 cursor-pointer"
         >
           {currentPage + 1}
         </Link>
         {currentPage != totalPages && (
           <Link
-            href={`${name}/?id=${id}&page=${currentPage + 1}`}
+            href={`${href}&page=${currentPage + 1}`}
             className="py-[6px] px-3 cursor-pointer"
           >
             <Image

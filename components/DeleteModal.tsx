@@ -19,8 +19,9 @@ const DeleteModal = ({ open, onClose, id, userId }: Props) => {
     await deleteDataset(userId, id);
     onClose();
     setIsLoading(false);
-    router.replace("/dashboard/data");
-    router.refresh();
+    router.push("/dashboard/data");
+    // router.refresh();
+    window.location.reload();
   };
 
   return (

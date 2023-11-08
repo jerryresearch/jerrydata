@@ -62,8 +62,7 @@ const EditDatasetData = ({
       <div className="flex-1">
         <Data headers={dataset.headers} records={records} />
         <Pagination
-          name={name}
-          id={dataset._id}
+          href={`/dashboard/data/${name}/edit/data?id=${dataset._id}`}
           length={records.length}
           totalRecords={dataset.rows}
           currentPage={currentPage}

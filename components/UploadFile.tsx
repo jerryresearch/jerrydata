@@ -36,6 +36,18 @@ const UploadFile = ({ id, type, dataset, handleDelete }: Props) => {
   });
   const [progessValue, setProgressValue] = useState(0);
 
+  const handleNext = () => {
+    router.push(`select-table?id=${id}`);
+  };
+
+  const handleBack = () => {
+    if (id) {
+      router.push(`connection-type?type=${type}&id=${id}`);
+    } else {
+      router.push(`connection-type?type=${type}`);
+    }
+  };
+
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const fileInput = event.target;
     const file = fileInput.files?.[0];
@@ -301,10 +313,9 @@ const UploadFile = ({ id, type, dataset, handleDelete }: Props) => {
       </form>
       <Footer
         step={currentStep}
-        nextHref={`select-table?id=${id}`}
-        backHref={`connection-type?type=${type}`}
         nextDisabled={id == ""}
-        id={id}
+        handleBack={handleBack}
+        handleNext={handleNext}
       />
     </div>
   );

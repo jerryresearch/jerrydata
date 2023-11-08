@@ -46,7 +46,7 @@ const Datasets = ({ datasets, userId }: Props) => {
                 />
               </td>
               <td className="p-5 text-blue-500">
-                <Link href={`data/${row.name}?id=${row._id}&page=1`}>
+                <Link href={`data/${row.name}/edit/data?id=${row._id}`}>
                   {row.name}
                 </Link>
               </td>

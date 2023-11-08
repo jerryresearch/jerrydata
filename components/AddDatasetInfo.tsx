@@ -10,6 +10,8 @@ import {
 import Image from "next/image";
 import Footer from "./Footer";
 import Header from "./Header";
+import { useRouter } from "next/navigation";
+import updateDataset from "@/lib/datasets/updateDataset";
 
 type Props = {
   dataset: Dataset;
@@ -22,6 +24,24 @@ const AddDatasetInfo = ({ id, userId, dataset }: Props) => {
   const [name, setName] = useState(dataset.name);
   const [description, setDescription] = useState(dataset.description);
   const [isUpdated, setIsUpdated] = useState(false);
+
+  const router = useRouter();
+
+  const handleBack = () => {
+    router.push(`edit-fields?id=${id}`);
+  };
+
+  const handleNext = async () => {
+    if (isUpdated) {
+      const res = await updateDataset(userId, id, { name, description });
+      if (!res?.ok) {
+        alert("error updating");
+        return;
+      }
+    }
+    router.push("/dashboard/data");
+    router.refresh();
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F6F8FA]">
@@ -58,7 +78,7 @@ const AddDatasetInfo = ({ id, userId, dataset }: Props) => {
                 className="flex-[1_0_0] h-[120px] py-[14px] px-3 rounded border border-[#EAEDF2] bg-white"
               ></textarea>
             </div>
-            <div className="flex items-center gap-4 self-stretch">
+            <div className="flex items-center gap-4 self-stretch pointer-events-none text-[#ADB3BB]">
               <label className="text-sm font-medium w-[120px]">
                 Record Name
               </label>
@@ -69,7 +89,7 @@ const AddDatasetInfo = ({ id, userId, dataset }: Props) => {
             </div>
           </div>
 
-          <div className="flex flex-col flex-shrink-0 gap-6 items-start w-[500px]">
+          <div className="flex flex-col flex-shrink-0 gap-6 items-start w-[500px] pointer-events-none text-[#ADB3BB]">
             <div className="flex items-center self-stretch gap-4">
               <label className="w-[120px] text-sm font-medium">
                 Default Date Field
@@ -162,12 +182,9 @@ const AddDatasetInfo = ({ id, userId, dataset }: Props) => {
       </div>
       <Footer
         step={currentStep}
-        nextHref="/dashboard/data"
-        backHref={`edit-fields?id=${id}`}
-        userId={userId}
-        id={id}
         nextDisabled={false}
-        updates={isUpdated ? { name, description } : undefined}
+        handleBack={handleBack}
+        handleNext={handleNext}
       />
     </div>
   );

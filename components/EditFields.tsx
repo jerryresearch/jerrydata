@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/popover";
 import Header from "./Header";
 import Footer from "./Footer";
+import { useRouter } from "next/navigation";
 
 const fields = {
   "Column Type": ["Attribute", "Measure"],
@@ -61,6 +62,17 @@ const EditFields = ({ id, userId, headers }: Props) => {
   const disabled = false;
   const currentStep = 4;
   let count = 1;
+
+  const router = useRouter();
+
+  const handleBack = () => {
+    router.push(`select-table?id=${id}`);
+  };
+
+  const handleNext = () => {
+    // updates pending
+    router.push(`add-dataset-info?id=${id}`);
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F6F8FA]">
@@ -279,11 +291,9 @@ const EditFields = ({ id, userId, headers }: Props) => {
       </div>
       <Footer
         step={currentStep}
-        nextHref={`add-dataset-info?id=${id}`}
-        backHref={`select-table?id=${id}`}
         nextDisabled={false}
-        id={id}
-        userId={userId}
+        handleBack={handleBack}
+        handleNext={handleNext}
       />
     </div>
   );
