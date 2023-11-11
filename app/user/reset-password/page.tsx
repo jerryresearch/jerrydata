@@ -15,6 +15,7 @@ const initialState = {
 const Page = () => {
   const [data, setData] = useState(initialState);
   const [isLinkSent, setIsLinkSent] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, [e.target.name]: e.target.value });
@@ -67,7 +68,7 @@ const Page = () => {
               />
             </div>
             <div className="lg:w-[420px] h-14">
-              <Button>Reset password</Button>
+              <Button isLoading={isLoading}>Reset password</Button>
             </div>
           </form>
         )}

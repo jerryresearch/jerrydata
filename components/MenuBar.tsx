@@ -3,22 +3,22 @@ import Link from "next/link";
 import React, { useState } from "react";
 
 type Props = {
-  items: string[];
+  id: string;
+  selected: string;
 };
 
-const MenuBar = ({ items }: Props) => {
-  const [active, setActive] = useState<string>(items[0]);
+const MenuBar = ({ id, selected }: Props) => {
+  const items = ["Info", "Field", "Data"];
   return (
     <div className="w-[180px] flex px-[5px] py-1 rounded bg-white border border-[#EAEDF2]">
       {items.map((item) => (
         <Link
-          href={item.toLowerCase()}
+          href={`${item.toLowerCase()}?id=${id}`}
           key={item}
           className={`px-[12px] py-[6px] ${
-            active === item &&
+            selected === item &&
             "bg-primary text-white rounded border border-[#EAEDF2] font-medium"
           }`}
-          onClick={() => setActive(item)}
         >
           {item}
         </Link>

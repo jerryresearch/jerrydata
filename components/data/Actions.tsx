@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import {
   Popover,
@@ -5,14 +7,16 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import Image from "next/image";
-import DeleteModal from "./DeleteModal";
+import DeleteModal from "../DeleteModal";
 import Link from "next/link";
 
 type Props = {
   name: string;
+  id: string;
+  userId: string;
 };
 
-const Actions = ({ name }: Props) => {
+const Actions = ({ name, id, userId }: Props) => {
   const [open, setOpen] = useState(false);
   const [popUpOpen, setPopUpOpen] = useState(false);
 
@@ -26,14 +30,15 @@ const Actions = ({ name }: Props) => {
         <Image src="/assets/ellipsis.svg" alt="more" width={24} height={20} />
       </PopoverTrigger>
       <PopoverContent className="flex flex-col p-2 rounded bg-white w-[122px] text-sm shadow-custom">
-        <span
+        <Link
+          href={`data/${name}/edit/data?id=${id}`}
           onClick={() => setPopUpOpen(false)}
           className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
         >
           Explore
-        </span>
+        </Link>
         <Link
-          href={`data/${name}/edit/info`}
+          href={`data/${name}/edit/info?id=${id}`}
           className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
         >
           Edit
@@ -43,12 +48,17 @@ const Actions = ({ name }: Props) => {
             setPopUpOpen(false);
             setOpen(true);
           }}
-          className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
+          className="px-3 py-[12px] text-[#D30A0A] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
         >
           Delete
         </span>
       </PopoverContent>
-      <DeleteModal open={open} onClose={handleCloseModal} />
+      <DeleteModal
+        userId={userId}
+        id={id}
+        open={open}
+        onClose={handleCloseModal}
+      />
     </Popover>
   );
 };

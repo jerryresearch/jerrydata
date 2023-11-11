@@ -1,11 +1,29 @@
+import deleteDataset from "@/lib/datasets/deleteDataset";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 type Props = {
   open: boolean;
   onClose: () => void;
+  id: string;
+  userId: string;
 };
 
-const DeleteModal = ({ open, onClose }: Props) => {
+const DeleteModal = ({ open, onClose, id, userId }: Props) => {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleDelete = async () => {
+    setIsLoading(true);
+    await deleteDataset(userId, id);
+    onClose();
+    setIsLoading(false);
+    router.push("/dashboard/data");
+    // router.refresh();
+    window.location.reload();
+  };
+
   return (
     <section
       className={`${
@@ -28,7 +46,9 @@ const DeleteModal = ({ open, onClose }: Props) => {
             width={24}
             height={24}
             onClick={onClose}
-            className="cursor-pointer"
+            className={`cursor-pointer ${
+              isLoading && "pointer-events-none opacity-50"
+            }`}
           />
         </div>
         <div className="flex flex-col gap-4 w-[576px] text-lg">
@@ -44,13 +64,17 @@ const DeleteModal = ({ open, onClose }: Props) => {
         <div className="flex flex-col gap-4 w-[576px] text-lg">
           <button
             onClick={onClose}
-            className="rounded border border-[#EAEDF2] px-6 py-2 bg-[#F8FAFC] h-[56px] flex items-center justify-center gap-[10px] flex-shrink-0"
+            className={`rounded border border-[#EAEDF2] px-6 py-2 bg-[#F8FAFC] h-[56px] flex items-center justify-center gap-[10px] flex-shrink-0 ${
+              isLoading && "pointer-events-none opacity-50"
+            }`}
           >
             Cancel
           </button>
           <button
-            onClick={onClose}
-            className="rounded border border-[#EAEDF2] px-6 py-2 bg-[#D30A0A] text-white h-[56px] flex items-center justify-center gap-[10px] flex-shrink-0"
+            onClick={() => handleDelete()}
+            className={`rounded border border-[#EAEDF2] px-6 py-2 bg-[#D30A0A] text-white h-[56px] flex items-center justify-center gap-[10px] flex-shrink-0 ${
+              isLoading && "pointer-events-none opacity-50"
+            }`}
           >
             Delete Dataset
           </button>

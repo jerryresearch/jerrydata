@@ -1,33 +1,26 @@
-"use client";
-
 import EditFields from "@/components/EditFields";
-import Image from "next/image";
-import React from "react";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import getDataset from "@/lib/getDataset";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/utils/authOptions";
 
-const Page = () => {
-  const currentStep = 4;
-  return (
-    <div className="bg-[#F6F8FA] overflow-auto flex-1">
-      <EditFields />
-      <section className="px-7">
-        <div className="w-full flex justify-between items-center pl-1 py-2">
-          <div className="text-[#ADB3BB]">Showing 1-2 of 2</div>
-          <div className="p-[10px] flex justify-center items-center gap-[5px] rounded border border-[#EAEDF2] bg-white">
-            <div className="py-[6px] px-3 bg-[#DEE8FA] cursor-pointer">1</div>
-            <div className="py-[6px] px-3 cursor-pointer">2</div>
-            <div className="py-[6px] px-3 cursor-pointer">
-              <Image
-                src="/assets/chevron-right.svg"
-                alt="more"
-                width={24}
-                height={24}
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-  );
+const Page = async ({
+  params,
+  searchParams,
+}: {
+  params: { name: string };
+  searchParams?: { [key: string]: any };
+}) => {
+  const id = searchParams?.id;
+
+  const session: any = await getServerSession(authOptions);
+  const userId = session?.user?._id || session?.user?.id;
+
+  const datasetData: Promise<Dataset> = getDataset(userId, id);
+  const dataset = await datasetData;
+
+  return <EditFields id={id} userId={userId} headers={dataset.headers} />;
 };
 
 export default Page;

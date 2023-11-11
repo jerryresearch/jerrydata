@@ -1,32 +1,28 @@
-"use client";
+import EditDatasetInfo from "@/components/data/edit/EditDatasetInfo";
+import getDataset from "@/lib/getDataset";
+import { authOptions } from "@/utils/authOptions";
+import { getServerSession } from "next-auth";
 
-import AddDatasetInfo from "@/components/AddDatasetInfo";
-import DeleteModal from "@/components/DeleteModal";
-import MenuBar from "@/components/MenuBar";
-import Image from "next/image";
-import React, { useState } from "react";
+const Page = async ({
+  params,
+  searchParams,
+}: {
+  params: { name: string };
+  searchParams?: { [key: string]: any };
+}) => {
+  const session: any = await getServerSession(authOptions);
+  const userId = session?.user?._id || session?.user?.id;
+  const id = searchParams?.id || "";
 
-const Page = () => {
-  const [open, setOpen] = useState(false);
-
-  const handleCloseModal = () => {
-    setOpen(false);
-  };
+  const datasetData: Promise<Dataset> = getDataset(userId, id);
+  const dataset = await datasetData;
 
   return (
-    <section>
-      <AddDatasetInfo />
-      <div className="px-7">
-        <button
-          onClick={() => setOpen(true)}
-          className="flex items-center justify-center px-4 py-2 gap-[10px] bg-white border border-[#DEE8FA] rounded text-[#D30A0A]"
-        >
-          <Image src="/assets/trash.svg" alt="delete" width={20} height={20} />
-          <span>Delete Dataset</span>
-        </button>
-      </div>
-      <DeleteModal open={open} onClose={handleCloseModal} />
-    </section>
+    <EditDatasetInfo
+      dataset={dataset}
+      userId={userId}
+      userName={session?.user?.fullName}
+    />
   );
 };
 

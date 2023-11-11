@@ -1,0 +1,142 @@
+import type { NextAuthOptions } from "next-auth";
+import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
+import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { connectToDB } from "./mongoose";
+import clientPromise from "./mongodb";
+import { verifyPassword } from "./verifyPassword";
+import User from "@/models/User";
+
+export const authOptions: NextAuthOptions = {
+  adapter: MongoDBAdapter(clientPromise),
+  session: {
+    strategy: "jwt",
+  },
+  // Configure one or more authentication providers
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    }),
+    CredentialsProvider({
+      // The name to display on the sign in form (e.g. "Sign in with...")
+      name: "Credentials",
+      // `credentials` is used to generate a form on the sign in page.
+      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
+      // e.g. domain, username, password, 2FA token, etc.
+      // You can pass any HTML attribute to the <input> tag through the object.
+      credentials: {
+        email: { label: "Username", type: "text", placeholder: "jsmith" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials, req) {
+        if (!credentials?.email || !credentials.password) {
+          return null;
+        }
+        await connectToDB();
+        // Logic to look up the user from the credentials supplied
+        const user = await User.findOne({ email: credentials.email });
+        if (user) {
+          const isValid = await verifyPassword(
+            credentials.password,
+            user.password
+          );
+          if (!isValid) {
+            return null;
+          }
+          //   const isVerified = user[0].email_verified;
+          //   if (!isVerified) {
+          //     throw new Error("User is not verified.");
+          //     return;
+          //   }
+          // Any object returned will be saved in `user` property of the JWT
+          return {
+            _id: user._id,
+            fullName: user.fullName,
+            email: user.email,
+          } as any;
+        } else {
+          // If you return null then an error will be displayed advising the user to check their details.
+          return null;
+
+          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+        }
+      },
+    }),
+  ],
+  callbacks: {
+    // @ts-ignore
+    // async signIn({ user, account, profile }) {
+    //   console.log(user);
+    //   console.log(account);
+    //   console.log(profile);
+    //   return {
+    //     user,
+    //     account,
+    //     profile,
+    //   };
+
+    //   const existingUser = await User.findOne({ email: user.user.email });
+    //   if (!existingUser) {
+    //     //TODO Create a new user in your database
+    //     try {
+    //       //TODO create new user
+    //     } catch (err) {
+    //       console.log("Error message", err);
+    //       return false;
+    //     }
+    //   }
+    //   return true;
+    // },
+    session: ({ session, token }) => {
+      return {
+        ...session,
+        user: {
+          // @ts-ignore
+          ...token.user,
+        },
+      };
+    },
+    jwt: ({ token, user }) => {
+      if (user) {
+        const u = user as unknown as any;
+        return {
+          ...token,
+          user: { ...u, randomKey: u.randomKey },
+        };
+      }
+      return token;
+    },
+  },
+  pages: {
+    signIn: "/user/login",
+    error: "/user/login", //redirection page
+  },
+
+  secret: process.env.NEXTAUTH_SECRET,
+};
+
+// callbacks: {
+//   session: async (session) => {
+//     if (!session) return;
+
+//     const client = await connectToDatabase();
+//     const usersCollection = client.db().collection('users');
+
+//     const userData = await usersCollection.findOne({
+//       email: session.user.email,
+//     });
+
+//     return {
+//       session: {
+//         user: {
+//           id: userData._id,
+//           firstname: userData.firstname,
+//           lastname: userData.lastname,
+//           username: userData.username,
+//           email: userData.email
+//         }
+//       }
+//     };
+//   },
+// },

@@ -6,6 +6,9 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import Button from "@/components/Button";
 import Link from "next/link";
 import styles from "../styles.module.css";
+import { signIn } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,7 +18,10 @@ const initialState = {
 };
 
 const Page = () => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [data, setData] = useState(initialState);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, [e.target.name]: e.target.value });
@@ -23,8 +29,24 @@ const Page = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(data);
-    setData(initialState);
+    setIsLoading(true);
+    // sign in with credentials
+    try {
+      const res = await signIn("credentials", {
+        ...data,
+        redirect: false,
+      });
+      if (res?.error) {
+        alert("Invalid credentials");
+        setIsLoading(false);
+        return;
+      }
+      router.replace(searchParams.get("callbackUrl") || "/dashboard/home");
+    } catch (error) {
+      alert("Error!!!");
+      console.log(error);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -47,7 +69,10 @@ const Page = () => {
         <div className="lg:w-[420px] text-[#ADB3BB] font-normal text-base md:text-lg leading-[25.2px]">
           Sign in to your account below.
         </div>
-        <button className="lg:w-[420px] h-[48px] bg-white rounded-md border border-slate-200 py-2 text-slate-700 font-normal flex items-center justify-center gap-2">
+        <button
+          onClick={() => signIn("google", { callbackUrl: "/dashboard/home" })}
+          className="lg:w-[420px] h-[48px] bg-white rounded-md border border-slate-200 py-2 text-slate-700 font-normal flex items-center justify-center gap-2"
+        >
           <span>
             <Image
               src="/assets/google.svg"
@@ -99,7 +124,7 @@ const Page = () => {
             </div>
           </div>
           <div className="lg:w-[420px] h-14">
-            <Button>Sign In</Button>
+            <Button isLoading={isLoading}>Sign In</Button>
           </div>
         </form>
         <div className="lg:w-[420px] h-5 text-sm">

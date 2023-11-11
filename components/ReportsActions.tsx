@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import {
   Popover,
@@ -55,7 +57,7 @@ const Actions = () => {
           Delete
         </span>
       </PopoverContent>
-      <DeleteModal open={open} onClose={handleCloseModal} />
+      {/* <DeleteModal open={open} onClose={handleCloseModal} /> */}
     </Popover>
   );
 };

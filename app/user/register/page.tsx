@@ -6,17 +6,19 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import Button from "@/components/Button";
 import Link from "next/link";
 import styles from "../styles.module.css";
+import { signIn } from "next-auth/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
 const initialState = {
-  name: "",
+  fullName: "",
   email: "",
   password: "",
 };
 
 const Page = () => {
   const [data, setData] = useState(initialState);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, [e.target.name]: e.target.value });
@@ -24,8 +26,36 @@ const Page = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(data);
-    setData(initialState);
+    setIsLoading(true);
+    // setData(initialState);
+
+    try {
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const user = await res.json();
+      if (!res.ok) {
+        alert(user.message);
+        setIsLoading(false);
+        return;
+      }
+
+      // signIn(undefined, { callbackUrl: "/dashboard/home" });
+      await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        callbackUrl: "/dashboard/home",
+      });
+    } catch (error: any) {
+      setIsLoading(false);
+      alert(error);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -49,7 +79,10 @@ const Page = () => {
           Let&apos;s get started! Fill in the form below to create your free
           RaptorIQ account.
         </div>
-        <button className="lg:w-[420px] h-[48px] bg-white rounded-md border border-slate-200 py-2 text-slate-700 font-normal flex items-center justify-center gap-2">
+        <button
+          onClick={() => signIn("google", { callbackUrl: "/dashboard/home" })}
+          className="lg:w-[420px] h-[48px] bg-white rounded-md border border-slate-200 py-2 text-slate-700 font-normal flex items-center justify-center gap-2"
+        >
           <span>
             <Image
               src="/assets/google.svg"
@@ -73,8 +106,8 @@ const Page = () => {
             <input
               type="text"
               className="bg-white rounded border w-full border-[#EAEDF2] font-normal h-[48px] px-3 py-[14px]"
-              value={data.name}
-              name="name"
+              value={data.fullName}
+              name="fullName"
               required
               onChange={handleChange}
             />
@@ -114,7 +147,7 @@ const Page = () => {
             </div>
           </div>
           <div className="lg:w-[420px] h-14">
-            <Button>Sign Up</Button>
+            <Button isLoading={isLoading}>Sign Up</Button>
           </div>
         </form>
         <div className="lg:w-[420px] h-5 text-sm">
