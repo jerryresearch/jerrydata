@@ -37,7 +37,7 @@ export default function Page({ params: { name } }: Props) {
   useEffect(() => {
     async function fetchData(name: string) {
       try {
-        const res = await axios.get(`http://localhost:3000/api/file/${name}`);
+        const res = await axios.get(`${process.env.BASE_URL}/api/file/${name}`);
         setData(res.data.results);
       } catch (error) {
         console.log(error);

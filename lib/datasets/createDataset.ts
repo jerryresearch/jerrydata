@@ -3,7 +3,7 @@ export default async function createDataset(
   formData: FormData
 ) {
   if (!userId) return null;
-  const res = await fetch(`http://localhost:3000/api/upload/${userId}`, {
+  const res = await fetch(`${process.env.BASE_URL}/api/upload/${userId}`, {
     method: "POST",
     body: formData,
   });

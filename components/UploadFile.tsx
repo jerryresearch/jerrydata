@@ -63,7 +63,7 @@ const UploadFile = ({ id, type, dataset, handleDelete }: Props) => {
         formData.append("datatype", type);
         setShowProgress(true);
         const response = await axios.post(
-          `http://localhost:3000/api/upload/${userId}`,
+          `${process.env.BASE_URL}/api/upload/${userId}`,
           formData,
           {
             onUploadProgress: (progressEvent) => {
