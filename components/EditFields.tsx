@@ -10,6 +10,7 @@ import {
 import Header from "./Header";
 import Footer from "./Footer";
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 
 const fields = {
   "Column Type": ["Attribute", "Measure"],
@@ -58,7 +59,37 @@ type Props = {
   ];
 };
 
+type SelectedAttributes = {
+  "Column Type": string;
+  "Default Aggregate": string;
+  "Date Field Type": string;
+  "Geo Field Type": string;
+  [key: string]: string;
+};
+
 const EditFields = ({ id, userId, headers }: Props) => {
+  const [searchInput, setSearchInput] = useState("");
+  const [newupdatedheaders, setNewUpdatedHeaders] = useState(headers);
+
+  const [filteredHeaders, setFilteredHeaders] = useState(headers.filter((row) =>
+    row.name.toLowerCase().includes(searchInput.toLowerCase())
+  ));
+
+  useEffect(() => {
+    setFilteredHeaders(headers.filter((row) =>
+      row.name.toLowerCase().includes(searchInput.toLowerCase())
+    ))
+  }, [searchInput])
+
+  const [selectedAttributes, setSelectedAttributes] = useState<Array<SelectedAttributes>>(
+    Array.from({ length: headers.length }, () => ({
+      "Column Type": "Attribute",
+      "Default Aggregate": "No Aggregate",
+      "Date Field Type": "None",
+      "Geo Field Type": "None"
+    }))
+  );
+
   const disabled = false;
   const currentStep = 4;
   let count = 1;
@@ -72,6 +103,73 @@ const EditFields = ({ id, userId, headers }: Props) => {
   const handleNext = () => {
     // updates pending
     router.push(`add-dataset-info?id=${id}`);
+  };
+
+  const handleOnClickSwitch = (index: number) => {
+    setFilteredHeaders((prevFilteredHeaders) => {
+      const updatedFilteredHeaders = [...prevFilteredHeaders];
+      updatedFilteredHeaders[index] = {
+        ...updatedFilteredHeaders[index],
+        isDisabled: !updatedFilteredHeaders[index].isDisabled,
+      };
+      return updatedFilteredHeaders;
+    });
+
+    setNewUpdatedHeaders((prevHeaders) => {
+      const updatedHeaders = [...prevHeaders];
+      const headerIndex = prevHeaders.findIndex(
+        (header) => header.name === filteredHeaders[index].name
+      );
+      if (headerIndex !== -1) {
+        updatedHeaders[headerIndex] = {
+          ...updatedHeaders[headerIndex],
+          isDisabled: !updatedHeaders[headerIndex].isDisabled,
+        };
+      }
+      return updatedHeaders as [{ name: string; datatype: string; isDisabled: boolean; }];
+    });
+  };
+
+
+  const handleClickOnDropdown = (field: string, value: string, rowIndex: number) => {
+    setSelectedAttributes((prevState) => {
+      const updatedRows = [...prevState];
+      updatedRows[rowIndex] = {
+        ...updatedRows[rowIndex],
+        [field]: value
+      };
+
+      if (field === 'Column Type' && value === 'Attribute') {
+        updatedRows[rowIndex] = {
+          ...updatedRows[rowIndex],
+          'Default Aggregate': 'No Aggregate'
+        };
+      }
+
+      if (field === 'Column Type' && value === 'Measure') {
+        updatedRows[rowIndex] = {
+          ...updatedRows[rowIndex],
+          'Date Field Type': 'None',
+          'Geo Field Type': 'None'
+        };
+      }
+
+      if (field === 'Date Field Type' && value !== 'None') {
+        updatedRows[rowIndex] = {
+          ...updatedRows[rowIndex],
+          'Geo Field Type': 'None'
+        };
+      }
+
+      if (field === 'Geo Field Type' && value !== 'None') {
+        updatedRows[rowIndex] = {
+          ...updatedRows[rowIndex],
+          'Date Field Type': 'None'
+        };
+      }
+
+      return updatedRows;
+    });
   };
 
   return (
@@ -92,7 +190,8 @@ const EditFields = ({ id, userId, headers }: Props) => {
                 <input
                   type="text"
                   placeholder="Search Data"
-                  className="text-sm"
+                  className="text-sm focus:outline-0"
+                  onChange={(e) => setSearchInput(e.target.value)}
                 />
               </div>
             </div>
@@ -106,9 +205,6 @@ const EditFields = ({ id, userId, headers }: Props) => {
                   <th className="p-5 font-medium text-sm text-[#17212F]">NP</th>
                   <th className="p-5 font-medium text-sm text-[#17212F]">
                     Name
-                  </th>
-                  <th className="p-5 font-medium text-sm text-[#17212F]">
-                    Default Data type
                   </th>
                   <th className="p-5 font-medium text-sm text-[#17212F]">
                     <div className="flex items-center justify-between">
@@ -160,55 +256,63 @@ const EditFields = ({ id, userId, headers }: Props) => {
                 </tr>
               </thead>
               <tbody>
-                {headers?.map((row, index) => {
-                  if (!row.isDisabled)
-                    return (
-                      <tr
-                        key={index}
-                        className="text-sm text-[#17212F] font-medium border-b border-b-[#EAEDF2]"
-                      >
-                        <td className="p-5 font-medium">{count++}</td>
-                        <td className="p-5">
-                          {/* <Image
+                {filteredHeaders?.map((row, index) => {
+                  return (
+                    <tr
+                      key={index}
+                      className={`text-sm ${row.isDisabled ? "text-[#ADB3BB]" : "text-[#17212F]"} font-medium border-b border-b-[#EAEDF2]`}
+                    >
+                      <td className="p-5 font-medium">{count++}</td>
+                      <td className="p-5">
+                        {/* <Image
                     src={row.image}
                     width={20}
                     height={20}
                     alt={row.name}
                   /> */}
-                          {row.name}
-                        </td>
-                        <td>
+                        {row.name}
+                      </td>
+                      {Object.keys(fields).map((field, ind) => (
+                        <td key={ind}>
                           <Popover modal={true}>
                             <div className="flex items-center justify-between p-5">
                               <span
                                 className={`${disabled && "text-[#ADB3BB]"}`}
                               >
-                                {row.datatype}
+                                {selectedAttributes[index][field]}
                               </span>
-                              <PopoverTrigger>
-                                {disabled ? (
+                              {!(field === "Default Aggregate" && selectedAttributes[index]["Column Type"] === "Attribute")
+                                && !(field === "Date Field Type" && selectedAttributes[index]["Column Type"] === "Measure")
+                                && !(field === "Geo Field Type" && selectedAttributes[index]["Column Type"] === "Measure")
+                                && !(field === "Date Field Type" && selectedAttributes[index]["Geo Field Type"] !== "None")
+                                && !(field === "Geo Field Type" && selectedAttributes[index]["Date Field Type"] !== "None")
+                                && !row.isDisabled
+                                ? (
+                                  <PopoverTrigger>
+                                    <Image
+                                      src="/assets/chevron-down.svg"
+                                      alt="chevron down icon"
+                                      width={16}
+                                      height={16}
+                                    />
+                                  </PopoverTrigger>
+                                ) : (
                                   <Image
                                     src="/assets/chevron-down-disabled.svg"
                                     alt="chevron down icon"
                                     width={16}
                                     height={16}
                                   />
-                                ) : (
-                                  <Image
-                                    src="/assets/chevron-down.svg"
-                                    alt="chevron down icon"
-                                    width={16}
-                                    height={16}
-                                  />
                                 )}
-                              </PopoverTrigger>
                             </div>
                             <PopoverContent className="w-fit min-w-[122px] p-0 shadow-custom bg-white rounded">
                               <ul className="text-sm font-normal p-2 flex flex-col items-start">
-                                {datatypes.map((val, index) => (
+                                {/* @ts-ignore */}
+                                {fields[field].map((val, valIndex) => (
                                   <li
-                                    key={index}
+                                    key={valIndex}
                                     className="flex gap-2 items-center w-full px-3 py-[6px] cursor-pointer hover:bg-[#F8FAFC] rounded"
+                                    onClick={() => { handleClickOnDropdown(field, val, index) }}
                                   >
                                     {val}
                                   </li>
@@ -217,55 +321,12 @@ const EditFields = ({ id, userId, headers }: Props) => {
                             </PopoverContent>
                           </Popover>
                         </td>
-                        {Object.keys(fields).map((field, ind) => (
-                          <td key={ind}>
-                            <Popover modal={true}>
-                              <div className="flex items-center justify-between p-5">
-                                <span
-                                  className={`${disabled && "text-[#ADB3BB]"}`}
-                                >
-                                  {/* @ts-ignore */}
-                                  {fields[field][0]}
-                                </span>
-                                <PopoverTrigger>
-                                  {disabled ? (
-                                    <Image
-                                      src="/assets/chevron-down-disabled.svg"
-                                      alt="chevron down icon"
-                                      width={16}
-                                      height={16}
-                                    />
-                                  ) : (
-                                    <Image
-                                      src="/assets/chevron-down.svg"
-                                      alt="chevron down icon"
-                                      width={16}
-                                      height={16}
-                                    />
-                                  )}
-                                </PopoverTrigger>
-                              </div>
-                              <PopoverContent className="w-fit min-w-[122px] p-0 shadow-custom bg-white rounded">
-                                <ul className="text-sm font-normal p-2 flex flex-col items-start">
-                                  {/* @ts-ignore */}
-                                  {fields[field].map((val, index) => (
-                                    <li
-                                      key={index}
-                                      className="flex gap-2 items-center w-full px-3 py-[6px] cursor-pointer hover:bg-[#F8FAFC] rounded"
-                                    >
-                                      {val}
-                                    </li>
-                                  ))}
-                                </ul>
-                              </PopoverContent>
-                            </Popover>
-                          </td>
-                        ))}
-                        <td className="p-5">
-                          <Switch />
-                        </td>
-                      </tr>
-                    );
+                      ))}
+                      <td className="p-5">
+                        <Switch onClick={() => handleOnClickSwitch(index)} />
+                      </td>
+                    </tr>
+                  );
                 })}
               </tbody>
             </table>

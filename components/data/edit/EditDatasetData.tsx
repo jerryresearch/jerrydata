@@ -27,7 +27,7 @@ const EditDatasetData = ({
 }: Props) => {
   return (
     <section className="bg-[#F6F8FA] min-h-screen flex flex-col">
-      <div className="flex items-center bg-[#DEE8FA] py-3 px-7">
+      <div className="sticky top-0 z-10 flex items-center bg-[#DEE8FA] py-3 px-7">
         <h1 className="font-semibold text-lg">Edit Dataset</h1>
       </div>
       <div className="flex px-7 py-5  flex-col justify-center items-start gap-[10px] border-b border-[#EAEDF2] bg-[#F6F8FA]">

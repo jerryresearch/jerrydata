@@ -70,6 +70,7 @@ export const POST = async (req: Request, { params: { userId } }: Props) => {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
+    console.log(process.env.AWS_FILES_BUCKET_NAME);
     const params = {
       Bucket: process.env.AWS_FILES_BUCKET_NAME,
       Key: key,

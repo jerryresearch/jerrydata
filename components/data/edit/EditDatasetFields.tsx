@@ -59,7 +59,7 @@ const EditDatasetFields = ({ dataset, userId, userName }: Props) => {
 
   return (
     <section className="bg-[#F6F8FA] min-h-screen flex flex-col">
-      <div className="flex items-center bg-[#DEE8FA] py-3 px-7">
+      <div className="sticky top-0 z-10 flex items-center bg-[#DEE8FA] py-3 px-7">
         <h1 className="font-semibold text-lg">Edit Dataset</h1>
       </div>
       <div className="flex px-7 py-5  flex-col justify-center items-start gap-[10px] border-b border-[#EAEDF2] bg-[#F6F8FA]">
@@ -93,7 +93,7 @@ const EditDatasetFields = ({ dataset, userId, userName }: Props) => {
       </div>
       <div className="flex-1">
         <section className="py-4 px-7">
-          <div className="w-full p-5 rounded border border-[#EAEDF2] bg-white">
+          <div className="overflow-x-scroll w-full p-5 rounded border border-[#EAEDF2] bg-white">
             <table className="w-full table-auto min-w-max text-left bg-white rounded text-sm text-[#17212F]">
               {/* row */}
               <thead>
