@@ -39,6 +39,22 @@ const DatasetSchema = new mongoose.Schema(
           enum: ["String", "Date", "Location", "Number"],
           default: "String",
         },
+        columnType: {
+          type: String,
+          default: "Attribute",
+        },
+        defaultAggregate: {
+          type: String,
+          default: "No Aggregate",
+        },
+        dateFieldType: {
+          type: String,
+          default: "None",
+        },
+        geoFieldType: {
+          type: String,
+          default: "None",
+        },
         isDisabled: {
           type: Boolean,
           default: false,

@@ -17,6 +17,10 @@ type Dataset = {
     {
       name: string;
       datatype: string;
+      columnType: string;
+      defaultAggregate: string;
+      dateFieldType: string;
+      geoFieldType: string;
       isDisabled: boolean;
     }
   ];

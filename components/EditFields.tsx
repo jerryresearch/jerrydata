@@ -11,6 +11,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import updateDataset from "@/lib/datasets/updateDataset";
 
 const fields = {
   "Column Type": ["Attribute", "Measure"],
@@ -54,22 +55,34 @@ type Props = {
     {
       name: string;
       datatype: string;
+      columnType: "Attribute";
+      defaultAggregate: "No Aggregate";
+      dateFieldType: "None";
+      geoFieldType: "None";
       isDisabled: boolean;
     }
   ];
 };
 
 type SelectedAttributes = {
-  "Column Type": string;
-  "Default Aggregate": string;
-  "Date Field Type": string;
-  "Geo Field Type": string;
+  columnType: string;
+  defaultAggregate: string;
+  dateFieldType: string;
+  geoFieldType: string;
   [key: string]: string;
 };
 
 const EditFields = ({ id, userId, headers }: Props) => {
   const [searchInput, setSearchInput] = useState("");
-  const [newupdatedheaders, setNewUpdatedHeaders] = useState(headers);
+  const [newupdatedheaders, setNewUpdatedHeaders] = useState(
+    headers.map(header => ({
+      ...header,
+      columnType: "Attribute",
+      defaultAggregate: "No Aggregate",
+      dateFieldType: "None",
+      geoFieldType: "None",
+    }))
+  );
 
   const [filteredHeaders, setFilteredHeaders] = useState(headers.filter((row) =>
     row.name.toLowerCase().includes(searchInput.toLowerCase())
@@ -83,10 +96,10 @@ const EditFields = ({ id, userId, headers }: Props) => {
 
   const [selectedAttributes, setSelectedAttributes] = useState<Array<SelectedAttributes>>(
     Array.from({ length: headers.length }, () => ({
-      "Column Type": "Attribute",
-      "Default Aggregate": "No Aggregate",
-      "Date Field Type": "None",
-      "Geo Field Type": "None"
+      columnType: "Attribute",
+      defaultAggregate: "No Aggregate",
+      dateFieldType: "None",
+      geoFieldType: "None"
     }))
   );
 
@@ -100,9 +113,19 @@ const EditFields = ({ id, userId, headers }: Props) => {
     router.push(`select-table?id=${id}`);
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     // updates pending
-    router.push(`add-dataset-info?id=${id}`);
+    try {
+      const res = await updateDataset(userId, id, { headers: newupdatedheaders });
+      if (!res?.ok) {
+        alert("error updating");
+        return;
+      }
+      router.push(`add-dataset-info?id=${id}`);
+    } catch (error) {
+      console.error(error);
+      alert("An error occured! Try Again.");
+    }
   };
 
   const handleOnClickSwitch = (index: number) => {
@@ -126,17 +149,57 @@ const EditFields = ({ id, userId, headers }: Props) => {
           isDisabled: !updatedHeaders[headerIndex].isDisabled,
         };
       }
-      return updatedHeaders as [{ name: string; datatype: string; isDisabled: boolean; }];
+      return updatedHeaders;
     });
   };
 
-
   const handleClickOnDropdown = (field: string, value: string, rowIndex: number) => {
+    setNewUpdatedHeaders((prevHeaders) => {
+      const updatedHeaders = [...prevHeaders];
+      const headerIndex = prevHeaders.findIndex(
+        (header) => header.name === filteredHeaders[rowIndex].name
+      );
+
+      if (headerIndex !== -1) {
+        const updatedHeader = {
+          ...updatedHeaders[headerIndex],
+          ...(field === "Column Type" && { columnType: value }),
+          ...(field === "Default Aggregate" && { defaultAggregate: value }),
+          ...(field === "Date Field Type" && { dateFieldType: value }),
+          ...(field === "Geo Field Type" && { geoFieldType: value }),
+        };
+
+        if (field === 'Column Type' && value === 'Attribute') {
+          updatedHeader.defaultAggregate = 'No Aggregate';
+        }
+
+        if (field === 'Column Type' && value === 'Measure') {
+          updatedHeader.dateFieldType = 'None';
+          updatedHeader.geoFieldType = 'None';
+        }
+
+        if (field === 'Date Field Type' && value !== 'None') {
+          updatedHeader.geoFieldType = 'None';
+        }
+
+        if (field === 'Geo Field Type' && value !== 'None') {
+          updatedHeader.dateFieldType = 'None';
+        }
+
+        updatedHeaders[headerIndex] = updatedHeader;
+      }
+
+      return updatedHeaders;
+    });
+
     setSelectedAttributes((prevState) => {
       const updatedRows = [...prevState];
       updatedRows[rowIndex] = {
         ...updatedRows[rowIndex],
-        [field]: value
+        ...(field === "Column Type" && { columnType: value }),
+        ...(field === "Default Aggregate" && { defaultAggregate: value }),
+        ...(field === "Date Field Type" && { dateFieldType: value }),
+        ...(field === "Geo Field Type" && { geoFieldType: value }),
       };
 
       if (field === 'Column Type' && value === 'Attribute') {
@@ -257,76 +320,96 @@ const EditFields = ({ id, userId, headers }: Props) => {
               </thead>
               <tbody>
                 {filteredHeaders?.map((row, index) => {
-                  return (
-                    <tr
-                      key={index}
-                      className={`text-sm ${row.isDisabled ? "text-[#ADB3BB]" : "text-[#17212F]"} font-medium border-b border-b-[#EAEDF2]`}
-                    >
-                      <td className="p-5 font-medium">{count++}</td>
-                      <td className="p-5">
-                        {/* <Image
+                  // if (!row.isDisabled)
+                    return (
+                      <tr
+                        key={index}
+                        className={`text-sm ${row.isDisabled ? "text-[#ADB3BB]" : "text-[#17212F]"} font-medium border-b border-b-[#EAEDF2]`}
+                      >
+                        <td className="p-5 font-medium">{count++}</td>
+                        <td className="p-5">
+                          {/* <Image
                     src={row.image}
                     width={20}
                     height={20}
                     alt={row.name}
                   /> */}
-                        {row.name}
-                      </td>
-                      {Object.keys(fields).map((field, ind) => (
-                        <td key={ind}>
-                          <Popover modal={true}>
-                            <div className="flex items-center justify-between p-5">
-                              <span
-                                className={`${disabled && "text-[#ADB3BB]"}`}
-                              >
-                                {selectedAttributes[index][field]}
-                              </span>
-                              {!(field === "Default Aggregate" && selectedAttributes[index]["Column Type"] === "Attribute")
-                                && !(field === "Date Field Type" && selectedAttributes[index]["Column Type"] === "Measure")
-                                && !(field === "Geo Field Type" && selectedAttributes[index]["Column Type"] === "Measure")
-                                && !(field === "Date Field Type" && selectedAttributes[index]["Geo Field Type"] !== "None")
-                                && !(field === "Geo Field Type" && selectedAttributes[index]["Date Field Type"] !== "None")
-                                && !row.isDisabled
-                                ? (
-                                  <PopoverTrigger>
+                          {row.name}
+                        </td>
+                        {Object.keys(fields).map((field, ind) => (
+                          <td key={ind}>
+                            <Popover modal={true}>
+                              <div className="flex items-center justify-between p-5">
+                                <span
+                                  className={`${disabled && "text-[#ADB3BB]"} ${!(
+                                    (field === "Default Aggregate" && selectedAttributes[index].columnType === "Attribute") ||
+                                    (field === "Date Field Type" && selectedAttributes[index].columnType === "Measure") ||
+                                    (field === "Geo Field Type" && selectedAttributes[index].columnType === "Measure") ||
+                                    (field === "Date Field Type" && selectedAttributes[index].geoFieldType !== "None") ||
+                                    (field === "Geo Field Type" && selectedAttributes[index].dateFieldType !== "None")
+                                  ) && !row.isDisabled ? 'text-[#17212F]' : 'text-[#ADB3BB]'
+                                    }`}
+                                >
+                                  {(() => {
+                                    if (field === "Column Type") {
+                                      return selectedAttributes[index].columnType;
+                                    } else if (field === "Default Aggregate") {
+                                      return selectedAttributes[index].defaultAggregate;
+                                    } else if (field === "Date Field Type") {
+                                      return selectedAttributes[index].dateFieldType;
+                                    } else if (field === "Geo Field Type") {
+                                      return selectedAttributes[index].geoFieldType;
+                                    } else {
+                                      return "";
+                                    }
+                                  })()}
+                                </span>
+                                {!(field === "Default Aggregate" && selectedAttributes[index].columnType === "Attribute")
+                                  && !(field === "Date Field Type" && selectedAttributes[index].columnType === "Measure")
+                                  && !(field === "Geo Field Type" && selectedAttributes[index].columnType === "Measure")
+                                  && !(field === "Date Field Type" && selectedAttributes[index].geoFieldType !== "None")
+                                  && !(field === "Geo Field Type" && selectedAttributes[index].dateFieldType !== "None")
+                                  && !row.isDisabled
+                                  ? (
+                                    <PopoverTrigger>
+                                      <Image
+                                        src="/assets/chevron-down.svg"
+                                        alt="chevron down icon"
+                                        width={16}
+                                        height={16}
+                                      />
+                                    </PopoverTrigger>
+                                  ) : (
                                     <Image
-                                      src="/assets/chevron-down.svg"
+                                      src="/assets/chevron-down-disabled.svg"
                                       alt="chevron down icon"
                                       width={16}
                                       height={16}
                                     />
-                                  </PopoverTrigger>
-                                ) : (
-                                  <Image
-                                    src="/assets/chevron-down-disabled.svg"
-                                    alt="chevron down icon"
-                                    width={16}
-                                    height={16}
-                                  />
-                                )}
-                            </div>
-                            <PopoverContent className="w-fit min-w-[122px] p-0 shadow-custom bg-white rounded">
-                              <ul className="text-sm font-normal p-2 flex flex-col items-start">
-                                {/* @ts-ignore */}
-                                {fields[field].map((val, valIndex) => (
-                                  <li
-                                    key={valIndex}
-                                    className="flex gap-2 items-center w-full px-3 py-[6px] cursor-pointer hover:bg-[#F8FAFC] rounded"
-                                    onClick={() => { handleClickOnDropdown(field, val, index) }}
-                                  >
-                                    {val}
-                                  </li>
-                                ))}
-                              </ul>
-                            </PopoverContent>
-                          </Popover>
+                                  )}
+                              </div>
+                              <PopoverContent className="w-fit min-w-[122px] p-0 shadow-custom bg-white rounded">
+                                <ul className="text-sm font-normal p-2 flex flex-col items-start">
+                                  {/* @ts-ignore */}
+                                  {fields[field].map((val, valIndex) => (
+                                    <li
+                                      key={valIndex}
+                                      className="flex gap-2 items-center w-full px-3 py-[6px] cursor-pointer hover:bg-[#F8FAFC] rounded"
+                                      onClick={() => { handleClickOnDropdown(field, val, index) }}
+                                    >
+                                      {val}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </PopoverContent>
+                            </Popover>
+                          </td>
+                        ))}
+                        <td className="p-5">
+                          <Switch onClick={() => handleOnClickSwitch(index)} checked={row.isDisabled} />
                         </td>
-                      ))}
-                      <td className="p-5">
-                        <Switch onClick={() => handleOnClickSwitch(index)} />
-                      </td>
-                    </tr>
-                  );
+                      </tr>
+                    );
                 })}
               </tbody>
             </table>
