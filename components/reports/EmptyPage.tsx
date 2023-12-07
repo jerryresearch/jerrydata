@@ -1,7 +1,20 @@
-import Image from "next/image";
-import React from "react";
+"use client";
 
-const EmptyPage = () => {
+import Image from "next/image";
+import React, { useState } from "react";
+import AddReportModal from "../AddReportModal";
+
+type Props = {
+  userId: string;
+};
+
+const EmptyPage = ({ userId }: Props) => {
+  const [open, setOpen] = useState(false);
+
+  const handleCloseModal = () => {
+    setOpen(false);
+  };
+
   return (
     <section className="flex h-[calc(100vh-49px)] py-5 px-7 items-center justify-center gap-5 flex-shrink-0">
       <div className="flex flex-col items-center gap-6">
@@ -20,7 +33,10 @@ const EmptyPage = () => {
           </p>
         </div>
         <div className="inline-flex flex-col justify-center items-center gap-[10px]">
-          <button className="w-[210px] h-[40px] flex items-center justify-center gap-[10px] self-stretch px-4 py-2 rounded bg-primary text-white">
+          <button
+            onClick={() => setOpen(true)}
+            className="w-[210px] h-[40px] flex items-center justify-center gap-[10px] self-stretch px-4 py-2 rounded bg-primary text-white"
+          >
             Add Report
           </button>
           <button className="w-[210px] h-[40px] flex items-center justify-center gap-[10px] self-stretch px-4 py-2 rounded bg-[#17212F] text-white">
@@ -28,6 +44,7 @@ const EmptyPage = () => {
           </button>
         </div>
       </div>
+      <AddReportModal open={open} onClose={handleCloseModal} userId={userId} />
     </section>
   );
 };

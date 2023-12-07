@@ -1,5 +1,7 @@
 type Reports = {
-  title: string;
+  _id: string;
+  name: string;
+  description: string;
   chartsCount: number;
   lastModified: string;
   charts: string[];

@@ -1,13 +1,36 @@
+import createReport from "@/lib/reports/createReport";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 type Props = {
   open: boolean;
   onClose: () => void;
+  userId: string;
 };
 
-import React from "react";
+import React, { useState } from "react";
 
-const AddReportModal = ({ open, onClose }: Props) => {
+const AddReportModal = ({ open, onClose, userId }: Props) => {
+  const router = useRouter();
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [name, setName] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+
+  const handleCreate = async () => {
+    console.log(name, description);
+    setIsLoading(true);
+    try {
+      const res = await createReport(userId, { name, description });
+      onClose();
+      router.refresh();
+    } catch (error) {
+      console.log("error in creating report");
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <section
       className={`${
@@ -36,6 +59,8 @@ const AddReportModal = ({ open, onClose }: Props) => {
             type="text"
             name="title"
             id="title"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             placeholder="Enter title name here"
             className="flex h-10 py-[14px] px-3 items-center self-stretch rounded border border-[#EAEDF2] bg-white"
           />
@@ -47,6 +72,8 @@ const AddReportModal = ({ open, onClose }: Props) => {
           <textarea
             name="description"
             id="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             placeholder="Description"
             className="h-[180px] py-[14px] px-3 flex items-start self-stretch rounded border border-[#EAEDF2] bg-white"
           ></textarea>
@@ -54,13 +81,17 @@ const AddReportModal = ({ open, onClose }: Props) => {
         <div className="flex gap-[10px] justify-end items-center w-[576px]">
           <button
             onClick={onClose}
-            className="rounded border border-[#DEE8FA] px-4 py-2 h-[36px] flex items-center justify-center gap-[10px]"
+            disabled={isLoading}
+            className={`rounded border border-[#DEE8FA] px-4 py-2 h-[36px] flex items-center justify-center gap-[10px]`}
           >
             Cancel
           </button>
           <button
-            onClick={onClose}
-            className="rounded text-white bg-primary px-4 py-2 h-[36px] flex items-center justify-center gap-[10px]"
+            onClick={handleCreate}
+            disabled={isLoading}
+            className={`rounded text-white bg-primary px-4 py-2 h-[36px] flex items-center justify-center gap-[10px] ${
+              isLoading && "opacity-50 cursor-progress"
+            }`}
           >
             Save
           </button>

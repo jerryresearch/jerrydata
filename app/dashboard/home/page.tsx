@@ -34,7 +34,7 @@ const Page = async () => {
         <h1 className="text-base font-medium">Recent Reports</h1>
         <div className="flex items-center gap-6">
           {reports.map((report, index) => (
-            <ReportCard key={index} {...report} />
+            <ReportCard userId={userId} key={index} report={report} />
           ))}
         </div>
       </div>

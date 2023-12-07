@@ -1,13 +1,20 @@
 import React from "react";
-import ReportsActions from "./ReportsActions";
-import Link from "next/link";
 
-const ReportCard = ({ title, chartsCount, lastModified, charts }: Reports) => {
+import Link from "next/link";
+import ReportsActions from "./ReportsActions";
+
+type Props = {
+  userId: string;
+  report: Reports;
+};
+
+const ReportCard = ({ userId, report }: Props) => {
+  const { _id, name, chartsCount, lastModified, charts } = report;
   return (
     <div className="flex w-[400px] h-[260px] font-medium pt-5 flex-col justify-end items-center flex-shrink-0 rounded-[8px] border border-[#EAEDF2] bg-white">
       <div className="flex w-[372px] py-5 px-[18px] justify-between items-center rounded  bg-[#F8FAFC]">
-        <Link href={`reports/${title}`}>{title}</Link>
-        <ReportsActions />
+        <Link href={`reports/${name}`}>{name}</Link>
+        <ReportsActions id={_id} userId={userId} />
       </div>
       {charts.length > 0 ? (
         <div className="w-full min-h-[120px]">

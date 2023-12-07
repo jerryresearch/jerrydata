@@ -11,7 +11,9 @@ import ReportCard from "@/components/ReportCard";
 import Image from "next/image";
 
 type Report = {
-  title: string;
+  _id: string;
+  name: string;
+  description: string;
   chartsCount: number;
   lastModified: string;
   charts: string[];
@@ -20,9 +22,10 @@ type Report = {
 
 type Props = {
   reports: Report[];
+  userId: string;
 };
 
-const Reports = ({ reports }: Props) => {
+const Reports = ({ reports, userId }: Props) => {
   const [open, setOpen] = useState(false);
 
   const handleCloseModal = () => {
@@ -91,10 +94,10 @@ const Reports = ({ reports }: Props) => {
       </div>
       <div className="flex py-5 px-7 items-center gap-5">
         {reports.map((report, index) => (
-          <ReportCard key={index} {...report} />
+          <ReportCard userId={userId} report={report} key={index} />
         ))}
       </div>
-      <AddReportModal open={open} onClose={handleCloseModal} />
+      <AddReportModal open={open} userId={userId} onClose={handleCloseModal} />
     </section>
   );
 };

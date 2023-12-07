@@ -7,9 +7,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import Image from "next/image";
-import DeleteModal from "./DeleteModal";
+import DeleteReportModal from "./reports/DeleteReportModal";
 
-const Actions = () => {
+type Props = {
+  id: string;
+  userId: string;
+};
+
+const ReportsActions = ({ id, userId }: Props) => {
   const [open, setOpen] = useState(false);
   const [popUpOpen, setPopUpOpen] = useState(false);
 
@@ -57,9 +62,14 @@ const Actions = () => {
           Delete
         </span>
       </PopoverContent>
-      {/* <DeleteModal open={open} onClose={handleCloseModal} /> */}
+      <DeleteReportModal
+        id={id}
+        userId={userId}
+        open={open}
+        onClose={handleCloseModal}
+      />
     </Popover>
   );
 };
 
-export default Actions;
+export default ReportsActions;
