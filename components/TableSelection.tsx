@@ -22,6 +22,8 @@ type Props = {
 };
 
 const TableSelection = ({ userId, id, datatype, name, headers }: Props) => {
+  const [searchInput, setSearchInput] = useState("");
+
   const currentStep = 3;
 
   const router = useRouter();
@@ -29,6 +31,10 @@ const TableSelection = ({ userId, id, datatype, name, headers }: Props) => {
   const [expanded, setExpanded] = useState(false);
   const [myHeaders, setMyHeaders] = useState(headers);
   const [isUpdated, setIsUpdated] = useState(false);
+
+  const filteredHeaders = headers.filter((row) =>
+    row.name.toLowerCase().includes(searchInput.toLowerCase())
+  );
 
   const handleHeaderChange = (name: string) => {
     setIsUpdated(true);
@@ -79,6 +85,7 @@ const TableSelection = ({ userId, id, datatype, name, headers }: Props) => {
                     type="text"
                     placeholder="Search by name"
                     className="text-sm focus:outline-none"
+                    onChange={(e) => setSearchInput(e.target.value)}
                   />
                 </div>
               </div>
@@ -121,7 +128,7 @@ const TableSelection = ({ userId, id, datatype, name, headers }: Props) => {
                     expanded && "max-h-screen"
                   }`}
                 >
-                  {myHeaders?.map((header, index) => (
+                  {filteredHeaders?.map((header, index) => (
                     <li
                       key={index}
                       className="py-2 flex items-center justify-center gap-[10px]"

@@ -28,7 +28,7 @@ const DatasetsContainer = ({ datasets, userId }: Props) => {
 
   return (
     <section className="h-screen bg-[#F6F8FA] text-sm">
-      <div className="px-7 py-5 border-b border-[#EAEDF2] flex justify-between items-center">
+      <div className="sticky top-0 px-7 py-5 border-b border-[#EAEDF2] flex justify-between items-center">
         <div className="flex items-center justify-between w-[423px] text-sm">
           <Filters />
           <div className="flex gap-2">

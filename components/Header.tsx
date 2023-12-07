@@ -13,7 +13,7 @@ const Header = ({ currentStep }: Props) => {
     { number: 5, title: "Add Dataset Info" },
   ];
   return (
-    <div className="h-[49px] px-7 py-3 flex justify-between items-center bg-[#DEE8FA]">
+    <div className="sticky top-0 z-10 h-[49px] px-7 py-3 flex justify-between items-center bg-[#DEE8FA]">
       <p className="text-[#17212F] text-lg font-semibold">Add New Dataset</p>
       <div className="flex gap-6 items-center justify-center">
         {steps.map((step) => (

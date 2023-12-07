@@ -1,7 +1,7 @@
 export default async function updateDataset(
   userId: string,
   datasetId: string,
-  body: any
+  body: any,
 ) {
   if (!userId || !datasetId) return null;
   const res = await fetch(

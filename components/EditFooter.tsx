@@ -28,7 +28,7 @@ const EditFooter = ({ updates, userId, id }: Props) => {
   };
 
   return (
-    <footer className="py-4 flex px-7 flex-col items-start gap-6">
+    <footer className="p-5 sticky bottom-0 z-10 flex flex-col items-start gap-6">
       <div className="flex p-3 justify-between items-center self-stretch rounded border border-[#EAEDF2] bg-white">
         <div className="flex justify-between items-center flex-[1_0_0]">
           <Link
