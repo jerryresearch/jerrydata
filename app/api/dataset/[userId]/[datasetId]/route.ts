@@ -63,14 +63,11 @@ export async function PUT(
         { status: 400 }
       );
     }
+    const updatedDataset = await Dataset.findByIdAndUpdate(datasetId, body, {
+      new: true,
+      runValidators: true,
+    });
 
-    const updatedDataset = await Dataset.findByIdAndUpdate(
-      datasetId,
-      { headers: body.headers },
-      { new: true, runValidators: true }
-    );
-
-    console.log(updatedDataset);
     return NextResponse.json(updatedDataset, { status: 200 });
   } catch (error) {
     console.log(error);
