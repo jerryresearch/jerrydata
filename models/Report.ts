@@ -2,7 +2,11 @@ import mongoose, { models } from "mongoose";
 
 const ReportSchema = new mongoose.Schema(
   {
-    title: {
+    name: {
+      type: String,
+      required: true,
+    },
+    description: {
       type: String,
       required: true,
     },

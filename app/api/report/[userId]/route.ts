@@ -30,17 +30,23 @@ export async function POST(req: Request, { params: { userId } }: Props) {
     if (!userId || !mongoose.isValidObjectId(userId)) {
       return NextResponse.json({ message: "Invalid session" }, { status: 403 });
     }
-    const { title } = await req.json();
-    if (!title) {
-      return NextResponse.json({ message: "Error" }, { status: 400 });
+    const { name, description } = await req.json();
+    if (!name || !description) {
+      return NextResponse.json(
+        { message: "Fill all details" },
+        { status: 400 }
+      );
     }
     // @ts-ignore
-    const report = await Report.create({ title, createdBy: userId });
+    const report = await Report.create({
+      name,
+      description,
+      createdBy: userId,
+    });
     return NextResponse.json(
       { report, message: "report created" },
       { status: 201 }
     );
-    console.log("Hello");
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 500 });
   }
