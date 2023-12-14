@@ -111,9 +111,7 @@ const Chat = () => {
       </div>
       <section className="flex-1 overflow-auto px-7 mt-6 mb-[14px] flex flex-col gap-[14px]">
         <Message>Analytics for sales of hurrae</Message>
-        <Message>
-          <BarChart data={data} />
-        </Message>
+        <Message>{/* <BarChart data={data} /> */} Chart</Message>
       </section>
       <div className="flex w-full px-[29px] mb-5 h-10 gap-2">
         <div className="flex-1 flex items-start flex-col gap-[10px] rounded border border-[#EAEDF2] bg-white pl-2 pr-[100px]">
