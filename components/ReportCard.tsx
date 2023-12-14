@@ -2,6 +2,7 @@ import React from "react";
 
 import Link from "next/link";
 import ReportsActions from "./ReportsActions";
+import { formatLastLoad } from "@/lib/formatDatasets";
 
 type Props = {
   userId: string;
@@ -9,14 +10,14 @@ type Props = {
 };
 
 const ReportCard = ({ userId, report }: Props) => {
-  const { _id, name, chartsCount, lastModified, charts } = report;
+  const { _id, name, chartsCount, updatedAt, charts } = report;
   return (
     <div className="flex w-[400px] h-[260px] font-medium pt-5 flex-col justify-end items-center flex-shrink-0 rounded-[8px] border border-[#EAEDF2] bg-white">
       <div className="flex w-[372px] py-5 px-[18px] justify-between items-center rounded  bg-[#F8FAFC]">
-        <Link href={`reports/${name}`}>{name}</Link>
-        <ReportsActions id={_id} userId={userId} />
+        <Link href={`reports/${name}/?id=${_id}`}>{name}</Link>
+        <ReportsActions report={report} userId={userId} />
       </div>
-      {charts.length > 0 ? (
+      {charts.length < 0 ? (
         <div className="w-full min-h-[120px]">
           <div className="flex w-full py-5 px-8 gap-8 flex-[1_0_0] border-b border-[#EAEDF2]">
             {charts[0]}
@@ -33,7 +34,7 @@ const ReportCard = ({ userId, report }: Props) => {
       )}
       <div className="flex w-full justify-between items-center flex-[1_0_0] py-5 px-8 text-[#ADB3BB] text-sm">
         <p>{chartsCount == 0 ? "No" : chartsCount} charts</p>
-        <p>Modified {lastModified} ago</p>
+        <p>Modified {formatLastLoad(updatedAt)}</p>
       </div>
     </div>
   );

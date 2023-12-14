@@ -8,18 +8,31 @@ import {
 } from "@/components/ui/popover";
 import Image from "next/image";
 import DeleteReportModal from "./reports/DeleteReportModal";
+import duplicateReport from "@/lib/reports/duplicateReport";
+import { useRouter } from "next/navigation";
 
 type Props = {
-  id: string;
+  report: Reports;
   userId: string;
 };
 
-const ReportsActions = ({ id, userId }: Props) => {
+const ReportsActions = ({ report, userId }: Props) => {
+  const router = useRouter();
+
   const [open, setOpen] = useState(false);
   const [popUpOpen, setPopUpOpen] = useState(false);
 
   const handleCloseModal = () => {
     setOpen(false);
+  };
+
+  const handleDuplicate = async () => {
+    try {
+      const res = await duplicateReport(userId, report._id, report);
+      router.refresh();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -47,7 +60,10 @@ const ReportsActions = ({ id, userId }: Props) => {
           Save as PDF
         </span>
         <span
-          onClick={() => setPopUpOpen(false)}
+          onClick={() => {
+            setPopUpOpen(false);
+            handleDuplicate();
+          }}
           className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
         >
           Duplicate
@@ -63,7 +79,7 @@ const ReportsActions = ({ id, userId }: Props) => {
         </span>
       </PopoverContent>
       <DeleteReportModal
-        id={id}
+        id={report._id}
         userId={userId}
         open={open}
         onClose={handleCloseModal}

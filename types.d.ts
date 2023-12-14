@@ -3,9 +3,23 @@ type Reports = {
   name: string;
   description: string;
   chartsCount: number;
-  lastModified: string;
+  updatedAt: string;
   charts: string[];
   createdBy: string;
+};
+
+type Chart = {
+  _id: string;
+  title: string;
+  chartType: string;
+  report: string;
+  dataset: string;
+  createdBy: string;
+  xAxis: string;
+  yAxis: string;
+  xData: any[];
+  yData: any[];
+  series?: string;
 };
 
 type Dataset = {
