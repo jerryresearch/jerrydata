@@ -7,9 +7,28 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import Image from "next/image";
+import DeleteChartModal from "./DeleteChartModal";
+import { useSession } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
 
-const ChartActions = () => {
+type Props = {
+  chartId: string;
+};
+
+const ChartActions = ({ chartId }: Props) => {
+  const searchParams = useSearchParams();
+  const { data: session } = useSession();
+
+  // @ts-ignore
+  const userId = session?.user?._id || session?.user?.id;
+  const reportId = searchParams.get("id") || "";
+
+  const [open, setOpen] = useState(false);
   const [popUpOpen, setPopUpOpen] = useState(false);
+
+  const handleCloseModal = () => {
+    setOpen(false);
+  };
 
   return (
     <Popover open={popUpOpen} onOpenChange={setPopUpOpen}>
@@ -42,12 +61,22 @@ const ChartActions = () => {
           Duplicate
         </span>
         <span
-          onClick={() => setPopUpOpen(false)}
+          onClick={() => {
+            setPopUpOpen(false);
+            setOpen(true);
+          }}
           className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer text-[#D30A0A]"
         >
           Delete
         </span>
       </PopoverContent>
+      <DeleteChartModal
+        open={open}
+        onClose={handleCloseModal}
+        userId={userId}
+        reportId={reportId}
+        chartId={chartId}
+      />
     </Popover>
   );
 };

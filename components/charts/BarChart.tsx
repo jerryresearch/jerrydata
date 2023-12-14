@@ -9,7 +9,6 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import ChartActions from "./ChartActions";
 
 ChartJS.register(
   BarElement,
@@ -21,58 +20,63 @@ ChartJS.register(
 );
 
 type Props = {
-  data: {
-    [key: string]: {
-      retail: number;
-      wholesale: number;
-      distribution: number;
-    };
-  };
+  data?: Chart;
 };
 
 const BarChart = ({ data }: Props) => {
-  const labels = Object.keys(data);
-  const retailData = labels.map((label) => data[label].retail);
-  const wholesaleData = labels.map((label) => data[label].wholesale);
-  const distributionData = labels.map((label) => data[label].distribution);
+  if (!data) {
+    return;
+  }
 
-  const chartData = {
-    labels: labels,
+  const { title, xAxis, yAxis, xData, yData } = data;
+
+  const aggregatedData = xData.reduce((acc, curr, index) => {
+    if (acc[curr]) {
+      acc[curr] += parseInt(yData[index]);
+    } else {
+      acc[curr] = parseInt(yData[index]);
+    }
+    return acc;
+  }, {});
+
+  // Extract aggregated xData and yData
+  const aggregatedXData = Object.keys(aggregatedData);
+  const aggregatedYData = Object.values(aggregatedData);
+
+  const barChartData = {
+    labels: aggregatedXData,
     datasets: [
       {
-        label: "Retail",
-        data: retailData,
+        label: yAxis,
+        // backgroundColor: ["#16CC62", "#2272E3", "#FFD111"],
         backgroundColor: "#16CC62",
-      },
-      {
-        label: "Wholesale",
-        data: wholesaleData,
-        backgroundColor: "#2272E3",
-      },
-      {
-        label: "Distribution",
-        data: distributionData,
-        backgroundColor: "#FFD111",
+        borderWidth: 1,
+        data: aggregatedYData,
       },
     ],
   };
 
   const chartOptions = {
+    title: {
+      display: true,
+      text: title,
+      fontSize: 20,
+    },
     scales: {
       y: {
-        suggestedMax: 1000,
+        suggestedMax: 10000,
         title: {
           display: true,
-          text: "Unit cost",
+          text: yAxis,
         },
-        ticks: {
-          stepSize: 100,
-        },
+        // ticks: {
+        //   stepSize: 100,
+        // },
       },
       x: {
         title: {
           display: true,
-          text: "Region",
+          text: xAxis,
         },
       },
     },
@@ -80,7 +84,7 @@ const BarChart = ({ data }: Props) => {
 
   return (
     <div className="w-4/5 mx-auto">
-      <Bar data={chartData} options={chartOptions} />
+      <Bar data={barChartData} options={chartOptions} />
     </div>
   );
 };

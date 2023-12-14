@@ -10,18 +10,8 @@ import AddReportModal from "@/components/AddReportModal";
 import ReportCard from "@/components/ReportCard";
 import Image from "next/image";
 
-type Report = {
-  _id: string;
-  name: string;
-  description: string;
-  chartsCount: number;
-  lastModified: string;
-  charts: string[];
-  createdBy: string;
-};
-
 type Props = {
-  reports: Report[];
+  reports: Reports[];
   userId: string;
 };
 

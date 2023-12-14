@@ -9,7 +9,6 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import ChartActions from "./ChartActions";
 
 ChartJS.register(
   LineElement,
@@ -21,61 +20,64 @@ ChartJS.register(
 );
 
 type Props = {
-  data: {
-    [key: string]: {
-      retail: number;
-      wholesale: number;
-      distribution: number;
-    };
-  };
+  data?: Chart;
 };
 
 const LineChart = ({ data }: Props) => {
-  const labels = Object.keys(data);
-  const retailData = labels.map((label) => data[label].retail);
-  const wholesaleData = labels.map((label) => data[label].wholesale);
-  const distributionData = labels.map((label) => data[label].distribution);
+  if (!data) {
+    return;
+  }
 
-  const chartData = {
-    labels: labels,
+  const { title, xAxis, yAxis, xData, yData } = data;
+
+  const aggregatedData = xData.reduce((acc, curr, index) => {
+    if (acc[curr]) {
+      acc[curr] += parseInt(yData[index]);
+    } else {
+      acc[curr] = parseInt(yData[index]);
+    }
+    return acc;
+  }, {});
+
+  // Extract aggregated xData and yData
+  const aggregatedXData = Object.keys(aggregatedData);
+  const aggregatedYData = Object.values(aggregatedData);
+
+  const lineChartData = {
+    labels: aggregatedXData,
     datasets: [
       {
-        label: "Retail",
-        data: retailData,
-        borderColor: "#16CC62",
+        label: yAxis,
         backgroundColor: "#16CC62",
-      },
-      {
-        label: "Wholesale",
-        data: wholesaleData,
-        borderColor: "#2272E3",
-        backgroundColor: "#2272E3",
-      },
-      {
-        label: "Distribution",
-        data: distributionData,
-        borderColor: "#FFD111",
-        backgroundColor: "#FFD111",
+        // borderColor: "#16CC62",
+        // pointBorderColor: "rgba(75,192,192,1)",
+        pointBackgroundColor: "#F00",
+        data: aggregatedYData,
       },
     ],
   };
 
   const chartOptions = {
+    title: {
+      display: true,
+      text: title,
+      fontSize: 20,
+    },
     scales: {
       y: {
-        suggestedMax: 1000,
+        // suggestedMax: 10000,
         title: {
           display: true,
-          text: "Unit cost",
+          text: yAxis,
         },
-        ticks: {
-          stepSize: 100,
-        },
+        // ticks: {
+        //   stepSize: 100,
+        // },
       },
       x: {
         title: {
           display: true,
-          text: "Region",
+          text: xAxis,
         },
       },
     },
@@ -83,7 +85,7 @@ const LineChart = ({ data }: Props) => {
 
   return (
     <div className="w-4/5 mx-auto">
-      <Line data={chartData} options={chartOptions} />
+      <Line data={lineChartData} options={chartOptions} />
     </div>
   );
 };
