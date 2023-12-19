@@ -1,6 +1,5 @@
 import deleteReport from "@/lib/reports/deleteReport";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type Props = {
@@ -11,14 +10,13 @@ type Props = {
 };
 
 const DeleteReportModal = ({ open, onClose, id, userId }: Props) => {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleDelete = async () => {
     setIsLoading(true);
     try {
       await deleteReport(userId, id);
-      router.refresh();
+      location.reload();
     } catch (error) {
       console.log("error");
     }

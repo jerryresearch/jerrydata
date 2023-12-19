@@ -30,29 +30,16 @@ const LineChart = ({ data }: Props) => {
 
   const { title, xAxis, yAxis, xData, yData } = data;
 
-  const aggregatedData = xData.reduce((acc, curr, index) => {
-    if (acc[curr]) {
-      acc[curr] += parseInt(yData[index]);
-    } else {
-      acc[curr] = parseInt(yData[index]);
-    }
-    return acc;
-  }, {});
-
-  // Extract aggregated xData and yData
-  const aggregatedXData = Object.keys(aggregatedData);
-  const aggregatedYData = Object.values(aggregatedData);
-
   const lineChartData = {
-    labels: aggregatedXData,
+    labels: xData,
     datasets: [
       {
         label: yAxis,
         backgroundColor: "#16CC62",
         // borderColor: "#16CC62",
         // pointBorderColor: "rgba(75,192,192,1)",
-        pointBackgroundColor: "#F00",
-        data: aggregatedYData,
+        // pointBackgroundColor: "#F00",
+        data: yData,
       },
     ],
   };

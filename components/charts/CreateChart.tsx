@@ -19,8 +19,18 @@ import PieChart from "./PieChart";
 import DoughnutChart from "./DoughnutGraph";
 import deleteChart from "@/lib/charts/deleteChart";
 import Loading from "../Loading";
+import PloarAreaChart from "./PolarAreaChart";
+import HorizontalBarChart from "./HorizontalBarChart";
+import styles from "@/app/user/styles.module.css";
 
-const chartTypes = ["Bar", "Doughnut", "Pie", "Line"];
+const chartTypes = [
+  "Bar",
+  "Doughnut",
+  "Pie",
+  "Line",
+  "Polar Area",
+  "Horizontal Bar",
+];
 
 type Props = {
   datasets: Dataset[];
@@ -44,6 +54,8 @@ const CreateChart = ({ datasets }: Props) => {
   const [chart, setChart] = useState<Chart>();
   const [xAxis, setXAxis] = useState("");
   const [yAxis, setYAxis] = useState("");
+  const [title, setTitle] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
   const [type, setType] = useState("Bar");
 
   // Function to handle closing the modal
@@ -72,9 +84,8 @@ const CreateChart = ({ datasets }: Props) => {
 
   // Function to handle form submission
   const handleSubmit = async () => {
-    console.log(xAxis, yAxis);
     const data = {
-      title: "A demo chart",
+      title: title || `${type} chart`,
       chartType: type,
       dataset: selectedDataset._id,
       report: reportId,
@@ -86,14 +97,16 @@ const CreateChart = ({ datasets }: Props) => {
       let res;
       if (chartId == "") {
         res = await createChart(userId, reportId, data);
+        router.replace(pathname + `?id=${reportId}&chart=${res.chart._id}`);
       } else {
         res = await updateChart(userId, reportId, chartId, data);
       }
-      router.replace(pathname + `?id=${reportId}&chart=${res.chart._id}`);
+      setIsEditing(false);
       setChart(res.chart);
       setXAxis(res.chart.xAxis);
       setYAxis(res.chart.yAxis);
       setType(res.chart.chartType);
+      setTitle(res.chart.title);
       handleSelectDataset(res.chart.dataset);
       setShowChart(true);
     } catch (error) {
@@ -112,6 +125,7 @@ const CreateChart = ({ datasets }: Props) => {
         setXAxis(res.xAxis);
         setYAxis(res.yAxis);
         setType(res.chartType);
+        setTitle(res.title);
         handleSelectDataset(res.dataset);
         setShowChart(true);
       } catch (error) {
@@ -259,7 +273,9 @@ const CreateChart = ({ datasets }: Props) => {
                       height={16}
                     />
                   </PopoverTrigger>
-                  <PopoverContent className="w-[150px] text-sm bg-white">
+                  <PopoverContent
+                    className={`max-w-max text-sm bg-white max-h-96 overflow-y-auto 2xl:max-h-none ${styles.scrollbar}`}
+                  >
                     <ul className="">
                       {selectedDataset?.headers?.map(
                         (header: any, index: string) => (
@@ -294,7 +310,9 @@ const CreateChart = ({ datasets }: Props) => {
                       height={16}
                     />
                   </PopoverTrigger>
-                  <PopoverContent className="w-[150px] text-sm bg-white">
+                  <PopoverContent
+                    className={`max-w-max text-sm bg-white max-h-96 overflow-y-auto 2xl:max-h-none ${styles.scrollbar}`}
+                  >
                     <ul className="">
                       {selectedDataset?.headers?.map(
                         (header: any, index: string) => (
@@ -323,15 +341,59 @@ const CreateChart = ({ datasets }: Props) => {
           </div>
           {showChart && chart ? (
             <div className="flex p-[14px] gap-6 flex-col items-center overflow-auto flex-[1_0_0] 2xl:justify-center self-stretch rounded border border-[#EAEDF2] bg-white">
-              <h1 className="font-semibold text-lg">Unit Cost by Region</h1>
-              {type == "Bar" ? (
+              <header className="text-base h-5 2xl:h-10 text-center">
+                {isEditing ? (
+                  <span className="flex justify-center gap-[10px]">
+                    <input
+                      type="text"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      className="w-[240px] border border-[#EAEDF2] py-1 2xl:py-2 px-3 rounded focus:outline-none font-normal"
+                    />
+                    <span
+                      onClick={handleSubmit}
+                      className="bg-primary cursor-pointer w-7 flex items-center justify-center 2xl:w-10 2xl:h-10 rounded"
+                    >
+                      <Image
+                        src="/assets/check-icon.svg"
+                        alt="confirm icon"
+                        width={16}
+                        height={16}
+                      />
+                    </span>
+                    <span
+                      onClick={() => setIsEditing(false)}
+                      className="w-7 cursor-pointer border border-[#DEE8FA] flex items-center justify-center 2xl:w-10 2xl:h-10 rounded"
+                    >
+                      <Image
+                        src="/assets/dismiss.svg"
+                        alt="confirm icon"
+                        width={16}
+                        height={16}
+                      />
+                    </span>
+                  </span>
+                ) : (
+                  <span
+                    className="cursor-pointer font-semibold"
+                    onClick={() => setIsEditing(true)}
+                  >
+                    {chart.title}
+                  </span>
+                )}
+              </header>
+              {chart.chartType == "Bar" ? (
                 <BarChart data={chart} />
-              ) : type == "Line" ? (
+              ) : chart.chartType == "Line" ? (
                 <LineChart data={chart} />
-              ) : type == "Pie" ? (
+              ) : chart.chartType == "Pie" ? (
                 <PieChart data={chart} />
-              ) : (
+              ) : chart.chartType == "Doughnut" ? (
                 <DoughnutChart data={chart} />
+              ) : chart.chartType == "Polar Area" ? (
+                <PloarAreaChart data={chart} />
+              ) : (
+                <HorizontalBarChart data={chart} />
               )}
             </div>
           ) : (

@@ -124,7 +124,6 @@ export async function PUT(
     }
 
     const { title, chartType, dataset, xAxis, yAxis } = await req.json();
-    console.log({ title, chartType, dataset, xAxis, yAxis });
     if (
       dataset == chart.dataset &&
       xAxis == chart.xAxis &&
@@ -139,7 +138,7 @@ export async function PUT(
         }
       );
       return NextResponse.json(
-        { updatedChart, message: "chart updated" },
+        { chart: updatedChart, message: "chart updated" },
         { status: 201 }
       );
     }
@@ -158,8 +157,8 @@ export async function PUT(
     const resp = await s3.send(command);
     const fileData: any = resp.Body;
 
-    const xData: any[] = [];
-    const yData: any[] = [];
+    let xData: any[] = [];
+    let yData: any[] = [];
 
     await new Promise((resolve, reject) => {
       fileData
@@ -176,7 +175,18 @@ export async function PUT(
         });
     });
 
-    console.log("hello");
+    const aggregatedData = xData.reduce((acc, curr, index) => {
+      if (acc[curr]) {
+        acc[curr] += parseInt(yData[index]);
+      } else {
+        acc[curr] = parseInt(yData[index]);
+      }
+      return acc;
+    }, {});
+
+    // Extract aggregated xData and yData
+    xData = Object.keys(aggregatedData);
+    yData = Object.values(aggregatedData);
 
     const updatedChart = await Chart.findByIdAndUpdate(
       chartId,

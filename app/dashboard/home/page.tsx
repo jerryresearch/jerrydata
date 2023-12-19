@@ -32,8 +32,8 @@ const Page = async () => {
       </header>
       <div className="flex flex-col p-6 justify-center items-start gap-6">
         <h1 className="text-base font-medium">Recent Reports</h1>
-        <div className="flex items-center gap-6">
-          {reports.map((report, index) => (
+        <div className="grid grid-cols-3 w-full items-center gap-6">
+          {reports.slice(0, 3).map((report, index) => (
             <ReportCard userId={userId} key={index} report={report} />
           ))}
         </div>

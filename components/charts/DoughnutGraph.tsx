@@ -15,24 +15,11 @@ const DoughnutChart = ({ data }: Props) => {
 
   const { title, xAxis, yAxis, xData, yData } = data;
 
-  const aggregatedData = xData.reduce((acc, curr, index) => {
-    if (acc[curr]) {
-      acc[curr] += parseInt(yData[index]);
-    } else {
-      acc[curr] = parseInt(yData[index]);
-    }
-    return acc;
-  }, {});
-
-  // Extract aggregated xData and yData
-  const aggregatedXData = Object.keys(aggregatedData);
-  const aggregatedYData = Object.values(aggregatedData);
-
   const doughnutChartData = {
-    labels: aggregatedXData,
+    labels: xData,
     datasets: [
       {
-        data: aggregatedYData,
+        data: yData,
         backgroundColor: ["#2272E3", "#FFD111", "#16CC62"],
         // hoverBackgroundColor: [
         //   "rgba(255, 99, 132, 0.8)",
@@ -60,7 +47,7 @@ const DoughnutChart = ({ data }: Props) => {
   };
 
   return (
-    <div className="w-3/5">
+    <div className="w-3/5 mx-auto">
       <Doughnut data={doughnutChartData} options={options} />
     </div>
   );

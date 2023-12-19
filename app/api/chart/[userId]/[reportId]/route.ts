@@ -86,8 +86,8 @@ export async function POST(
     const resp = await s3.send(command);
     const fileData: any = resp.Body;
 
-    const xData: any[] = [];
-    const yData: any[] = [];
+    let xData: any[] = [];
+    let yData: any[] = [];
 
     await new Promise((resolve, reject) => {
       fileData
@@ -103,6 +103,19 @@ export async function POST(
           reject(error);
         });
     });
+
+    const aggregatedData = xData.reduce((acc, curr, index) => {
+      if (acc[curr]) {
+        acc[curr] += parseInt(yData[index]);
+      } else {
+        acc[curr] = parseInt(yData[index]);
+      }
+      return acc;
+    }, {});
+
+    // Extract aggregated xData and yData
+    xData = Object.keys(aggregatedData);
+    yData = Object.values(aggregatedData);
 
     const chart = await Chart.create({
       title,

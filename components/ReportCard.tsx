@@ -12,9 +12,11 @@ type Props = {
 const ReportCard = ({ userId, report }: Props) => {
   const { _id, name, chartsCount, updatedAt, charts } = report;
   return (
-    <div className="flex w-[400px] h-[260px] font-medium pt-5 flex-col justify-end items-center flex-shrink-0 rounded-[8px] border border-[#EAEDF2] bg-white">
-      <div className="flex w-[372px] py-5 px-[18px] justify-between items-center rounded  bg-[#F8FAFC]">
-        <Link href={`reports/${name}/?id=${_id}`}>{name}</Link>
+    <div className="flex h-[260px] font-medium pt-5 flex-col justify-end items-center flex-shrink-0 rounded-[8px] border border-[#EAEDF2] bg-white">
+      <div className="flex w-11/12 py-5 px-[18px] justify-between items-center rounded  bg-[#F8FAFC]">
+        <Link href={`reports/${name}/?id=${_id}`}>
+          {name.length > 26 ? name.substring(0, 26) + "..." : name}
+        </Link>
         <ReportsActions report={report} userId={userId} />
       </div>
       {charts.length < 0 ? (

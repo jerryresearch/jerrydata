@@ -9,7 +9,6 @@ import {
 import Image from "next/image";
 import DeleteReportModal from "./reports/DeleteReportModal";
 import duplicateReport from "@/lib/reports/duplicateReport";
-import { useRouter } from "next/navigation";
 
 type Props = {
   report: Reports;
@@ -17,8 +16,6 @@ type Props = {
 };
 
 const ReportsActions = ({ report, userId }: Props) => {
-  const router = useRouter();
-
   const [open, setOpen] = useState(false);
   const [popUpOpen, setPopUpOpen] = useState(false);
 
@@ -29,7 +26,7 @@ const ReportsActions = ({ report, userId }: Props) => {
   const handleDuplicate = async () => {
     try {
       const res = await duplicateReport(userId, report._id, report);
-      router.refresh();
+      location.reload();
     } catch (error) {
       console.log(error);
     }

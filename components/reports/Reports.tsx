@@ -16,6 +16,19 @@ type Props = {
 };
 
 const Reports = ({ reports, userId }: Props) => {
+  const [filteredReports, setFilteredReports] = useState(reports);
+  const handleSearch = (query: string) => {
+    if (query == "") {
+      setFilteredReports(reports);
+    } else {
+      setFilteredReports(
+        reports.filter((report) =>
+          report.name.toLowerCase().includes(query.toLowerCase())
+        )
+      );
+    }
+  };
+
   const [open, setOpen] = useState(false);
 
   const handleCloseModal = () => {
@@ -67,6 +80,7 @@ const Reports = ({ reports, userId }: Props) => {
                 type="text"
                 name="search"
                 placeholder="Search Data"
+                onChange={(e) => handleSearch(e.target.value)}
                 className="focus:outline-none"
               />
             </div>
@@ -82,8 +96,8 @@ const Reports = ({ reports, userId }: Props) => {
           </button>
         </div>
       </div>
-      <div className="flex py-5 px-7 items-center gap-5">
-        {reports.map((report, index) => (
+      <div className="grid grid-cols-3 py-5 px-7 items-center gap-5 justify-between">
+        {filteredReports.map((report, index) => (
           <ReportCard userId={userId} report={report} key={index} />
         ))}
       </div>

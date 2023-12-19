@@ -30,28 +30,15 @@ const BarChart = ({ data }: Props) => {
 
   const { title, xAxis, yAxis, xData, yData } = data;
 
-  const aggregatedData = xData.reduce((acc, curr, index) => {
-    if (acc[curr]) {
-      acc[curr] += parseInt(yData[index]);
-    } else {
-      acc[curr] = parseInt(yData[index]);
-    }
-    return acc;
-  }, {});
-
-  // Extract aggregated xData and yData
-  const aggregatedXData = Object.keys(aggregatedData);
-  const aggregatedYData = Object.values(aggregatedData);
-
   const barChartData = {
-    labels: aggregatedXData,
+    labels: xData,
     datasets: [
       {
         label: yAxis,
         // backgroundColor: ["#16CC62", "#2272E3", "#FFD111"],
         backgroundColor: "#16CC62",
         borderWidth: 1,
-        data: aggregatedYData,
+        data: yData,
       },
     ],
   };
