@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import Report from "@/models/Report";
 import { NextResponse } from "next/server";
 import { connectToDB } from "@/utils/mongoose";
+import Chart from "@/models/Chart";
 
 type Props = {
   params: {
@@ -57,6 +58,10 @@ export async function DELETE(
         { message: "Report not found" },
         { status: 404 }
       );
+    }
+
+    for (const chartId of report.charts) {
+      const chart = await Chart.findByIdAndDelete(chartId);
     }
 
     await Report.findByIdAndDelete(reportId);

@@ -24,7 +24,8 @@ const AddReportModal = ({ open, onClose, userId }: Props) => {
     try {
       const res = await createReport(userId, { name, description });
       onClose();
-      router.refresh();
+      // router.refresh();
+      location.reload();
     } catch (error) {
       console.log("error in creating report");
     } finally {

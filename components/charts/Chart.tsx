@@ -76,12 +76,15 @@ const Chart = ({ chart }: Props) => {
             </span>
           ) : (
             <span className="cursor-pointer" onClick={() => setIsEditing(true)}>
-              {chart.title}
+              {/* {chart.title} */}
+              {chart.title.length > 40
+                ? chart.title.substring(0, 40) + "..."
+                : chart.title}
             </span>
           )}
         </header>
         <div className="justify-self-end">
-          <ChartActions chartId={chart._id} />
+          <ChartActions chart={chart} />
         </div>
       </div>
       {chart.chartType == "Bar" ? (

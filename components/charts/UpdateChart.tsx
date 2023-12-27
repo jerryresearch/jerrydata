@@ -8,9 +8,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useSearchParams, usePathname } from "next/navigation";
 import SelectDatasetModal from "./SelectDatasetModal";
-import createChart from "@/lib/charts/createChart";
 import { useSession } from "next-auth/react";
 import getChart from "@/lib/charts/getChart";
 import updateChart from "@/lib/charts/updateChart";
@@ -36,10 +35,9 @@ type Props = {
   datasets: Dataset[];
 };
 
-const CreateChart = ({ datasets }: Props) => {
+const UpdateChart = ({ datasets }: Props) => {
   const { data: session } = useSession();
   const searchParams = useSearchParams();
-  const router = useRouter();
   const pathname = usePathname();
 
   // @ts-ignore
@@ -49,7 +47,7 @@ const CreateChart = ({ datasets }: Props) => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [showChart, setShowChart] = useState(false);
-  const [open, setOpen] = useState(chartId == "");
+  const [open, setOpen] = useState(false);
   const [selectedDataset, setSelectedDataset] = useState<any>();
   const [chart, setChart] = useState<Chart>();
   const [xAxis, setXAxis] = useState("");
@@ -71,20 +69,6 @@ const CreateChart = ({ datasets }: Props) => {
     setSelectedDataset(datasets.find((dataset) => dataset._id == id));
   };
 
-  // Function to handle chart deletion
-  const handleDelete = async () => {
-    try {
-      setIsLoading(true);
-      if (chartId != "") {
-        await deleteChart(userId, reportId, chartId);
-        console.log("deleted");
-      }
-      router.replace(pathname.replace("/new", "") + `?id=${reportId}`);
-    } catch (error) {
-      console.log("error");
-    }
-  };
-
   // Function to handle form submission
   const handleSubmit = async () => {
     const data = {
@@ -97,13 +81,10 @@ const CreateChart = ({ datasets }: Props) => {
     };
     try {
       setIsLoading(true);
-      let res;
       if (chartId == "") {
-        res = await createChart(userId, reportId, data);
-        router.replace(pathname + `?id=${reportId}&chart=${res.chart._id}`);
-      } else {
-        res = await updateChart(userId, reportId, chartId, data);
+        alert("Try again");
       }
+      const res = await updateChart(userId, reportId, chartId, data);
       setIsEditing(false);
       setChart(res.chart);
       setXAxis(res.chart.xAxis);
@@ -171,29 +152,33 @@ const CreateChart = ({ datasets }: Props) => {
         </div>
         <div className="flex items-center gap-2">
           <button
-            onClick={handleDelete}
+            onClick={() => {
+              location.replace(
+                pathname.replace("/update", "") + `?id=${reportId}`
+              );
+            }}
             className="px-4 py-2 rounded border border-[#DEE8FA] bg-white text-sm font-medium"
           >
-            Cancel
+            Close
           </button>
           <button
             disabled={!selectedDataset || !xAxis || !yAxis}
             onClick={handleSubmit}
-            className={`px-4 py-2 rounded text-white bg-black text-sm font-medium disabled:opacity-50 disabled:pointer-events-none`}
+            className={`px-4 py-2 rounded text-white bg-primary text-sm font-medium disabled:opacity-50 disabled:pointer-events-none`}
           >
-            Generate
+            Update
           </button>
-          <button
+          {/* <button
             disabled={!chart}
             onClick={() => {
               location.replace(
-                pathname.replace("/new", "") + `?id=${reportId}`
+                pathname.replace("/update", "") + `?id=${reportId}`
               );
             }}
             className={`px-4 py-2 rounded text-white bg-primary text-sm font-medium disabled:opacity-50 disabled:pointer-events-none`}
           >
             Save & Close
-          </button>
+          </button> */}
         </div>
       </div>
       <div className="flex flex-[1_0_0] items-start gap-5 flex-shrink-0 px-7 py-5 text-[#17212F]">
@@ -454,4 +439,4 @@ const CreateChart = ({ datasets }: Props) => {
   );
 };
 
-export default CreateChart;
+export default UpdateChart;
