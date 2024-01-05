@@ -8,6 +8,9 @@ const DatasetSchema = new mongoose.Schema(
     key: {
       type: String,
     },
+    openAPIFile: {
+      type: mongoose.Schema.Types.Mixed,
+    },
     name: {
       type: String,
     },

@@ -3,6 +3,7 @@ import { connectToDB } from "@/utils/mongoose";
 import { NextResponse } from "next/server";
 import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import Dataset from "@/models/Dataset";
+import { OpenAI } from "openai";
 
 type Props = {
   params: {
@@ -10,6 +11,8 @@ type Props = {
     datasetId: string;
   };
 };
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export async function GET(
   req: Request,
@@ -112,6 +115,8 @@ export async function DELETE(
 
     const command = new DeleteObjectCommand(params);
     await s3.send(command);
+
+    await openai.files.del(dataset.openAPIFile.id);
 
     await Dataset.findByIdAndDelete(datasetId);
     return NextResponse.json(

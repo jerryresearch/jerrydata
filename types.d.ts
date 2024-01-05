@@ -45,3 +45,13 @@ type Dataset = {
   createdAt: string;
   updatedAt: string;
 };
+
+type Chat = {
+  _id: string;
+  title: string;
+  dataset: string;
+  createdBy: string;
+  thread: any;
+  createdAt: string;
+  updatedAt: string;
+};

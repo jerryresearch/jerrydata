@@ -2,14 +2,30 @@ import mongoose, { models } from "mongoose";
 
 const MessageSchema = new mongoose.Schema(
   {
-    sender: {
+    role: {
       type: String,
-      enum: ["User", "AI"],
+      enum: ["user", "assistant"],
+      required: true,
+    },
+    type: {
+      type: String,
+      enum: ["Text", "Chart"],
       required: true,
     },
     content: {
       type: String,
-      required: true,
+    },
+    xAxis: {
+      type: String,
+    },
+    yAxis: {
+      type: String,
+    },
+    xData: {
+      type: String,
+    },
+    yData: {
+      type: String,
     },
     chat: {
       type: mongoose.Schema.Types.ObjectId,
