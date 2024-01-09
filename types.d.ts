@@ -55,3 +55,15 @@ type Chat = {
   createdAt: string;
   updatedAt: string;
 };
+
+type Message = {
+  _id: string;
+  role: string;
+  type: string;
+  content: string;
+  xAxis: string;
+  yAxis: string;
+  xData: any[];
+  yData: any[];
+  chat: string;
+};

@@ -9,7 +9,7 @@ const ChartSchema = new mongoose.Schema(
     chartType: {
       type: String,
       required: true,
-      enum: ["Bar", "Doughnut", "Pie", "Line", "Polar Area", "Horizontal Bar"],
+      enum: ["bar", "doughnut", "pie", "line", "polar area", "horizontal bar"],
     },
     report: {
       type: mongoose.Schema.Types.ObjectId,

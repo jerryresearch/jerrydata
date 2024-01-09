@@ -9,11 +9,15 @@ const MessageSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["Text", "Chart"],
+      enum: ["text", "chart"],
       required: true,
     },
     content: {
       type: String,
+    },
+    chartType: {
+      type: String,
+      enum: ["bar", "doughnut", "pie", "line", "polar area", "horizontal bar"],
     },
     xAxis: {
       type: String,
@@ -22,10 +26,10 @@ const MessageSchema = new mongoose.Schema(
       type: String,
     },
     xData: {
-      type: String,
+      type: mongoose.Schema.Types.Array,
     },
     yData: {
-      type: String,
+      type: mongoose.Schema.Types.Array,
     },
     chat: {
       type: mongoose.Schema.Types.ObjectId,

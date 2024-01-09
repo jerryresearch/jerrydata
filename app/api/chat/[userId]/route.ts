@@ -5,7 +5,7 @@ import { connectToDB } from "@/utils/mongoose";
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 import { OpenAI } from "openai";
-import fs from "fs";
+import Message from "@/models/Message";
 
 type Props = {
   params: {
@@ -23,21 +23,7 @@ export async function GET(req: Request, { params: { userId } }: Props) {
     if (!userId || !mongoose.isValidObjectId(userId)) {
       return NextResponse.json({ message: "Invalid session" }, { status: 403 });
     }
-    const chats = await Chat.find({ createdBy: userId });
-    // const response = await openai.files.content(
-    //   "file-2Ho6l0ar8GDreEqp4DXgBspy"
-    // );
-
-    // // Extract the binary data from the Response object
-    // const image_data = await response.arrayBuffer();
-
-    // // Convert the binary data to a Buffer
-    // const image_data_buffer = Buffer.from(image_data);
-
-    // console.log("start image");
-    // // Save the image to a specific location
-    // fs.writeFileSync("./my-image.png", image_data_buffer);
-    // console.log("done image");
+    const chats = await Chat.find({ createdBy: userId }).sort("-createdAt");
     return NextResponse.json(chats, { status: 200 });
   } catch (error) {
     console.log(error);
@@ -71,7 +57,7 @@ export async function POST(req: Request, { params: { userId } }: Props) {
 
     const assistant = await openai.beta.assistants.create({
       instructions:
-        "You are an analytics bot. Access the dataset provided (in CSV or Excel format) and utilize its information to respond accurately to user questions based on the dataset's analytics. If the user asks general questions about the dataset then just answer those questions. But if the user asks questions which can be answered with charts then parse the dataset and give a javascript object in the result, the object should contain 4 fields xAxis, yAxis, xData and yData. xAxis and yAxis are column names for x axis and y axis of the chart and xData and yData are arrays which contain values of these columns.",
+        "You are an analytics bot. Access the dataset provided (in CSV or Excel format) and utilize its information to respond accurately to user questions based on the dataset's analytics. If possible give the result that contains a javascript object with 4 fields. They are: xAxis, yAxis, xData and yData. xAxis and yAxis are column names for x axis and y axis of the chart and xData and yData are arrays which contain values of these columns",
       name: "Analytics Assistant",
       tools: [{ type: "code_interpreter" }, { type: "retrieval" }],
       model: "gpt-3.5-turbo-1106",
@@ -81,11 +67,30 @@ export async function POST(req: Request, { params: { userId } }: Props) {
     const assistantId = assistant.id;
 
     const thread = await openai.beta.threads.create({});
+    await openai.beta.threads.messages.create(thread.id, {
+      role: "user",
+      content: "Hello",
+    });
+    let firstRun = await openai.beta.threads.runs.create(thread.id, {
+      assistant_id: assistantId,
+    });
+
+    let firstRunStatus = firstRun.status;
+    while (firstRunStatus === "queued" || firstRunStatus === "in_progress") {
+      await delay(15000); // 15 seconds delay
+      firstRun = await openai.beta.threads.runs.retrieve(
+        thread.id,
+        firstRun.id
+      );
+      firstRunStatus = firstRun.status;
+    }
 
     // Step 1: Add Messages to the Thread
     await openai.beta.threads.messages.create(thread.id, {
       role: "user",
-      content: message,
+      content:
+        message +
+        " If possible, give a javascript object for that information that has 4 fields. xAxis, yAxis, xData and yData",
     });
 
     const chat = await Chat.create({
@@ -96,10 +101,17 @@ export async function POST(req: Request, { params: { userId } }: Props) {
       createdBy: userId,
     });
 
+    await Message.create({
+      role: "user",
+      type: "text",
+      content: message,
+      chat: chat._id,
+    });
+
     // Step 2: Run the Assistant
     let myRun = await openai.beta.threads.runs.create(thread.id, {
       assistant_id: assistantId,
-      // instructions: "",
+      instructions: "In the result, if possible, give a javascript object",
     });
 
     let runStatus = myRun.status;
@@ -107,11 +119,15 @@ export async function POST(req: Request, { params: { userId } }: Props) {
       await delay(15000); // 15 seconds delay
       myRun = await openai.beta.threads.runs.retrieve(thread.id, myRun.id);
       runStatus = myRun.status;
-
-      if (runStatus === "completed") {
-        break;
-      }
     }
+
+    // if (!(runStatus === "completed")) {
+    //   return NextResponse.json(
+    //     { message: "Something went wrong, try again" },
+    //     { status: 500 }
+    //   );
+    // }
+    console.log("runStatus", runStatus);
 
     // Step 4: Retrieve the Messages added by the Assistant to the Thread
     const messages = await openai.beta.threads.messages.list(thread.id);
@@ -121,10 +137,32 @@ export async function POST(req: Request, { params: { userId } }: Props) {
         ? messages.data[0].content[0].text.value
         : "No text content found";
 
-    console.log(responseMessage);
+    const resArray = responseMessage.split("```");
+    if (resArray.length >= 3) {
+      const obj = JSON.parse(resArray[1].replace("javascript", ""));
+      await Message.create({
+        role: "assistant",
+        type: "chart",
+        chartType: "bar",
+        xAxis: obj.xAxis,
+        yAxis: obj.yAxis,
+        xData: obj.xData,
+        yData: obj.yData,
+        chat: chat._id,
+      });
+    } else {
+      await Message.create({
+        role: "assistant",
+        type: "text",
+        content: responseMessage,
+        chat: chat._id,
+      });
+    }
+
+    const messagesList = await Message.find({ chat: chat._id });
 
     return NextResponse.json(
-      { chat, messages, message: "chat created" },
+      { chat, messages: messagesList, message: "chat created" },
       { status: 201 }
     );
   } catch (error) {
