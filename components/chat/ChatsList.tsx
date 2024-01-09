@@ -1,12 +1,18 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { useSearchParams } from "next/navigation";
 
 type Props = {
   chats: Chat[];
 };
 
 const ChatsList = ({ chats }: Props) => {
+  const searchParams = useSearchParams();
+  const chatId = searchParams.get("id") || "";
+
   return (
     <aside className="flex max-h-full overflow-auto w-[252px] py-6 flex-col text-sm items-center gap-6 flex-shrink-0 self-stretch rounded border border-[#EAEDF2] bg-white">
       <div className="w-[226px] flex flex-col gap-[10px]">
@@ -36,7 +42,9 @@ const ChatsList = ({ chats }: Props) => {
             <Link
               href={`chatIQ?id=${chat._id}`}
               key={index}
-              className="flex h-8 py-[6px] px-[10px] gap-2"
+              className={`flex h-8 py-[6px] px-[10px] gap-2 ${
+                chat._id == chatId && "bg-[#EAEDF2] rounded"
+              }`}
             >
               <Image
                 src="/assets/message-icon.svg"
