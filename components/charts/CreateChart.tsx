@@ -89,7 +89,7 @@ const CreateChart = ({ datasets }: Props) => {
   const handleSubmit = async () => {
     const data = {
       title: title || `${type} chart`,
-      chartType: type,
+      chartType: type.toLowerCase(),
       dataset: selectedDataset._id,
       report: reportId,
       xAxis,
@@ -415,15 +415,15 @@ const CreateChart = ({ datasets }: Props) => {
                   </span>
                 )}
               </header>
-              {chart.chartType == "Bar" ? (
+              {chart.chartType == "bar" ? (
                 <BarChart data={chart} />
-              ) : chart.chartType == "Line" ? (
+              ) : chart.chartType == "line" ? (
                 <LineChart data={chart} />
-              ) : chart.chartType == "Pie" ? (
+              ) : chart.chartType == "pie" ? (
                 <PieChart data={chart} />
-              ) : chart.chartType == "Doughnut" ? (
+              ) : chart.chartType == "doughnut" ? (
                 <DoughnutChart data={chart} />
-              ) : chart.chartType == "Polar Area" ? (
+              ) : chart.chartType == "polar area" ? (
                 <PloarAreaChart data={chart} />
               ) : (
                 <HorizontalBarChart data={chart} />

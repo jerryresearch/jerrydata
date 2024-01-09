@@ -19,7 +19,7 @@ ChartJS.register(
 );
 
 type Props = {
-  data: Chart;
+  data?: Partial<Chart>;
 };
 
 const HorizontalBarChart = ({ data }: Props) => {

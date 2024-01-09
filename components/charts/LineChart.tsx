@@ -20,7 +20,7 @@ ChartJS.register(
 );
 
 type Props = {
-  data?: Chart;
+  data?: Partial<Chart>;
 };
 
 const LineChart = ({ data }: Props) => {
@@ -46,7 +46,7 @@ const LineChart = ({ data }: Props) => {
 
   const chartOptions = {
     title: {
-      display: true,
+      display: title && true,
       text: title,
       fontSize: 20,
     },

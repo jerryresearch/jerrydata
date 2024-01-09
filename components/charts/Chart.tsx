@@ -11,7 +11,7 @@ import HorizontalBarChart from "./HorizontalBarChart";
 import Image from "next/image";
 import updateChart from "@/lib/charts/updateChart";
 import { useSession } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 type Props = {
   chart: Chart;
@@ -20,7 +20,6 @@ type Props = {
 const Chart = ({ chart }: Props) => {
   const { data: session } = useSession();
   const searchParams = useSearchParams();
-  const router = useRouter();
 
   // @ts-ignore
   const userId = session?.user?._id || session?.user?.id;
@@ -68,7 +67,7 @@ const Chart = ({ chart }: Props) => {
               >
                 <Image
                   src="/assets/dismiss.svg"
-                  alt="confirm icon"
+                  alt="cancel icon"
                   width={16}
                   height={16}
                 />
@@ -87,15 +86,15 @@ const Chart = ({ chart }: Props) => {
           <ChartActions chart={chart} />
         </div>
       </div>
-      {chart.chartType == "Bar" ? (
+      {chart.chartType == "bar" ? (
         <BarChart data={chart} />
-      ) : chart.chartType == "Line" ? (
+      ) : chart.chartType == "line" ? (
         <LineChart data={chart} />
-      ) : chart.chartType == "Pie" ? (
+      ) : chart.chartType == "pie" ? (
         <PieChart data={chart} />
-      ) : chart.chartType == "Doughnut" ? (
+      ) : chart.chartType == "doughnut" ? (
         <DoughnutChart data={chart} />
-      ) : chart.chartType == "Polar Area" ? (
+      ) : chart.chartType == "polar area" ? (
         <PloarAreaChart data={chart} />
       ) : (
         <HorizontalBarChart data={chart} />
