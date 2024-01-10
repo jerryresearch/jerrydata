@@ -1,4 +1,3 @@
-import EditFields from "@/components/EditFields";
 import EditDatasetFields from "@/components/data/edit/EditDatasetFields";
 import getDataset from "@/lib/getDataset";
 import { authOptions } from "@/utils/authOptions";
@@ -18,6 +17,7 @@ const page = async ({
 
   const datasetData: Promise<Dataset> = getDataset(userId, id);
   const dataset = await datasetData;
+
   return (
     <EditDatasetFields
       dataset={dataset}

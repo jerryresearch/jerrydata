@@ -1,6 +1,6 @@
 "use client";
 
-import EditFooter from "@/components/EditFooter";
+import EditFooter from "@/components/data/edit/EditFooter";
 import MenuBar from "@/components/MenuBar";
 import Image from "next/image";
 import { Switch } from "@/components/ui/switch";
@@ -51,8 +51,6 @@ const fields = {
   ],
 };
 
-const datatypes = ["String", "Date", "Location", "Number"];
-
 type SelectedAttributes = {
   columnType: string;
   defaultAggregate: string;
@@ -63,14 +61,9 @@ type SelectedAttributes = {
 
 const EditDatasetFields = ({ dataset, userId, userName }: Props) => {
   const [searchInput, setSearchInput] = useState("");
+  const [isUpdated, setIsUpdated] = useState(false);
   const [newupdatedheaders, setNewUpdatedHeaders] = useState(
-    dataset.headers.map((header) => ({
-      ...header,
-      columnType: "Attribute",
-      defaultAggregate: "No Aggregate",
-      dateFieldType: "None",
-      geoFieldType: "None",
-    }))
+    dataset.headers.map((header) => ({ ...header }))
   );
 
   const [filteredHeaders, setFilteredHeaders] = useState(
@@ -99,10 +92,10 @@ const EditDatasetFields = ({ dataset, userId, userName }: Props) => {
   );
 
   const disabled = false;
-  const currentStep = 4;
   let count = 1;
 
   const handleOnClickSwitch = (index: number) => {
+    setIsUpdated(true);
     setFilteredHeaders((prevFilteredHeaders) => {
       const updatedFilteredHeaders = [...prevFilteredHeaders];
       updatedFilteredHeaders[index] = {
@@ -111,6 +104,20 @@ const EditDatasetFields = ({ dataset, userId, userName }: Props) => {
       };
       return updatedFilteredHeaders;
     });
+
+    setNewUpdatedHeaders((prevHeaders) => {
+      const updatedHeaders = [...prevHeaders];
+      const headerIndex = prevHeaders.findIndex(
+        (header) => header.name === filteredHeaders[index].name
+      );
+      if (headerIndex !== -1) {
+        updatedHeaders[headerIndex] = {
+          ...updatedHeaders[headerIndex],
+          isDisabled: !updatedHeaders[headerIndex].isDisabled,
+        };
+      }
+      return updatedHeaders;
+    });
   };
 
   const handleClickOnDropdown = (
@@ -118,6 +125,45 @@ const EditDatasetFields = ({ dataset, userId, userName }: Props) => {
     value: string,
     rowIndex: number
   ) => {
+    setIsUpdated(true);
+    setNewUpdatedHeaders((prevHeaders) => {
+      const updatedHeaders = [...prevHeaders];
+      const headerIndex = prevHeaders.findIndex(
+        (header) => header.name === filteredHeaders[rowIndex].name
+      );
+
+      if (headerIndex !== -1) {
+        const updatedHeader = {
+          ...updatedHeaders[headerIndex],
+          ...(field === "Column Type" && { columnType: value }),
+          ...(field === "Default Aggregate" && { defaultAggregate: value }),
+          ...(field === "Date Field Type" && { dateFieldType: value }),
+          ...(field === "Geo Field Type" && { geoFieldType: value }),
+        };
+
+        if (field === "Column Type" && value === "Attribute") {
+          updatedHeader.defaultAggregate = "No Aggregate";
+        }
+
+        if (field === "Column Type" && value === "Measure") {
+          updatedHeader.dateFieldType = "None";
+          updatedHeader.geoFieldType = "None";
+        }
+
+        if (field === "Date Field Type" && value !== "None") {
+          updatedHeader.geoFieldType = "None";
+        }
+
+        if (field === "Geo Field Type" && value !== "None") {
+          updatedHeader.dateFieldType = "None";
+        }
+
+        updatedHeaders[headerIndex] = updatedHeader;
+      }
+
+      return updatedHeaders;
+    });
+
     setSelectedAttributes((prevState) => {
       const updatedRows = [...prevState];
       updatedRows[rowIndex] = {
@@ -395,7 +441,11 @@ const EditDatasetFields = ({ dataset, userId, userName }: Props) => {
           </div>
         </section>
       </div>
-      <EditFooter id={dataset._id} userId={userId} />
+      <EditFooter
+        id={dataset._id}
+        userId={userId}
+        updates={isUpdated ? { headers: newupdatedheaders } : undefined}
+      />
     </section>
   );
 };

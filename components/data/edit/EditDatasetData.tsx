@@ -4,27 +4,27 @@ import { formatLastLoad, formatRows, formatSize } from "@/lib/formatDatasets";
 import Image from "next/image";
 import React from "react";
 import Data from "../Data";
-import EditFooter from "@/components/EditFooter";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/utils/authOptions";
+import EditFooter from "@/components/data/edit/EditFooter";
 
 type Props = {
   dataset: Dataset;
-  userId: string;
-  userName: string;
   records: any[];
-  name: string;
   currentPage: number;
   totalPages: number;
 };
 
-const EditDatasetData = ({
+const EditDatasetData = async ({
   dataset,
-  userId,
-  name,
-  userName,
   records,
   currentPage,
   totalPages,
 }: Props) => {
+  const session: any = await getServerSession(authOptions);
+  const userId = session?.user?._id || session?.user?.id;
+  const userName = session?.user?.fullName;
+
   return (
     <section className="bg-[#F6F8FA] min-h-screen flex flex-col">
       <div className="sticky top-0 z-10 flex items-center bg-[#DEE8FA] py-3 px-7">
@@ -62,14 +62,14 @@ const EditDatasetData = ({
       <div className="flex-1">
         <Data headers={dataset.headers} records={records} />
         <Pagination
-          href={`/dashboard/data/${name}/edit/data?id=${dataset._id}`}
+          href={`/dashboard/data/${dataset.name}/edit/data?id=${dataset._id}`}
           length={records.length}
           totalRecords={dataset.rows}
           currentPage={currentPage}
           totalPages={totalPages}
         />
       </div>
-      <EditFooter id={dataset._id} userId={userId} />
+      <EditFooter id={dataset._id} userId={userId} updates={undefined} />
     </section>
   );
 };

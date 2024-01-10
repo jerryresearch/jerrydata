@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/popover";
 import { Switch } from "../../ui/switch";
 import DeleteModal from "../../DeleteModal";
-import EditFooter from "../../EditFooter";
+import EditFooter from "./EditFooter";
 import MenuBar from "../../MenuBar";
 import { formatLastLoad, formatRows, formatSize } from "@/lib/formatDatasets";
 
