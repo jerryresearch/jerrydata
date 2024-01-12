@@ -6,9 +6,10 @@ import { connectToDB } from "./mongoose";
 import clientPromise from "./mongodb";
 import { verifyPassword } from "./verifyPassword";
 import User from "@/models/User";
+import { randomBytes, randomUUID } from "crypto";
 
 export const authOptions: NextAuthOptions = {
-  adapter: MongoDBAdapter(clientPromise),
+  // adapter: MongoDBAdapter(clientPromise),
   session: {
     strategy: "jwt",
   },
@@ -54,6 +55,7 @@ export const authOptions: NextAuthOptions = {
             _id: user._id,
             fullName: user.fullName,
             email: user.email,
+            // emailVerified: user.emailVerified,
           } as any;
         } else {
           // If you return null then an error will be displayed advising the user to check their details.
@@ -64,48 +66,75 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  // callbacks: {
+  // @ts-ignore
+  // async signIn({ user, account, profile }) {
+  //   console.log(user);
+  //   console.log(account);
+  //   console.log(profile);
+  //   return {
+  //     user,
+  //     account,
+  //     profile,
+  //   };
+  //   const existingUser = await User.findOne({ email: user.user.email });
+  //   if (!existingUser) {
+  //     //TODO Create a new user in your database
+  //     try {
+  //       //TODO create new user
+  //     } catch (err) {
+  //       console.log("Error message", err);
+  //       return false;
+  //     }
+  //   }
+  //   return true;
+  // },
+  // session: ({ session, token }) => {
+  //   return {
+  //     ...session,
+  //     user: {
+  //       // @ts-ignore
+  //       ...token.user,
+  //     },
+  //   };
+  // },
+  // jwt: ({ token, user }) => {
+  //   if (user) {
+  //     const u = user as unknown as any;
+  //     return {
+  //       ...token,
+  //       user: { ...u, randomKey: u.randomKey },
+  //     };
+  //   }
+  //   return token;
+  // },
+  // },
   callbacks: {
     // @ts-ignore
-    // async signIn({ user, account, profile }) {
-    //   console.log(user);
-    //   console.log(account);
-    //   console.log(profile);
-    //   return {
-    //     user,
-    //     account,
-    //     profile,
-    //   };
-
-    //   const existingUser = await User.findOne({ email: user.user.email });
-    //   if (!existingUser) {
-    //     //TODO Create a new user in your database
-    //     try {
-    //       //TODO create new user
-    //     } catch (err) {
-    //       console.log("Error message", err);
-    //       return false;
-    //     }
-    //   }
-    //   return true;
-    // },
-    session: ({ session, token }) => {
+    async signIn(user, account, profile) {
+      const existingUser = await User.findOne({ email: user.user.email });
+      if (!existingUser) {
+        try {
+          const newUser = await User.create({
+            firstname: user.profile.given_name || user.profile.name,
+          });
+        } catch (err) {
+          console.log("Sample hi", err);
+          return false;
+        }
+      }
+      return true;
+    },
+    // @ts-ignore
+    session: async (session) => {
+      const userData = await User.findOne({
+        email: session?.session?.user?.email,
+      });
       return {
-        ...session,
         user: {
-          // @ts-ignore
-          ...token.user,
+          id: userData._id,
         },
       };
-    },
-    jwt: ({ token, user }) => {
-      if (user) {
-        const u = user as unknown as any;
-        return {
-          ...token,
-          user: { ...u, randomKey: u.randomKey },
-        };
-      }
-      return token;
     },
   },
   pages: {

@@ -33,6 +33,7 @@ export async function POST(req: Request) {
       fullName,
       email,
       password: hashed_password,
+      // token: `${randomUUID()}/${randomUUID()}`.replaceAll("-", ""),
     });
 
     const { password: newPassword, ...rest } = user;

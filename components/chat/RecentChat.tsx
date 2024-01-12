@@ -1,12 +1,14 @@
 import React from "react";
 import ChatActions from "./ChatActions";
+import Link from "next/link";
 
 type Props = {
+  id: string;
   name: string;
   lastModified: string;
 };
 
-const RecentChat = ({ name, lastModified }: Props) => {
+const RecentChat = ({ id, name, lastModified }: Props) => {
   return (
     <div className="w-full h-[160px] p-5 rounded border border-[#EAEDF2] bg-white">
       <table className="w-full table-auto min-w-max text-left">
@@ -19,10 +21,12 @@ const RecentChat = ({ name, lastModified }: Props) => {
         </thead>
         <tbody>
           <tr>
-            <td className="font-medium p-5 text-primary">{name}</td>
-            <td className="font-medium p-5">{lastModified} ago</td>
+            <td className="font-medium p-5 text-primary">
+              <Link href={`chatIQ?id=${id}`}>{name}</Link>
+            </td>
+            <td className="font-medium p-5">{lastModified}</td>
             <td className="font-medium p-5">
-              <ChatActions />
+              <ChatActions chatId={id} />
             </td>
           </tr>
         </tbody>

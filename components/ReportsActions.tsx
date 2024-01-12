@@ -7,14 +7,29 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import Image from "next/image";
-import DeleteModal from "./DeleteModal";
+import DeleteReportModal from "./reports/DeleteReportModal";
+import duplicateReport from "@/lib/reports/duplicateReport";
 
-const Actions = () => {
+type Props = {
+  report: Reports;
+  userId: string;
+};
+
+const ReportsActions = ({ report, userId }: Props) => {
   const [open, setOpen] = useState(false);
   const [popUpOpen, setPopUpOpen] = useState(false);
 
   const handleCloseModal = () => {
     setOpen(false);
+  };
+
+  const handleDuplicate = async () => {
+    try {
+      const res = await duplicateReport(userId, report._id, report);
+      location.reload();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -42,7 +57,10 @@ const Actions = () => {
           Save as PDF
         </span>
         <span
-          onClick={() => setPopUpOpen(false)}
+          onClick={() => {
+            setPopUpOpen(false);
+            handleDuplicate();
+          }}
           className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
         >
           Duplicate
@@ -57,9 +75,14 @@ const Actions = () => {
           Delete
         </span>
       </PopoverContent>
-      {/* <DeleteModal open={open} onClose={handleCloseModal} /> */}
+      <DeleteReportModal
+        id={report._id}
+        userId={userId}
+        open={open}
+        onClose={handleCloseModal}
+      />
     </Popover>
   );
 };
 
-export default Actions;
+export default ReportsActions;

@@ -24,7 +24,7 @@ const navLinks = [
     image: "/assets/data-icon.svg",
   },
   {
-    name: "CharIQ",
+    name: "ChatIQ",
     href: "/dashboard/chatIQ",
     active: "/assets/chatIQ-icon-active.svg",
     image: "/assets/chatIQ-icon.svg",

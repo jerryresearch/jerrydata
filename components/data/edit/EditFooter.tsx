@@ -14,6 +14,7 @@ type Props = {
 const EditFooter = ({ updates, userId, id }: Props) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+
   const handleUpdate = async () => {
     if (userId && updates) {
       setIsLoading(true);
@@ -40,7 +41,7 @@ const EditFooter = ({ updates, userId, id }: Props) => {
           <button
             onClick={handleUpdate}
             className={`flex py-2 px-4 justify-center items-center gap-[10px] rounded bg-primary text-white ${
-              isLoading && "opacity-50 pointer-events-none"
+              (isLoading || !updates) && "opacity-50 pointer-events-none"
             }`}
           >
             Save

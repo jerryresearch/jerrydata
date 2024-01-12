@@ -12,7 +12,7 @@ export default function Home() {
 
   useEffect(() => {
     router.push("/user/login");
-  }, []);
+  }, [router]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

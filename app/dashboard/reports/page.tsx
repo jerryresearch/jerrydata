@@ -6,9 +6,8 @@ import { getServerSession } from "next-auth";
 
 const Page = async () => {
   const session: any = await getServerSession(authOptions);
-  const reportsData: Promise<Reports[]> = getReports(
-    session?.user?._id || session?.user?.id
-  );
+  const userId = session?.user?._id || session?.user?.id;
+  const reportsData: Promise<Reports[]> = getReports(userId);
 
   const reports = await reportsData;
 
@@ -17,7 +16,11 @@ const Page = async () => {
       <div className="flex items-center py-3 px-7 bg-[#DEE8FA] h-[49px]">
         <h1 className="text-lg font-semibold text-[#17212F]">Reports</h1>
       </div>
-      {reports.length == 0 ? <EmptyPage /> : <Reports reports={reports} />}
+      {reports.length == 0 ? (
+        <EmptyPage userId={userId} />
+      ) : (
+        <Reports userId={userId} reports={reports} />
+      )}
     </section>
   );
 };

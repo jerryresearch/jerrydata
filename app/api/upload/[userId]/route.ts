@@ -6,6 +6,9 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import crypto from "crypto";
 import csv from "csv-parser";
 import { Readable } from "stream";
+import { OpenAI } from "openai";
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 type Props = {
   params: {
@@ -111,11 +114,17 @@ export const POST = async (req: Request, { params: { userId } }: Props) => {
         });
     });
 
+    const openAPIFile = await openai.files.create({
+      file: file,
+      purpose: "assistants",
+    });
+
     // store in database
     const dataset = await Dataset.create({
       name: fileName,
       key,
       datatype,
+      openAPIFile,
       size,
       rows,
       columns: headers.length,

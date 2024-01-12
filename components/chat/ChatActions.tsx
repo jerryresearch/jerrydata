@@ -7,10 +7,20 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import Image from "next/image";
-import DeleteModal from "../DeleteModal";
+import DeleteChatModal from "./DeleteChatModal";
 import ShareChatModal from "./ShareModal";
+import { useSession } from "next-auth/react";
 
-const ChatActions = () => {
+type Props = {
+  chatId: string;
+};
+
+const ChatActions = ({ chatId }: Props) => {
+  const { data: session } = useSession();
+
+  // @ts-ignore
+  const userId = session?.user?._id || session?.user?.id;
+
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openShareModal, setOpenShareModal] = useState(false);
   const [popUpOpen, setPopUpOpen] = useState(false);
@@ -52,7 +62,12 @@ const ChatActions = () => {
           Delete chat
         </span>
       </PopoverContent>
-      {/* <DeleteModal open={openDeleteModal} onClose={handleCloseDeleteModal} /> */}
+      <DeleteChatModal
+        open={openDeleteModal}
+        onClose={handleCloseDeleteModal}
+        id={chatId}
+        userId={userId}
+      />
       <ShareChatModal open={openShareModal} onClose={handleCloseShareModal} />
     </Popover>
   );

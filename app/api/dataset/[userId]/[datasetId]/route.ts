@@ -3,7 +3,7 @@ import { connectToDB } from "@/utils/mongoose";
 import { NextResponse } from "next/server";
 import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import Dataset from "@/models/Dataset";
-import { TURBO_TRACE_DEFAULT_MEMORY_LIMIT } from "next/dist/shared/lib/constants";
+import { OpenAI } from "openai";
 
 type Props = {
   params: {
@@ -11,6 +11,8 @@ type Props = {
     datasetId: string;
   };
 };
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export async function GET(
   req: Request,
@@ -64,14 +66,11 @@ export async function PUT(
         { status: 400 }
       );
     }
+    const updatedDataset = await Dataset.findByIdAndUpdate(datasetId, body, {
+      new: true,
+      runValidators: true,
+    });
 
-    const updatedDataset = await Dataset.findByIdAndUpdate(
-      datasetId,
-      { headers: body.headers },
-      { new: true, runValidators: true }
-    );
-
-    console.log(updatedDataset);
     return NextResponse.json(updatedDataset, { status: 200 });
   } catch (error) {
     console.log(error);
@@ -116,6 +115,8 @@ export async function DELETE(
 
     const command = new DeleteObjectCommand(params);
     await s3.send(command);
+
+    await openai.files.del(dataset.openAPIFile.id);
 
     await Dataset.findByIdAndDelete(datasetId);
     return NextResponse.json(

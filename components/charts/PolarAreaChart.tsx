@@ -8,7 +8,6 @@ import {
   PolarAreaController,
   RadialLinearScale,
 } from "chart.js";
-import ChartActions from "./ChartActions";
 
 ChartJS.register(
   ArcElement,
@@ -19,24 +18,23 @@ ChartJS.register(
 );
 
 type Props = {
-  data: {
-    [key: string]: number;
-  };
+  data?: Partial<Chart>;
 };
 
 const PloarAreaChart = ({ data }: Props) => {
-  const chartData = {
-    labels: Object.keys(data),
+  if (!data) {
+    return;
+  }
+
+  const { title, xAxis, yAxis, xData, yData } = data;
+
+  const polarChartData = {
+    labels: xData,
     datasets: [
       {
-        data: Object.values(data),
-        backgroundColor: [
-          "#16CC62",
-          "#2272E3",
-          "#FFD111",
-          "#D242E9",
-          "#F63333",
-        ],
+        data: yData,
+        backgroundColor: ["#2272E3", "#FFD111", "#16CC62"],
+        // hoverBackgroundColor: [ Add more colors as needed ],
       },
     ],
   };
@@ -62,7 +60,7 @@ const PloarAreaChart = ({ data }: Props) => {
 
   return (
     <div className="w-3/5">
-      <PolarArea data={chartData} options={options} />
+      <PolarArea data={polarChartData} options={options} />
     </div>
   );
 };

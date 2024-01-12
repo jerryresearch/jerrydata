@@ -1,6 +1,4 @@
 import EditFields from "@/components/EditFields";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
 import getDataset from "@/lib/getDataset";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/authOptions";

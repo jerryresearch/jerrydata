@@ -34,12 +34,9 @@ const Page = async ({
   return (
     <EditDatasetData
       dataset={dataset}
-      userId={userId}
       records={records}
-      name={params.name}
       totalPages={totalPages}
       currentPage={currentPage}
-      userName={session?.user?.fullName}
     />
   );
 };

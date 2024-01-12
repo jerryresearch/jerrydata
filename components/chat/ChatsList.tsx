@@ -1,17 +1,25 @@
-import Image from "next/image";
-import React from "react";
+"use client";
 
-const ChatsList = () => {
-  const chats = [
-    "Analytics for sales of hurrae",
-    "Analytics for sales of hurrae",
-    "Analytics for sales of hurrae",
-    "Analytics for sales of hurrae",
-  ];
+import Image from "next/image";
+import Link from "next/link";
+import React from "react";
+import { useSearchParams } from "next/navigation";
+
+type Props = {
+  chats: Chat[];
+};
+
+const ChatsList = ({ chats }: Props) => {
+  const searchParams = useSearchParams();
+  const chatId = searchParams.get("id") || "";
+
   return (
     <aside className="flex max-h-full overflow-auto w-[252px] py-6 flex-col text-sm items-center gap-6 flex-shrink-0 self-stretch rounded border border-[#EAEDF2] bg-white">
       <div className="w-[226px] flex flex-col gap-[10px]">
-        <button className="h-10 px-2 bg-primary text-white rounded flex items-center gap-2">
+        <Link
+          href={"chatIQ"}
+          className="h-10 px-2 bg-primary text-white rounded flex items-center gap-2"
+        >
           <Image
             src="/assets/plus-icon.svg"
             alt="add new chat"
@@ -19,7 +27,7 @@ const ChatsList = () => {
             height={20}
           />
           <span>New Chat</span>
-        </button>
+        </Link>
         <input
           type="text"
           placeholder="Search chat"
@@ -31,15 +39,21 @@ const ChatsList = () => {
         <div className="w-[212px] flex flex-col gap-[14px]">
           <h1>Recent chats</h1>
           {chats.map((chat, index) => (
-            <div key={index} className="flex h-8 py-[6px] px-[10px] gap-2">
+            <Link
+              href={`chatIQ?id=${chat._id}`}
+              key={index}
+              className={`flex h-8 py-[6px] px-[10px] gap-2 ${
+                chat._id == chatId && "bg-[#EAEDF2] rounded"
+              }`}
+            >
               <Image
                 src="/assets/message-icon.svg"
                 alt="message icon"
                 width={20}
                 height={20}
               />
-              <span className="truncate text-sm">{chat}</span>
-            </div>
+              <span className="truncate text-sm">{chat.title}</span>
+            </Link>
           ))}
         </div>
       </div>

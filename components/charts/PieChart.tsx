@@ -1,29 +1,27 @@
 import React from "react";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import ChartActions from "./ChartActions";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 type Props = {
-  data: {
-    [key: string]: number;
-  };
+  data?: Partial<Chart>;
 };
 
 const PieChart = ({ data }: Props) => {
-  const chartData = {
-    labels: Object.keys(data),
+  if (!data) {
+    return;
+  }
+
+  const { title, xAxis, yAxis, xData, yData } = data;
+
+  const pieChartData = {
+    labels: xData,
     datasets: [
       {
-        data: Object.values(data),
-        backgroundColor: [
-          "#16CC62",
-          "#2272E3",
-          "#FFD111",
-          "#D242E9",
-          "#F63333",
-        ],
+        data: yData,
+        backgroundColor: ["#2272E3", "#FFD111", "#16CC62"],
+        // hoverBackgroundColor: [ Add more colors as needed ],
       },
     ],
   };
@@ -41,8 +39,8 @@ const PieChart = ({ data }: Props) => {
   };
 
   return (
-    <div className="w-3/5">
-      <Pie data={chartData} options={options} />
+    <div className="w-3/5 mx-auto">
+      <Pie data={pieChartData} options={options} />
     </div>
   );
 };
