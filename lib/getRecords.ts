@@ -4,7 +4,7 @@ export default async function getRecords(
   page: number
 ) {
   const res = await fetch(
-    `http://localhost:3000/api/file/${userId}?id=${datasetId}&page=${page}`,
+    `${process.env.BASE_URL}/api/file/${userId}?id=${datasetId}&page=${page}`,
     {
       headers: {
         "Content-Type": "application/json",
