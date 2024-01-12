@@ -9,16 +9,17 @@ import {
 import Image from "next/image";
 import DeleteChatModal from "./DeleteChatModal";
 import ShareChatModal from "./ShareModal";
-import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 
-const ChatActions = () => {
-  const searchParams = useSearchParams();
+type Props = {
+  chatId: string;
+};
+
+const ChatActions = ({ chatId }: Props) => {
   const { data: session } = useSession();
 
   // @ts-ignore
   const userId = session?.user?._id || session?.user?.id;
-  const chatId = searchParams.get("id") || "";
 
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openShareModal, setOpenShareModal] = useState(false);

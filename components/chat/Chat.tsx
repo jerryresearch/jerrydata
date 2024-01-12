@@ -216,7 +216,7 @@ const Chat = ({ datasets }: Props) => {
             </div>
           </div>
           <div className="flex w-10 h-10 items-center justify-center gap-2 py-5  rounded border border-[#EAEDF2] bg-white">
-            <ChatActions />
+            <ChatActions chatId={chatId} />
           </div>
         </div>
       </div>
