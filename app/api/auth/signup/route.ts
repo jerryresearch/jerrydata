@@ -6,8 +6,8 @@ import { connectToDB } from "@/utils/mongoose";
 export async function POST(req: Request) {
   try {
     // get details of user from request
-    const { fullName, email, password } = (await req.json()) as {
-      fullName: string;
+    const { name, email, password } = (await req.json()) as {
+      name: string;
       email: string;
       password: string;
     };
@@ -30,7 +30,7 @@ export async function POST(req: Request) {
 
     // create new user in DB
     const user = await User.create({
-      fullName,
+      name,
       email,
       password: hashed_password,
       // token: `${randomUUID()}/${randomUUID()}`.replaceAll("-", ""),

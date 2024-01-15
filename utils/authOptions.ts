@@ -31,6 +31,7 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
+        console.log("normal");
         if (!credentials?.email || !credentials.password) {
           return null;
         }
@@ -53,7 +54,7 @@ export const authOptions: NextAuthOptions = {
           // Any object returned will be saved in `user` property of the JWT
           return {
             _id: user._id,
-            fullName: user.fullName,
+            name: user.name,
             email: user.email,
             // emailVerified: user.emailVerified,
           } as any;
@@ -112,14 +113,19 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     // @ts-ignore
     async signIn(user, account, profile) {
+      await connectToDB();
       const existingUser = await User.findOne({ email: user.user.email });
       if (!existingUser) {
         try {
+          if (user.account.type == "credentials") {
+            throw new Error("Not registered");
+          }
           const newUser = await User.create({
-            firstname: user.profile.given_name || user.profile.name,
+            name: user.profile.given_name || user.profile.name,
+            email: user.profile.email,
           });
         } catch (err) {
-          console.log("Sample hi", err);
+          console.log("Error", err);
           return false;
         }
       }
@@ -127,12 +133,15 @@ export const authOptions: NextAuthOptions = {
     },
     // @ts-ignore
     session: async (session) => {
-      const userData = await User.findOne({
+      let userData = await User.findOne({
         email: session?.session?.user?.email,
       });
+      userData = JSON.parse(JSON.stringify(userData));
       return {
         user: {
           id: userData._id,
+          name: userData.name,
+          email: userData.email,
         },
       };
     },
@@ -144,28 +153,3 @@ export const authOptions: NextAuthOptions = {
 
   secret: process.env.NEXTAUTH_SECRET,
 };
-
-// callbacks: {
-//   session: async (session) => {
-//     if (!session) return;
-
-//     const client = await connectToDatabase();
-//     const usersCollection = client.db().collection('users');
-
-//     const userData = await usersCollection.findOne({
-//       email: session.user.email,
-//     });
-
-//     return {
-//       session: {
-//         user: {
-//           id: userData._id,
-//           firstname: userData.firstname,
-//           lastname: userData.lastname,
-//           username: userData.username,
-//           email: userData.email
-//         }
-//       }
-//     };
-//   },
-// },
