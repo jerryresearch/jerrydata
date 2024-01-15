@@ -8,9 +8,10 @@ type Props = {
   onClose: () => void;
   id: string;
   userId: string;
+  title: string;
 };
 
-const DeleteChatModal = ({ open, onClose, id, userId }: Props) => {
+const DeleteChatModal = ({ open, onClose, id, userId, title }: Props) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -34,7 +35,7 @@ const DeleteChatModal = ({ open, onClose, id, userId }: Props) => {
           : "hidden"
       }`}
     >
-      <div className="bg-white flex w-[640px] h-[394px] flex-col gap-6 flex-shrink-0 items-center pb-[34px] text-xl text-[#17212F]">
+      <div className="bg-white flex w-[640px] min-h-[394px] flex-col gap-6 flex-shrink-0 items-center pb-[34px] text-xl text-[#17212F]">
         <div className="h-[120px] w-full p-8 flex items-center justify-center gap-[254px] flex-shrink-0 border-b border-[#EAEDF2] bg-[#F8FAFC]">
           <div>
             <p className="text-xl font-semibold">Are you sure?</p>
@@ -57,7 +58,7 @@ const DeleteChatModal = ({ open, onClose, id, userId }: Props) => {
           <p>
             Are you sure you want to delete{" "}
             <span className="font-semibold underline underline-offset-2">
-              chat?
+              {title}?
             </span>{" "}
             and its contents?
           </p>

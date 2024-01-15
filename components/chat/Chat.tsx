@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useRef, useState } from "react";
 import {
   Popover,
   PopoverContent,
@@ -38,6 +38,20 @@ const Chat = ({ datasets }: Props) => {
   const [chat, setChat] = useState<Chat | undefined>();
   const [messages, setMessages] = useState<Message[] | undefined>();
   const [selectedDataset, setSelectedDataset] = useState("");
+
+  const chatContainerRef = useRef(null);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      const container = chatContainerRef.current;
+      // @ts-ignore
+      container.scrollTop = container.scrollHeight;
+    }
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -215,12 +229,19 @@ const Chat = ({ datasets }: Props) => {
               />
             </div>
           </div>
-          <div className="flex w-10 h-10 items-center justify-center gap-2 py-5  rounded border border-[#EAEDF2] bg-white">
-            <ChatActions chatId={chatId} />
+          <div
+            className={`flex w-10 h-10 items-center justify-center gap-2 py-5  rounded border border-[#EAEDF2] bg-white ${
+              !chatId && "pointer-events-none opacity-50"
+            }`}
+          >
+            <ChatActions chatId={chatId} title={chat?.title || ""} />
           </div>
         </div>
       </div>
-      <section className="flex-1 overflow-auto px-7 mt-6 mb-[14px] flex flex-col gap-[14px]">
+      <section
+        ref={chatContainerRef}
+        className="flex-1 overflow-auto px-7 mt-6 mb-[14px] flex flex-col gap-[14px]"
+      >
         {messages &&
           messages.map((item, index) => <Message key={index} message={item} />)}
       </section>
