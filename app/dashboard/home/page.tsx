@@ -1,6 +1,6 @@
 import Image from "next/image";
 import RecentChat from "@/components/chat/RecentChat";
-import ReportCard from "@/components/ReportCard";
+import ReportCard from "@/components/reports/ReportCard";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/authOptions";
 import getReports from "@/lib/getReports";

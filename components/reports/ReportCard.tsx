@@ -1,5 +1,3 @@
-import React from "react";
-
 import Link from "next/link";
 import ReportsActions from "./ReportsActions";
 import { formatLastLoad } from "@/lib/formatDatasets";

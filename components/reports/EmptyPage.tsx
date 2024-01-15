@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import React, { useState } from "react";
-import AddReportModal from "../AddReportModal";
+import AddReportModal from "./AddReportModal";
 
 type Props = {
   userId: string;
