@@ -59,13 +59,13 @@ const ConnectionType = ({ id, type }: Props) => {
               <div
                 key={index}
                 onClick={() => {
-                  setSelectedType(file.name);
+                  if (file.name == "CSV") setSelectedType(file.name);
                 }}
               >
                 <ImageCard
                   image={file.image}
                   selected={selectedType === file.name}
-                  disabled={false}
+                  disabled={file.name != "CSV"}
                 />
               </div>
             ))}

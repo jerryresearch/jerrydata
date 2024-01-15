@@ -15,7 +15,7 @@ export async function GET(req: Request, { params: { userId } }: Props) {
     if (!userId || !mongoose.isValidObjectId(userId)) {
       return NextResponse.json({ message: "Invalid session" }, { status: 403 });
     }
-    const datasets = await Dataset.find({ addedBy: userId });
+    const datasets = await Dataset.find({ addedBy: userId }).sort("-createdAt");
     return NextResponse.json(datasets, { status: 200 });
   } catch (error) {
     console.log(error);

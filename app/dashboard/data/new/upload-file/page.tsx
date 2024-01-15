@@ -32,6 +32,7 @@ const Page = async ({
         defaultAggregate: "string",
         dateFieldType: "string",
         geoFieldType: "string",
+        isHidden: false,
       },
     ],
     columns: 0,

@@ -1,17 +1,16 @@
 import deleteDataset from "@/lib/datasets/deleteDataset";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type Props = {
   open: boolean;
   onClose: () => void;
   id: string;
+  name: string;
   userId: string;
 };
 
-const DeleteModal = ({ open, onClose, id, userId }: Props) => {
-  const router = useRouter();
+const DeleteModal = ({ open, onClose, id, userId, name }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleDelete = async () => {
@@ -19,9 +18,7 @@ const DeleteModal = ({ open, onClose, id, userId }: Props) => {
     await deleteDataset(userId, id);
     onClose();
     setIsLoading(false);
-    router.push("/dashboard/data");
-    // router.refresh();
-    window.location.reload();
+    location.reload();
   };
 
   return (
@@ -32,7 +29,7 @@ const DeleteModal = ({ open, onClose, id, userId }: Props) => {
           : "hidden"
       }`}
     >
-      <div className="bg-white flex w-[640px] h-[394px] flex-col gap-6 flex-shrink-0 items-center pb-[34px] text-xl text-[#17212F]">
+      <div className="bg-white flex w-[640px] min-h-[394px] flex-col gap-6 flex-shrink-0 items-center pb-[34px] text-xl text-[#17212F]">
         <div className="h-[120px] w-full p-8 flex items-center justify-center gap-[254px] flex-shrink-0 border-b border-[#EAEDF2] bg-[#F8FAFC]">
           <div>
             <p className="text-xl font-semibold">Are you sure?</p>
@@ -55,7 +52,7 @@ const DeleteModal = ({ open, onClose, id, userId }: Props) => {
           <p>
             Are you sure you want to delete{" "}
             <span className="font-semibold underline underline-offset-2">
-              Dataset?
+              {name}?
             </span>{" "}
             and its contents?
           </p>

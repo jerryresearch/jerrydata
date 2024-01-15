@@ -133,6 +133,7 @@ export const authOptions: NextAuthOptions = {
     },
     // @ts-ignore
     session: async (session) => {
+      await connectToDB();
       let userData = await User.findOne({
         email: session?.session?.user?.email,
       });

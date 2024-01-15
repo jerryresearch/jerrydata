@@ -60,6 +60,7 @@ type Props = {
       dateFieldType: string;
       geoFieldType: string;
       isDisabled: boolean;
+      isHidden: boolean;
     }
   ];
 };
@@ -120,7 +121,6 @@ const EditFields = ({ id, userId, headers }: Props) => {
   };
 
   const handleNext = async () => {
-    // updates pending
     try {
       const res = await updateDataset(userId, id, {
         headers: newupdatedheaders,
@@ -154,7 +154,7 @@ const EditFields = ({ id, userId, headers }: Props) => {
       if (headerIndex !== -1) {
         updatedHeaders[headerIndex] = {
           ...updatedHeaders[headerIndex],
-          isDisabled: !updatedHeaders[headerIndex].isDisabled,
+          isHidden: !updatedHeaders[headerIndex].isHidden,
         };
       }
       return updatedHeaders;

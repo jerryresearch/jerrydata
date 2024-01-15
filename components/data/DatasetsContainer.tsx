@@ -73,21 +73,23 @@ const DatasetsContainer = ({ datasets, userId }: Props) => {
       <section className="w-full px-7 py-4">
         <Datasets datasets={filteredDatasets} userId={userId} />
       </section>
-      <div className="flex justify-between items-center px-7 py-2">
-        <div className="text-[#ADB3BB]">Showing 1-2 of 2</div>
-        <div className="p-[10px] flex justify-center items-center gap-[5px] rounded border border-[#EAEDF2] bg-white">
-          <div className="py-[6px] px-3 bg-[#DEE8FA] cursor-pointer">1</div>
-          <div className="py-[6px] px-3 cursor-pointer">2</div>
-          <div className="py-[6px] px-3 cursor-pointer">
-            <Image
-              src="/assets/chevron-right.svg"
-              alt="more"
-              width={24}
-              height={24}
-            />
+      {datasets.length > 10 && (
+        <div className="flex justify-between items-center px-7 py-2">
+          <div className="text-[#ADB3BB]">Showing 1-2 of 2</div>
+          <div className="p-[10px] flex justify-center items-center gap-[5px] rounded border border-[#EAEDF2] bg-white">
+            <div className="py-[6px] px-3 bg-[#DEE8FA] cursor-pointer">1</div>
+            <div className="py-[6px] px-3 cursor-pointer">2</div>
+            <div className="py-[6px] px-3 cursor-pointer">
+              <Image
+                src="/assets/chevron-right.svg"
+                alt="more"
+                width={24}
+                height={24}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </section>
   );
 };
