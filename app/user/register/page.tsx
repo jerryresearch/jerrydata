@@ -30,7 +30,7 @@ const Page = () => {
     // setData(initialState);
 
     try {
-      const res = await fetch("/api/auth/signup", {
+      const res = await fetch("/api/auth/user", {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
