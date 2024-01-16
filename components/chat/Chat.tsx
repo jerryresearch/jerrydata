@@ -199,6 +199,7 @@ const Chat = ({ datasets }: Props) => {
                         type="checkbox"
                         name={dataset._id}
                         id={dataset._id}
+                        readOnly
                         checked={selectedDataset == dataset._id}
                       />
                       <label
