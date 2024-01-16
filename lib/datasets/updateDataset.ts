@@ -5,7 +5,7 @@ export default async function updateDataset(
 ) {
   if (!userId || !datasetId) return null;
   const res = await fetch(
-    `http://localhost:3000/api/dataset/${userId}/${datasetId}`,
+    `${process.env.BASE_URL}/api/dataset/${userId}/${datasetId}`,
     {
       method: "PUT",
       body: JSON.stringify(body),
