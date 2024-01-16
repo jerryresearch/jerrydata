@@ -89,6 +89,7 @@ const ChartActions = ({ chart }: Props) => {
         </span>
       </PopoverContent>
       <DeleteChartModal
+        title={chart.title}
         open={open}
         onClose={handleCloseModal}
         userId={userId}

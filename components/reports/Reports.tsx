@@ -6,8 +6,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import AddReportModal from "@/components/AddReportModal";
-import ReportCard from "@/components/ReportCard";
+import AddReportModal from "@/components/reports/AddReportModal";
+import ReportCard from "@/components/reports/ReportCard";
 import Image from "next/image";
 
 type Props = {

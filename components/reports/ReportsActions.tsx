@@ -7,8 +7,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import Image from "next/image";
-import DeleteReportModal from "./reports/DeleteReportModal";
+import DeleteReportModal from "./DeleteReportModal";
 import duplicateReport from "@/lib/reports/duplicateReport";
+import EditReportModal from "./EditReportModal";
 
 type Props = {
   report: Reports;
@@ -17,10 +18,14 @@ type Props = {
 
 const ReportsActions = ({ report, userId }: Props) => {
   const [open, setOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
   const [popUpOpen, setPopUpOpen] = useState(false);
 
   const handleCloseModal = () => {
     setOpen(false);
+  };
+  const handleCloseEditModal = () => {
+    setEditOpen(false);
   };
 
   const handleDuplicate = async () => {
@@ -39,7 +44,10 @@ const ReportsActions = ({ report, userId }: Props) => {
       </PopoverTrigger>
       <PopoverContent className="flex flex-col p-2 rounded bg-white w-[171px] text-sm shadow-custom">
         <span
-          onClick={() => setPopUpOpen(false)}
+          onClick={() => {
+            setPopUpOpen(false);
+            setEditOpen(true);
+          }}
           className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
         >
           Edit title
@@ -75,8 +83,14 @@ const ReportsActions = ({ report, userId }: Props) => {
           Delete
         </span>
       </PopoverContent>
+      <EditReportModal
+        open={editOpen}
+        onClose={handleCloseEditModal}
+        report={report}
+        userId={userId}
+      />
       <DeleteReportModal
-        id={report._id}
+        report={report}
         userId={userId}
         open={open}
         onClose={handleCloseModal}

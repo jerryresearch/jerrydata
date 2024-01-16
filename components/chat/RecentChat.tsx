@@ -26,7 +26,7 @@ const RecentChat = ({ id, name, lastModified }: Props) => {
             </td>
             <td className="font-medium p-5">{lastModified}</td>
             <td className="font-medium p-5">
-              <ChatActions chatId={id} />
+              <ChatActions title={name} chatId={id} />
             </td>
           </tr>
         </tbody>

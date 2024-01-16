@@ -1,6 +1,6 @@
 import Image from "next/image";
 import RecentChat from "@/components/chat/RecentChat";
-import ReportCard from "@/components/ReportCard";
+import ReportCard from "@/components/reports/ReportCard";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/authOptions";
 import getReports from "@/lib/getReports";
@@ -12,6 +12,7 @@ import { formatLastLoad } from "@/lib/formatDatasets";
 const Page = async () => {
   const session: any = await getServerSession(authOptions);
   const userId = session?.user?._id || session?.user?.id;
+  const name = session?.user?.name;
 
   const reportsData: Promise<Reports[]> = getReports(userId);
   const datasetsData: Promise<Dataset[]> = getDatasets(userId);
@@ -25,7 +26,9 @@ const Page = async () => {
     <section className="bg-[#F6F8FA] min-h-screen">
       <header className="flex py-5 px-7 flex-col justify-center items-start gap-6">
         <div className="h-[82px] flex justify-between self-stretch rounded-[8px] border border-[#EAEDF2] bg-white text-[#17212F] text-2xl">
-          <p className="font-semibold my-6 mx-8">Welcome, Manoj.</p>
+          <p className="font-semibold my-6 mx-8">
+            Welcome, {name.split(" ")[0]}.
+          </p>
           <Image
             src="/assets/nav-icon.svg"
             alt="icon"

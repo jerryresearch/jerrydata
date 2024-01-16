@@ -113,7 +113,7 @@ const EditDatasetFields = ({ dataset, userId, userName }: Props) => {
       if (headerIndex !== -1) {
         updatedHeaders[headerIndex] = {
           ...updatedHeaders[headerIndex],
-          isDisabled: !updatedHeaders[headerIndex].isDisabled,
+          isHidden: !updatedHeaders[headerIndex].isHidden,
         };
       }
       return updatedHeaders;

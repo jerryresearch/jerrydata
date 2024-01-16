@@ -216,6 +216,7 @@ const EditDatasetInfo = ({ dataset, userId, userName }: Props) => {
         id={dataset._id}
         userId={userId}
         open={open}
+        name={dataset.name}
         onClose={handleCloseModal}
       />
       <EditFooter

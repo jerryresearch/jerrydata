@@ -13,9 +13,10 @@ import { useSession } from "next-auth/react";
 
 type Props = {
   chatId: string;
+  title: string;
 };
 
-const ChatActions = ({ chatId }: Props) => {
+const ChatActions = ({ chatId, title }: Props) => {
   const { data: session } = useSession();
 
   // @ts-ignore
@@ -57,7 +58,9 @@ const ChatActions = ({ chatId }: Props) => {
             setPopUpOpen(false);
             setOpenDeleteModal(true);
           }}
-          className="px-3 py-[12px] text-[#D30A0A] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
+          className={`px-3 py-[12px] text-[#D30A0A] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer ${
+            !chatId && "text-opacity-50 pointer-events-none"
+          }`}
         >
           Delete chat
         </span>
@@ -67,6 +70,7 @@ const ChatActions = ({ chatId }: Props) => {
         onClose={handleCloseDeleteModal}
         id={chatId}
         userId={userId}
+        title={title}
       />
       <ShareChatModal open={openShareModal} onClose={handleCloseShareModal} />
     </Popover>

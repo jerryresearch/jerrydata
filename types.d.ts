@@ -38,6 +38,7 @@ type Dataset = {
       dateFieldType: string;
       geoFieldType: string;
       isDisabled: boolean;
+      isHidden: boolean;
     }
   ];
   columns: number;

@@ -5,17 +5,17 @@ import { useState } from "react";
 type Props = {
   open: boolean;
   onClose: () => void;
-  id: string;
+  report: Reports;
   userId: string;
 };
 
-const DeleteReportModal = ({ open, onClose, id, userId }: Props) => {
+const DeleteReportModal = ({ open, onClose, report, userId }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleDelete = async () => {
     setIsLoading(true);
     try {
-      await deleteReport(userId, id);
+      await deleteReport(userId, report._id);
       location.reload();
     } catch (error) {
       console.log("error");
@@ -32,7 +32,7 @@ const DeleteReportModal = ({ open, onClose, id, userId }: Props) => {
           : "hidden"
       }`}
     >
-      <div className="bg-white flex w-[640px] h-[394px] flex-col gap-6 flex-shrink-0 items-center pb-[34px] text-xl text-[#17212F]">
+      <div className="bg-white flex w-[640px] min-h-[394px] flex-col gap-6 flex-shrink-0 items-center pb-[34px] text-xl text-[#17212F]">
         <div className="h-[120px] w-full p-8 flex items-center justify-center gap-[254px] flex-shrink-0 border-b border-[#EAEDF2] bg-[#F8FAFC]">
           <div>
             <p className="text-xl font-semibold">Are you sure?</p>
@@ -55,7 +55,7 @@ const DeleteReportModal = ({ open, onClose, id, userId }: Props) => {
           <p>
             Are you sure you want to delete{" "}
             <span className="font-semibold underline underline-offset-2">
-              Report?
+              {report.name}?
             </span>{" "}
             and its contents?
           </p>

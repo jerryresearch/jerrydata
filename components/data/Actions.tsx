@@ -57,6 +57,7 @@ const Actions = ({ name, id, userId }: Props) => {
         userId={userId}
         id={id}
         open={open}
+        name={name}
         onClose={handleCloseModal}
       />
     </Popover>
