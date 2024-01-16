@@ -11,7 +11,7 @@ import { signIn } from "next-auth/react";
 const inter = Inter({ subsets: ["latin"] });
 
 const initialState = {
-  fullName: "",
+  name: "",
   email: "",
   password: "",
 };
@@ -106,8 +106,8 @@ const Page = () => {
             <input
               type="text"
               className="bg-white rounded border w-full border-[#EAEDF2] font-normal h-[48px] px-3 py-[14px]"
-              value={data.fullName}
-              name="fullName"
+              value={data.name}
+              name="name"
               required
               onChange={handleChange}
             />

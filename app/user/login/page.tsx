@@ -115,9 +115,9 @@ const Page = () => {
             />
           </div>
           <div className="lg:w-[420px] h-5 text-[#17212F] text-sm flex gap-[10px]">
-            <input type="checkbox" />
+            {/* <input type="checkbox" /> */}
             <div className="font-medium">
-              <span className="text-slate-700">Remember me</span>{" "}
+              {/* <span className="text-slate-700">Remember me</span>{" "} */}
               <Link href="reset-password" className="text-blue-500 underline">
                 Forgot password?
               </Link>

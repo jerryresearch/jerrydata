@@ -19,6 +19,7 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-toast": "^1.1.5",
+    "@sendgrid/mail": "^8.1.0",
     "@types/bcrypt": "^5.0.0",
     "@types/node": "20.6.5",
     "@types/react": "18.2.22",

@@ -2,31 +2,83 @@
 
 import Image from "next/image";
 import { Inter } from "next/font/google";
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import Button from "@/components/Button";
 import styles from "../../styles.module.css";
+import Loading from "@/components/Loading";
+import { usePathname, useRouter } from "next/navigation";
+import validateToken from "@/lib/profile/validateToken";
+import Link from "next/link";
+import resetPassword from "@/lib/profile/resetPassword";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const initialState = {
-  password: "",
-  confirmPassword: "",
-};
-
 const Page = () => {
-  const [data, setData] = useState(initialState);
-  const [isLinkSent, setIsLinkSent] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setData({ ...data, [e.target.name]: e.target.value });
-  };
+  const pathname = usePathname();
+  const router = useRouter();
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(data);
-    setData(initialState);
+    console.log(password, confirmPassword);
+    if (password !== confirmPassword) {
+      alert("password does not match");
+      return;
+    }
+    try {
+      const items = pathname.split("/");
+      const token = items[items.length - 1];
+      const res = await resetPassword(token, password);
+      console.log(res);
+      router.replace("/user/login");
+    } catch (error) {
+      console.log("error updating password");
+      alert(error);
+    }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const items = pathname.split("/");
+        const token = items[items.length - 1];
+        const res = await validateToken(token);
+      } catch (error) {
+        console.log("error");
+        setIsError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, [pathname]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (isError) {
+    return (
+      <main
+        className={`${inter.className} flex flex-col w-screen h-screen items-center justify-center bg-[#F6F8FA] text-lg`}
+      >
+        <div>Password reset token is invalid or has expired.</div>
+        <div>
+          Click{" "}
+          <Link
+            href={"/user/reset-password"}
+            className="text-primary underline"
+          >
+            here
+          </Link>{" "}
+          to go back
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className={`${inter.className} lg:flex  bg-[#F6F8FA]`}>
@@ -55,11 +107,11 @@ const Page = () => {
             <input
               type="password"
               className="bg-white rounded border w-full border-[#EAEDF2] font-normal h-[48px] px-3 py-[14px]"
-              value={data.password}
+              value={password}
               placeholder="Must be atleast 8 characters"
               name="password"
               required
-              onChange={handleChange}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           <div className="lg:w-[420px] h-[80px] text-[#17212F] text-sm flex flex-col gap-3">
@@ -68,13 +120,13 @@ const Page = () => {
               type="password"
               className="bg-white rounded border w-full border-[#EAEDF2] font-normal h-[48px] px-3 py-[14px]"
               placeholder="Must be atleast 8 characters"
-              value={data.confirmPassword}
+              value={confirmPassword}
               name="confirmPassword"
               required
-              onChange={handleChange}
+              onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </div>
-          <div className="lg:w-[420px] h-14">
+          <div className="lg:w-[420px] h-14 opacity-50">
             <Button isLoading={isLoading}>Reset password</Button>
           </div>
         </form>

@@ -5,25 +5,27 @@ import { Inter } from "next/font/google";
 import { useState, ChangeEvent, FormEvent } from "react";
 import Button from "@/components/Button";
 import styles from "../styles.module.css";
+import requestPasswordChange from "@/lib/profile/requestPasswordChange";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const initialState = {
-  email: "",
-};
-
 const Page = () => {
-  const [data, setData] = useState(initialState);
+  const [email, setEmail] = useState("");
   const [isLinkSent, setIsLinkSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setData({ ...data, [e.target.name]: e.target.value });
-  };
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLinkSent(true);
+    setIsLoading(true);
+    try {
+      const res = await requestPasswordChange(email);
+      console.log(res);
+      setIsLinkSent(true);
+    } catch (error) {
+      console.log("error");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -61,10 +63,10 @@ const Page = () => {
               <input
                 type="email"
                 className="bg-white rounded border w-full border-[#EAEDF2] font-normal h-[48px] px-3 py-[14px]"
-                value={data.email}
+                value={email}
                 name="email"
                 required
-                onChange={handleChange}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="lg:w-[420px] h-14">
