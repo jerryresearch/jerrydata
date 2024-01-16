@@ -102,11 +102,11 @@ const EditProfile = ({ name, email, userId }: Props) => {
                 !isUpdated && "opacity-50 pointer-events-none"
               }`}
             >
-              Edit
+              Save Changes
             </button>
           </div>
         </div>
-        <div className="flex flex-col items-start gap-6 flex-shrink-0 w-[500px]">
+        {/* <div className="flex flex-col items-start gap-6 flex-shrink-0 w-[500px]">
           <div className="flex items-center self-stretch gap-4">
             <label className="text-sm font-medium w-[120px]">Time Zone</label>
             <Popover>
@@ -137,7 +137,7 @@ const EditProfile = ({ name, email, userId }: Props) => {
             </label>
             <Switch />
           </div>
-        </div>
+        </div> */}
       </div>
       <div className="fixed right-0 left-16 bottom-0 h-10 px-7 py-2 bg-white flex justify-center items-center gap-[10px] text-sm text-[#17212F]">
         <span>License: Enterprise free trial</span>

@@ -12,12 +12,12 @@ type Props = {
 
 const ChangePasswordModal = ({ open, onClose, userId }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [oldPassword, setOldPassword] = useState("");
+  // const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleSubmit = async () => {
-    if (!oldPassword || !newPassword || !confirmPassword) {
+    if (!newPassword || !confirmPassword) {
       console.log("fill all details");
     }
     if (newPassword !== confirmPassword) {
@@ -25,7 +25,7 @@ const ChangePasswordModal = ({ open, onClose, userId }: Props) => {
     }
     try {
       setIsLoading(true);
-      const res = await updatePassword(userId, { oldPassword, newPassword });
+      const res = await updatePassword(userId, { newPassword });
       location.reload();
     } catch (error) {
       console.log("error updating password");
@@ -43,8 +43,8 @@ const ChangePasswordModal = ({ open, onClose, userId }: Props) => {
           : "hidden"
       }`}
     >
-      <div className="flex w-[640px] min-h-[544px] flex-col gap-6 flex-shrink-0 items-center pb-[34px] shadow-custom rounded-[8px] bg-white text-xl text-[#17212F]">
-        <div className="h-[92px] p-8 flex items-center justify-center gap-[377px] flex-shrink-0 border-b border-[#EAEDF2] bg-[#F8FAFC]">
+      <div className="flex w-[640px] min-h-[460px] flex-col gap-6 flex-shrink-0 items-center pb-[34px] shadow-custom rounded-[8px] bg-white text-xl text-[#17212F]">
+        <div className="h-[92px] p-8 flex items-center justify-center gap-[377px] flex-shrink-0 border-b border-[#EAEDF2] bg-[#F8FAFC] rounded-[8px]">
           <p className="text-xl font-semibold">Change Password</p>
           <Image
             src="/assets/dismiss.svg"
@@ -55,7 +55,7 @@ const ChangePasswordModal = ({ open, onClose, userId }: Props) => {
             className="cursor-pointer"
           />
         </div>
-        <div className="w-[576px] flex flex-col items-start justify-center  gap-3 text-sm font-medium text-[#17212F]">
+        {/* <div className="w-[576px] flex flex-col items-start justify-center  gap-3 text-sm font-medium text-[#17212F]">
           <label htmlFor="old password" className="self-stretch">
             Old password
           </label>
@@ -67,7 +67,7 @@ const ChangePasswordModal = ({ open, onClose, userId }: Props) => {
             onChange={(e) => setOldPassword(e.target.value)}
             className="border border-[#EAEDF2] bg-white rounded py-[14px] px-3 flex items-center self-stretch"
           />
-        </div>
+        </div> */}
         <div className="w-[576px] flex flex-col items-start justify-center  gap-3 text-sm font-medium text-[#17212F]">
           <label htmlFor="new password" className="self-stretch">
             New password
@@ -98,11 +98,10 @@ const ChangePasswordModal = ({ open, onClose, userId }: Props) => {
           <button
             onClick={() => {
               handleSubmit();
-              onClose();
             }}
             className={`rounded border border-[#EAEDF2] px-6 py-2 bg-primary text-white h-[56px] flex items-center justify-center gap-[10px] flex-shrink-0 ${
               (isLoading ||
-                !oldPassword ||
+                // !oldPassword ||
                 !newPassword ||
                 !confirmPassword ||
                 newPassword !== confirmPassword) &&
