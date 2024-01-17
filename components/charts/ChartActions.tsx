@@ -16,9 +16,11 @@ import Link from "next/link";
 
 type Props = {
   chart: Chart;
+  downloadPNG: () => void;
+  downloadPDF: () => void;
 };
 
-const ChartActions = ({ chart }: Props) => {
+const ChartActions = ({ chart, downloadPNG, downloadPDF }: Props) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { data: session } = useSession();
@@ -58,13 +60,19 @@ const ChartActions = ({ chart }: Props) => {
           Edit chart
         </Link>
         <span
-          onClick={() => setPopUpOpen(false)}
+          onClick={() => {
+            downloadPNG();
+            setPopUpOpen(false);
+          }}
           className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
         >
           Save as PNG
         </span>
         <span
-          onClick={() => setPopUpOpen(false)}
+          onClick={() => {
+            downloadPDF();
+            setPopUpOpen(false);
+          }}
           className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
         >
           Save as PDF
