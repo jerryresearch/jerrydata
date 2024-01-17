@@ -18,13 +18,15 @@ const EditFooter = ({ updates, userId, id }: Props) => {
   const handleUpdate = async () => {
     if (userId && updates) {
       setIsLoading(true);
-      const res = await updateDataset(userId, id, updates);
-      setIsLoading(false);
-      if (!res?.ok) {
+      try {
+        const res = await updateDataset(userId, id, updates);
+        console.log(res);
+        location.reload();
+      } catch (error) {
+        console.log("error in updating dataset");
         alert("error updating");
-        return;
       }
-      router.refresh();
+      setIsLoading(false);
     }
   };
 

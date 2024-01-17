@@ -38,6 +38,11 @@ const TableSelection = ({ userId, id, datatype, name, headers }: Props) => {
 
   const handleHeaderChange = (name: string) => {
     setIsUpdated(true);
+    const len = myHeaders.filter((header) => header.isDisabled != true).length;
+    const currValue = myHeaders.find(
+      (header) => header.name == name
+    )?.isDisabled;
+    if (len <= 1 && !currValue) return;
     const h = myHeaders.map((header) => {
       if (header.name == name) {
         header.isDisabled = !header.isDisabled;
@@ -54,13 +59,14 @@ const TableSelection = ({ userId, id, datatype, name, headers }: Props) => {
 
   const handleNext = async () => {
     if (isUpdated) {
-      const res = await updateDataset(userId, id, { headers: myHeaders });
-      if (!res?.ok) {
+      try {
+        const res = await updateDataset(userId, id, { headers: myHeaders });
+        router.push(`edit-fields?id=${id}`);
+      } catch (error) {
+        console.log("error in updating dataset");
         alert("error updating");
-        return;
       }
     }
-    router.push(`edit-fields?id=${id}`);
   };
 
   return (

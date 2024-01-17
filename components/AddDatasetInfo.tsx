@@ -33,14 +33,21 @@ const AddDatasetInfo = ({ id, userId, dataset }: Props) => {
 
   const handleNext = async () => {
     if (isUpdated) {
-      const res = await updateDataset(userId, id, { name, description });
-      if (!res?.ok) {
+      try {
+        const res = await updateDataset(userId, id, {
+          name,
+          description,
+        });
+        router.push("/dashboard/data");
+        router.refresh();
+      } catch (error) {
+        console.log("error in updating dataset");
         alert("error updating");
-        return;
       }
+    } else {
+      router.push("/dashboard/data");
+      router.refresh();
     }
-    router.push("/dashboard/data");
-    router.refresh();
   };
 
   return (

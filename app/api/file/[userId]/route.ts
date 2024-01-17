@@ -78,8 +78,25 @@ export const GET = async (request: Request, { params: { userId } }: Props) => {
         });
     });
 
+    const removedHeaders = dataset.headers
+      .filter(
+        // @ts-ignore
+        (header) => header.isDisabled || header.isHidden
+      )
+      // @ts-ignore
+      .map((header) => header.name);
+
+    // Function to remove specified keys from each object
+    // @ts-ignore
+    function removeKeys(obj, keysToRemove) {
+      keysToRemove.forEach((key: string) => delete obj[key]);
+      return obj;
+    }
+
     const totalPages = Math.ceil(records.length / pageSize);
-    const paginatedRecords = records.slice(start, end);
+    const paginatedRecords = records
+      .slice(start, end)
+      .map((obj) => removeKeys({ ...obj }, removedHeaders));
     const totalRecords = records.length;
 
     return NextResponse.json(

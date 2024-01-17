@@ -7,6 +7,7 @@ type Props = {
       name: string;
       datatype: string;
       isDisabled: boolean;
+      isHidden: boolean;
     }
   ];
 };
@@ -18,14 +19,16 @@ const Data = ({ records, headers }: Props) => {
         <table className="w-full table-auto min-w-max text-left">
           <thead>
             <tr className="bg-[#F6F8FA]">
-              {headers.map((head, index: number) => (
-                <th
-                  key={index}
-                  className="text-[#17212F] rounded bg-[F8FAFC] font-medium p-5 gap-2"
-                >
-                  {head.name}
-                </th>
-              ))}
+              {headers
+                .filter((header) => !header.isDisabled && !header.isHidden)
+                .map((head, index: number) => (
+                  <th
+                    key={index}
+                    className="text-[#17212F] rounded bg-[F8FAFC] font-medium p-5 gap-2"
+                  >
+                    {head.name}
+                  </th>
+                ))}
             </tr>
           </thead>
           <tbody>
