@@ -126,7 +126,11 @@ const Page = () => {
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </div>
-          <div className="lg:w-[420px] h-14 opacity-50">
+          <div
+            className={`lg:w-[420px] h-14 ${
+              password !== confirmPassword && "opacity-50 pointer-events-none"
+            }`}
+          >
             <Button isLoading={isLoading}>Reset password</Button>
           </div>
         </form>

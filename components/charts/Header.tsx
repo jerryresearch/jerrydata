@@ -11,9 +11,11 @@ import ShareChartModal from "../ShareChartModal";
 type Props = {
   name: string;
   chartsCount: number;
+  onDownloadPNG?: () => void;
+  onDownloadPDF?: () => void;
 };
 
-const Header = ({ name, chartsCount }: Props) => {
+const Header = ({ name, chartsCount, onDownloadPNG, onDownloadPDF }: Props) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { data: session } = useSession();
@@ -41,7 +43,7 @@ const Header = ({ name, chartsCount }: Props) => {
           <span>{name}</span>
         </p>
       </Link>
-      <div className="w-[323px] h-10 text-sm flex gap-2">
+      <div className="h-10 text-sm flex gap-2">
         <button
           className={`inline-flex h-full py-2 px-4 justify-center items-center gap-[10px] flex-shrink-0 rounded border border-[#DEE8FA] bg-white ${
             chartsCount == 0 && "opacity-50"
@@ -54,12 +56,23 @@ const Header = ({ name, chartsCount }: Props) => {
             chartsCount == 0 && "opacity-50"
           }`}
           onClick={() => {
-            if (chartsCount > 0) {
-              setOpen(true);
-            }
+            // if (chartsCount > 0) {
+            //   setOpen(true);
+            // }
+            onDownloadPNG && onDownloadPNG();
           }}
         >
-          Share Report
+          Download as PNG
+        </button>
+        <button
+          className={`inline-flex h-full py-2 px-4 justify-center items-center gap-[10px] flex-shrink-0 rounded border border-[#DEE8FA] bg-white ${
+            chartsCount == 0 && "opacity-50"
+          }`}
+          onClick={() => {
+            onDownloadPDF && onDownloadPDF();
+          }}
+        >
+          Download as PDF
         </button>
         <Link
           href={`${pathname}/new?id=${reportId}`}

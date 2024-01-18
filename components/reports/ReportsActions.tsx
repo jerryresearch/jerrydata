@@ -52,7 +52,7 @@ const ReportsActions = ({ report, userId }: Props) => {
         >
           Edit title
         </span>
-        <span
+        {/* <span
           onClick={() => setPopUpOpen(false)}
           className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
         >
@@ -63,7 +63,7 @@ const ReportsActions = ({ report, userId }: Props) => {
           className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
         >
           Save as PDF
-        </span>
+        </span> */}
         <span
           onClick={() => {
             setPopUpOpen(false);
