@@ -66,6 +66,8 @@ const TableSelection = ({ userId, id, datatype, name, headers }: Props) => {
         console.log("error in updating dataset");
         alert("error updating");
       }
+    } else {
+      router.push(`edit-fields?id=${id}`);
     }
   };
 

@@ -1,7 +1,6 @@
 import deleteChat from "@/lib/chats/deleteChat";
 import Image from "next/image";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 type Props = {
   open: boolean;
@@ -12,14 +11,13 @@ type Props = {
 };
 
 const DeleteChatModal = ({ open, onClose, id, userId, title }: Props) => {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleDelete = async () => {
     setIsLoading(true);
     try {
       await deleteChat(userId, id);
-      router.replace("chatIQ");
+      location.replace("/dashboard/chatIQ");
     } catch (error) {
       console.log("error");
     }

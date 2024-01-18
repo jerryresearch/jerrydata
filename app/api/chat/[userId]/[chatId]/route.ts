@@ -63,7 +63,7 @@ export async function POST(
       role: "user",
       content:
         message +
-        " If possible, give a javascript object for that information that has 4 fields. xAxis, yAxis, xData and yData",
+        " If applicable, provide this information in a JavaScript object format with fields: xAxis, yAxis, xData, and yData, suitable for generating charts.",
     });
 
     await Message.create({
@@ -76,7 +76,7 @@ export async function POST(
     // Run the Assistant
     let myRun = await openai.beta.threads.runs.create(chat.thread.id, {
       assistant_id: assistantId,
-      instructions: "In the result, if possible, give a javascript object",
+      // instructions: "In the result, if possible, give a javascript object",
     });
 
     let runStatus = myRun.status;
@@ -103,6 +103,7 @@ export async function POST(
         : "No text content found";
 
     const resArray = responseMessage.split("```");
+    console.log(resArray);
     if (resArray.length >= 2) {
       let obj = resArray[1].replace("javascript", "");
       obj = obj.replace(/([{,]?\s*)([A-Za-z_][A-Za-z0-9_]*)\s*:/g, '$1"$2":');
@@ -130,7 +131,12 @@ export async function POST(
     const messagesList = await Message.find({ chat: chatId });
 
     return NextResponse.json(
-      { chat, messages: messagesList, message: "chat created" },
+      {
+        chat,
+        messages: messagesList,
+        asstMessages: messages,
+        message: "chat created",
+      },
       { status: 201 }
     );
   } catch (error) {

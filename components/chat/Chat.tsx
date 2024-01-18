@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/popover";
 import ChatActions from "./ChatActions";
 import Message from "./Message";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import getChat from "@/lib/chats/getChat";
 import Loading from "../Loading";
@@ -24,14 +24,13 @@ type Props = {
 const Chat = ({ datasets }: Props) => {
   const { data: session } = useSession();
   const searchParams = useSearchParams();
-  const router = useRouter();
   const pathname = usePathname();
 
   // @ts-ignore
   const userId = session?.user?._id || session?.user?.id;
   const chatId = searchParams.get("id") || "";
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState("New Chat");
   const [message, setMessage] = useState("");
@@ -69,12 +68,14 @@ const Chat = ({ datasets }: Props) => {
       let res;
       if (chatId == "") {
         res = await createChat(userId, data);
-        router.replace(pathname + `?id=${res.chat._id}`);
+        location.replace(pathname + `?id=${res.chat._id}`);
       }
       res = await sendMessage(userId, chatId, { message });
       setMessage("");
       setMessages(res.messages);
+      console.log(res.asstMessages);
     } catch (error) {
+      console.log(error);
       console.log("error sending message");
     }
     setIsLoading(false);
@@ -115,6 +116,7 @@ const Chat = ({ datasets }: Props) => {
     if (chatId != "") {
       fetchData();
     }
+    setIsLoading(false);
   }, [setIsLoading, chatId, userId]);
 
   if (isLoading) {

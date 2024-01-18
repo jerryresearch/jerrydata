@@ -55,9 +55,44 @@ export async function POST(req: Request, { params: { userId } }: Props) {
       return NextResponse.json({ message: "Invalid dataset" }, { status: 404 });
     }
 
+    const sampleResponse =
+      "The top 5 sales countries along with their total revenues are as follows: \n1. China: $454,466,400.00\n2. Maldives: $451,414,800.00\n3. Gabon: $442,334,500.00\n4. Samoa: $440,390,100.00\n5. Democratic Republic of the Congo: $434,335,000.00\n\nAs requested, here is the chart:\n\n```javascript\n{\n 'xAxis': 'Country',\n 'yAxis': 'Total Revenue',\n 'xData': ['China', 'Maldives', 'Gabon', 'Samoa', 'Democratic Republic of the Congo'],\n 'yData': [454466400.00, 451414800.00, 442334500.00, 440390100.00, 434335000.00]\n}\n```";
+
     const assistant = await openai.beta.assistants.create({
-      instructions:
-        "You are an analytics bot. Access the dataset provided (in CSV or Excel format) and utilize its information to respond accurately to user questions based on the dataset's analytics. If possible give the result that contains a javascript object with 4 fields. They are: xAxis, yAxis, xData and yData. xAxis and yAxis are column names for x axis and y axis of the chart and xData and yData are arrays which contain values of these columns",
+      instructions: `
+      Primary Role:
+      Your role is as an advanced analytics bot, tasked with interpreting and analyzing data from datasets in CSV or Excel formats. Your objective is to understand user queries related to the data and provide insightful, precise responses.
+      
+      Data Handling:
+      On receiving a dataset, thoroughly examine its structure to understand the column names and types of data it contains.
+      Ensure data is handled with utmost confidentiality and integrity, maintaining enterprise-level data security standards.
+      
+      Example:
+      If the dataset contains sales data, identify columns like Date, Product, Region, Sales, and Profit.
+      
+      Responding to Queries:
+      Interpret user questions ranging from basic data retrieval (e.g., total sales in a specific month) to complex data analyses (e.g., year-over-year sales growth by region).
+      When applicable, structure your response to include a JavaScript object suitable for charting or further analysis.
+      
+      Example:
+      Query: "What were the total sales for each product category in Q1 2023?"
+      Response: "In Q1 2023, the total sales for each product category were as follows..." followed by a JavaScript object with xAxis = 'Product Category', yAxis = 'Total Sales', xData = [list of product categories], yData = [corresponding sales figures].
+      
+      Structure of JavaScript Object:
+      Format the JavaScript object with four fields: xAxis, yAxis, xData, and yData.
+      xAxis and yAxis: String labels for chart axes, typically column names from the dataset.
+      xData and yData: Arrays containing data values corresponding to xAxis and yAxis.
+      
+      Example:
+      For a bar chart showing sales per region: xAxis = 'Region', yAxis = 'Sales', xData = ['North', 'South', 'East', 'West'], yData = [35000, 47000, 29000, 51000].
+      
+      Instructions for Submitting Queries:
+      Encourage users to specify if they want to visualize response as a chart.
+
+      Example:
+      User Submission: "What are the top 5 sales country wise?"
+      Assistant Response: ${sampleResponse}.
+      `,
       name: "Analytics Assistant",
       tools: [{ type: "code_interpreter" }, { type: "retrieval" }],
       model: "gpt-3.5-turbo-1106",
@@ -67,30 +102,30 @@ export async function POST(req: Request, { params: { userId } }: Props) {
     const assistantId = assistant.id;
 
     const thread = await openai.beta.threads.create({});
-    await openai.beta.threads.messages.create(thread.id, {
-      role: "user",
-      content: "Hello",
-    });
-    let firstRun = await openai.beta.threads.runs.create(thread.id, {
-      assistant_id: assistantId,
-    });
+    // await openai.beta.threads.messages.create(thread.id, {
+    //   role: "user",
+    //   content: "Hello",
+    // });
+    // let firstRun = await openai.beta.threads.runs.create(thread.id, {
+    //   assistant_id: assistantId,
+    // });
 
-    let firstRunStatus = firstRun.status;
-    while (firstRunStatus === "queued" || firstRunStatus === "in_progress") {
-      await delay(15000); // 15 seconds delay
-      firstRun = await openai.beta.threads.runs.retrieve(
-        thread.id,
-        firstRun.id
-      );
-      firstRunStatus = firstRun.status;
-    }
+    // let firstRunStatus = firstRun.status;
+    // while (firstRunStatus === "queued" || firstRunStatus === "in_progress") {
+    //   await delay(5000); // 5 seconds delay
+    //   firstRun = await openai.beta.threads.runs.retrieve(
+    //     thread.id,
+    //     firstRun.id
+    //   );
+    //   firstRunStatus = firstRun.status;
+    // }
 
     // Step 1: Add Messages to the Thread
     await openai.beta.threads.messages.create(thread.id, {
       role: "user",
       content:
         message +
-        " If possible, give a javascript object for that information that has 4 fields. xAxis, yAxis, xData and yData",
+        " If applicable, provide this information in a JavaScript object format with fields: xAxis, yAxis, xData, and yData, suitable for generating charts.",
     });
 
     const chat = await Chat.create({
@@ -111,12 +146,12 @@ export async function POST(req: Request, { params: { userId } }: Props) {
     // Step 2: Run the Assistant
     let myRun = await openai.beta.threads.runs.create(thread.id, {
       assistant_id: assistantId,
-      instructions: "In the result, if possible, give a javascript object",
+      // instructions: "In the result, if possible, give a javascript object",
     });
 
     let runStatus = myRun.status;
     while (runStatus === "queued" || runStatus === "in_progress") {
-      await delay(15000); // 15 seconds delay
+      await delay(1000); // 1 second delay
       myRun = await openai.beta.threads.runs.retrieve(thread.id, myRun.id);
       runStatus = myRun.status;
     }
@@ -138,16 +173,21 @@ export async function POST(req: Request, { params: { userId } }: Props) {
         : "No text content found";
 
     const resArray = responseMessage.split("```");
+    console.log(resArray);
     if (resArray.length >= 3) {
-      const obj = JSON.parse(resArray[1].replace("javascript", ""));
+      let obj = resArray[1].replace("javascript", "");
+      obj = obj.replace(/([{,]?\s*)([A-Za-z_][A-Za-z0-9_]*)\s*:/g, '$1"$2":');
+      obj = obj.replaceAll("'", '"');
+      const { xAxis, yAxis, xData, yData } = JSON.parse(obj);
       await Message.create({
         role: "assistant",
         type: "chart",
+        content: resArray[0],
         chartType: "bar",
-        xAxis: obj.xAxis,
-        yAxis: obj.yAxis,
-        xData: obj.xData,
-        yData: obj.yData,
+        xAxis,
+        yAxis,
+        xData,
+        yData,
         chat: chat._id,
       });
     } else {
@@ -162,7 +202,12 @@ export async function POST(req: Request, { params: { userId } }: Props) {
     const messagesList = await Message.find({ chat: chat._id });
 
     return NextResponse.json(
-      { chat, messages: messagesList, message: "chat created" },
+      {
+        chat,
+        messages: messagesList,
+        asstMessages: messages,
+        message: "chat created",
+      },
       { status: 201 }
     );
   } catch (error) {

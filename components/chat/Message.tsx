@@ -22,14 +22,17 @@ const Message = ({ message }: Props) => {
             {message.type == "text" ? (
               message.content
             ) : (
-              <BarChart
-                data={{
-                  xAxis: message.xAxis,
-                  yAxis: message.yAxis,
-                  xData: message.xData,
-                  yData: message.yData,
-                }}
-              />
+              <div className="flex flex-col gap-10">
+                <p>{message.content}</p>
+                <BarChart
+                  data={{
+                    xAxis: message.xAxis,
+                    yAxis: message.yAxis,
+                    xData: message.xData,
+                    yData: message.yData,
+                  }}
+                />
+              </div>
             )}
           </div>
         </div>
