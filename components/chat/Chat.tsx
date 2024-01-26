@@ -102,6 +102,8 @@ const Chat = ({ datasets }: Props) => {
         setTitle(res.chat.title);
         setSelectedDataset(res.chat.dataset);
         setMessages(res.messages);
+        console.log(res.asstMessages);
+        console.log(res.messages);
       } catch (error) {
         console.log("error getting chat data");
       } finally {

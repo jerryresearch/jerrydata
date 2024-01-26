@@ -61,7 +61,9 @@ type Message = {
   _id: string;
   role: string;
   type: string;
+  chartType: string;
   content: string;
+  title: string;
   xAxis: string;
   yAxis: string;
   xData: any[];

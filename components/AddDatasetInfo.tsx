@@ -12,6 +12,7 @@ import Footer from "./Footer";
 import Header from "./Header";
 import { useRouter } from "next/navigation";
 import updateDataset from "@/lib/datasets/updateDataset";
+import autogenerateQuestions from "@/lib/datasets/autogenerateQuestions";
 
 type Props = {
   dataset: Dataset;
@@ -38,6 +39,9 @@ const AddDatasetInfo = ({ id, userId, dataset }: Props) => {
           name,
           description,
         });
+        const response = await autogenerateQuestions(userId, id);
+        console.log(response.message);
+        console.log(response.responseMessage);
         router.push("/dashboard/data");
         router.refresh();
       } catch (error) {

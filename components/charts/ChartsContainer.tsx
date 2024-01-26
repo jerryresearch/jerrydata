@@ -12,6 +12,7 @@ type Props = {
 };
 
 const ChartsContainer = ({ charts, report }: Props) => {
+  console.log(charts);
   const elementRef = useRef(null);
   const options = {
     page: {

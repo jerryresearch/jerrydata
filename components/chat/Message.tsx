@@ -1,12 +1,17 @@
 import Image from "next/image";
-import React, { ReactNode } from "react";
+import LineChart from "../charts/LineChart";
 import BarChart from "../charts/BarChart";
+import PieChart from "../charts/PieChart";
+import DoughnutChart from "../charts/DoughnutGraph";
+import PloarAreaChart from "../charts/PolarAreaChart";
+import HorizontalBarChart from "../charts/HorizontalBarChart";
 
 interface Props {
   message: Message;
 }
 
 const Message = ({ message }: Props) => {
+  // console.log(message);
   return (
     <div className="flex py-5 px-[14px] items-center rounded bg-[#F6F8FA]">
       <div className="flex w-full gap-[13px]">
@@ -23,15 +28,62 @@ const Message = ({ message }: Props) => {
               message.content
             ) : (
               <div className="flex flex-col gap-10">
-                <p>{message.content}</p>
-                <BarChart
-                  data={{
-                    xAxis: message.xAxis,
-                    yAxis: message.yAxis,
-                    xData: message.xData,
-                    yData: message.yData,
-                  }}
-                />
+                {/* <p>{message.content}</p> */}
+                {message.chartType == "bar" ? (
+                  <BarChart
+                    data={{
+                      xAxis: message.xAxis,
+                      yAxis: message.yAxis,
+                      xData: message.xData,
+                      yData: message.yData,
+                    }}
+                  />
+                ) : message.chartType == "line" ? (
+                  <LineChart
+                    data={{
+                      xAxis: message.xAxis,
+                      yAxis: message.yAxis,
+                      xData: message.xData,
+                      yData: message.yData,
+                    }}
+                  />
+                ) : message.chartType == "pie" ? (
+                  <PieChart
+                    data={{
+                      xAxis: message.xAxis,
+                      yAxis: message.yAxis,
+                      xData: message.xData,
+                      yData: message.yData,
+                    }}
+                  />
+                ) : message.chartType == "doughnut" ? (
+                  <DoughnutChart
+                    data={{
+                      xAxis: message.xAxis,
+                      yAxis: message.yAxis,
+                      xData: message.xData,
+                      yData: message.yData,
+                    }}
+                  />
+                ) : message.chartType == "polar area" ? (
+                  <PloarAreaChart
+                    data={{
+                      xAxis: message.xAxis,
+                      yAxis: message.yAxis,
+                      xData: message.xData,
+                      yData: message.yData,
+                    }}
+                  />
+                ) : (
+                  <HorizontalBarChart
+                    data={{
+                      xAxis: message.xAxis,
+                      yAxis: message.yAxis,
+                      xData: message.xData,
+                      yData: message.yData,
+                    }}
+                  />
+                )}
               </div>
             )}
           </div>

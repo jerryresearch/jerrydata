@@ -3,16 +3,24 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import AddReportModal from "./AddReportModal";
+import AutoGenerateModal from "./AutoGenerateModal";
 
 type Props = {
   userId: string;
+  datasets: Dataset[];
 };
 
-const EmptyPage = ({ userId }: Props) => {
+const EmptyPage = ({ userId, datasets }: Props) => {
   const [open, setOpen] = useState(false);
 
   const handleCloseModal = () => {
     setOpen(false);
+  };
+
+  const [openAutoGenerate, setOpenAutoGenerate] = useState(false);
+
+  const handleCloseModalAutoGenerate = () => {
+    setOpenAutoGenerate(false);
   };
 
   return (
@@ -39,12 +47,21 @@ const EmptyPage = ({ userId }: Props) => {
           >
             Add Report
           </button>
-          <button className="w-[210px] h-[40px] flex items-center justify-center gap-[10px] self-stretch px-4 py-2 rounded bg-[#17212F] text-white">
+          <button
+            onClick={() => setOpenAutoGenerate(true)}
+            className="w-[210px] h-[40px] flex items-center justify-center gap-[10px] self-stretch px-4 py-2 rounded bg-[#17212F] text-white"
+          >
             Generate Auto Report
           </button>
         </div>
       </div>
       <AddReportModal open={open} onClose={handleCloseModal} userId={userId} />
+      <AutoGenerateModal
+        open={openAutoGenerate}
+        onClose={handleCloseModalAutoGenerate}
+        datasets={datasets}
+        userId={userId}
+      />
     </section>
   );
 };

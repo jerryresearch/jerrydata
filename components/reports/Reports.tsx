@@ -9,13 +9,15 @@ import {
 import AddReportModal from "@/components/reports/AddReportModal";
 import ReportCard from "@/components/reports/ReportCard";
 import Image from "next/image";
+import AutoGenerateModal from "./AutoGenerateModal";
 
 type Props = {
   reports: Reports[];
   userId: string;
+  datasets: Dataset[];
 };
 
-const Reports = ({ reports, userId }: Props) => {
+const Reports = ({ reports, userId, datasets }: Props) => {
   const [filteredReports, setFilteredReports] = useState(reports);
   const handleSearch = (query: string) => {
     if (query == "") {
@@ -33,6 +35,12 @@ const Reports = ({ reports, userId }: Props) => {
 
   const handleCloseModal = () => {
     setOpen(false);
+  };
+
+  const [openAutoGenerate, setOpenAutoGenerate] = useState(false);
+
+  const handleCloseModalAutoGenerate = () => {
+    setOpenAutoGenerate(false);
   };
 
   return (
@@ -91,7 +99,10 @@ const Reports = ({ reports, userId }: Props) => {
           >
             Add report
           </button>
-          <button className="flex h-[40px] py-2 px-4 items-center justify-center gap-[10px] bg-[#17212F] text-white rounded">
+          <button
+            onClick={() => setOpenAutoGenerate(true)}
+            className="flex h-[40px] py-2 px-4 items-center justify-center gap-[10px] bg-[#17212F] text-white rounded"
+          >
             Auto Generate Report
           </button>
         </div>
@@ -102,6 +113,12 @@ const Reports = ({ reports, userId }: Props) => {
         ))}
       </div>
       <AddReportModal open={open} userId={userId} onClose={handleCloseModal} />
+      <AutoGenerateModal
+        open={openAutoGenerate}
+        onClose={handleCloseModalAutoGenerate}
+        datasets={datasets}
+        userId={userId}
+      />
     </section>
   );
 };
