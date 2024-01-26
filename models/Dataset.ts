@@ -77,6 +77,7 @@ const DatasetSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    questions: [mongoose.Schema.Types.Mixed],
   },
   { timestamps: true }
 );

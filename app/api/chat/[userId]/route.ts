@@ -3,7 +3,9 @@ import Dataset from "@/models/Dataset";
 import User from "@/models/User";
 import { connectToDB } from "@/utils/mongoose";
 import mongoose from "mongoose";
+import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { NextResponse } from "next/server";
+import csv from "csv-parser";
 import { OpenAI } from "openai";
 import Message from "@/models/Message";
 
@@ -12,6 +14,16 @@ type Props = {
     userId: string;
   };
 };
+
+// create a s3 client
+// @ts-ignore
+const s3 = new S3Client({
+  region: process.env.AWS_BUCKET_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
+});
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -55,43 +67,26 @@ export async function POST(req: Request, { params: { userId } }: Props) {
       return NextResponse.json({ message: "Invalid dataset" }, { status: 404 });
     }
 
-    const sampleResponse =
-      "The top 5 sales countries along with their total revenues are as follows: \n1. China: $454,466,400.00\n2. Maldives: $451,414,800.00\n3. Gabon: $442,334,500.00\n4. Samoa: $440,390,100.00\n5. Democratic Republic of the Congo: $434,335,000.00\n\nAs requested, here is the chart:\n\n```javascript\n{\n 'xAxis': 'Country',\n 'yAxis': 'Total Revenue',\n 'xData': ['China', 'Maldives', 'Gabon', 'Samoa', 'Democratic Republic of the Congo'],\n 'yData': [454466400.00, 451414800.00, 442334500.00, 440390100.00, 434335000.00]\n}\n```";
-
     const assistant = await openai.beta.assistants.create({
       instructions: `
-      Primary Role:
-      Your role is as an advanced analytics bot, tasked with interpreting and analyzing data from datasets in CSV or Excel formats. Your objective is to understand user queries related to the data and provide insightful, precise responses.
-      
-      Data Handling:
-      On receiving a dataset, thoroughly examine its structure to understand the column names and types of data it contains.
-      Ensure data is handled with utmost confidentiality and integrity, maintaining enterprise-level data security standards.
-      
-      Example:
-      If the dataset contains sales data, identify columns like Date, Product, Region, Sales, and Profit.
-      
-      Responding to Queries:
-      Interpret user questions ranging from basic data retrieval (e.g., total sales in a specific month) to complex data analyses (e.g., year-over-year sales growth by region).
-      When applicable, structure your response to include a JavaScript object suitable for charting or further analysis.
-      
-      Example:
-      Query: "What were the total sales for each product category in Q1 2023?"
-      Response: "In Q1 2023, the total sales for each product category were as follows..." followed by a JavaScript object with xAxis = 'Product Category', yAxis = 'Total Sales', xData = [list of product categories], yData = [corresponding sales figures].
-      
-      Structure of JavaScript Object:
-      Format the JavaScript object with four fields: xAxis, yAxis, xData, and yData.
-      xAxis and yAxis: String labels for chart axes, typically column names from the dataset.
-      xData and yData: Arrays containing data values corresponding to xAxis and yAxis.
-      
-      Example:
-      For a bar chart showing sales per region: xAxis = 'Region', yAxis = 'Sales', xData = ['North', 'South', 'East', 'West'], yData = [35000, 47000, 29000, 51000].
-      
-      Instructions for Submitting Queries:
-      Encourage users to specify if they want to visualize response as a chart.
+      Interpret User Queries: When you receive a user query regarding data analysis and visualization, analyze the query to understand the key components necessary for creating a chart. Focus on identifying the metrics or dimensions mentioned in the query.
 
-      Example:
-      User Submission: "What are the top 5 sales country wise?"
-      Assistant Response: ${sampleResponse}.
+      Determine Chart Parameters:
+      Chart Type: Based on the query, determine the most appropriate type of chart from "bar", "doughnut", "pie", "line", "polar area", "horizontal bar". Consider the nature of the data and the user's intent in your decision.
+      X and Y Axes: Identify which data columns should be mapped to the x-axis and y-axis. These should be directly derived from the key components of the user's query and both of them should be exactly a column name from the dataset.
+      Chart Title: Generate a concise and informative title for the chart that reflects the user's intent and the data being visualized.
+      Generate Standardized JSON Output: Your response should be a JSON object containing the details necessary for creating the chart. The format of your response should be as follows:
+      {
+        "chartType": "<Identified Chart Type>",
+        "xAxis": "<Column for X-axis>",
+        "yAxis": "<Column for Y-axis>",
+        "title": "<Generated Chart Title>"
+      }
+      
+      Clarity and Precision: Ensure that your responses are clear and directly address the user's query. The output should be unambiguous and precisely formatted as per the JSON structure outlined.
+
+      User-Centric Approach: Always prioritize the user's analytical needs and the context of their query when generating the output. Your response should facilitate an intuitive and insightful visualization of the data as per the user's request.
+
       `,
       name: "Analytics Assistant",
       tools: [{ type: "code_interpreter" }, { type: "retrieval" }],
@@ -102,30 +97,13 @@ export async function POST(req: Request, { params: { userId } }: Props) {
     const assistantId = assistant.id;
 
     const thread = await openai.beta.threads.create({});
-    // await openai.beta.threads.messages.create(thread.id, {
-    //   role: "user",
-    //   content: "Hello",
-    // });
-    // let firstRun = await openai.beta.threads.runs.create(thread.id, {
-    //   assistant_id: assistantId,
-    // });
-
-    // let firstRunStatus = firstRun.status;
-    // while (firstRunStatus === "queued" || firstRunStatus === "in_progress") {
-    //   await delay(5000); // 5 seconds delay
-    //   firstRun = await openai.beta.threads.runs.retrieve(
-    //     thread.id,
-    //     firstRun.id
-    //   );
-    //   firstRunStatus = firstRun.status;
-    // }
 
     // Step 1: Add Messages to the Thread
     await openai.beta.threads.messages.create(thread.id, {
       role: "user",
       content:
         message +
-        " If applicable, provide this information in a JavaScript object format with fields: xAxis, yAxis, xData, and yData, suitable for generating charts.",
+        " If possible, generate the JSON object that includes the fields chartType, xAxis, yAxis, title.",
     });
 
     const chat = await Chat.create({
@@ -150,6 +128,7 @@ export async function POST(req: Request, { params: { userId } }: Props) {
     });
 
     let runStatus = myRun.status;
+    console.log("fetch resp");
     while (runStatus === "queued" || runStatus === "in_progress") {
       await delay(1000); // 1 second delay
       myRun = await openai.beta.threads.runs.retrieve(thread.id, myRun.id);
@@ -166,31 +145,104 @@ export async function POST(req: Request, { params: { userId } }: Props) {
 
     // Step 4: Retrieve the Messages added by the Assistant to the Thread
     const messages = await openai.beta.threads.messages.list(thread.id);
+
+    // if (Array.isArray(messages.data[0].content)) {
+    //   const content = messages.data[0].content;
+    //   for (let i = 0; i < content.length; i++) {
+    //     const item = content[i];
+    //     if (item.type == "image_file") {
+    //       const response = await openai.files.content(item.image_file.file_id);
+    //       const image_data = await response.arrayBuffer();
+    //       const image_data_buffer = Buffer.from(image_data).toString("base64");
+    //       images.push(image_data_buffer);
+    //     } else if (item.type == "text") {
+    //       messageContent += `
+    //       ${item.text.value}
+    //       `;
+    //     }
+    //   }
+    //   await Message.create({
+    //     role: "assistant",
+    //     content: messageContent,
+    //     imageIds: images,
+    //     chat: chat._id,
+    //   });
+    // } else {
+    //   messageContent = "Something went wrong";
+    //   await Message.create({
+    //     role: "assistant",
+    //     content: messageContent,
+    //     chat: chat._id,
+    //   });
+    // }
+
     const responseMessage =
       Array.isArray(messages.data[0].content) &&
       messages.data[0].content[0]?.type === "text"
         ? messages.data[0].content[0].text.value
         : "No text content found";
 
+    console.log(responseMessage);
     const resArray = responseMessage.split("```");
-    console.log(resArray);
     if (resArray.length >= 3) {
-      let obj = resArray[1].replace("javascript", "");
-      obj = obj.replace(/([{,]?\s*)([A-Za-z_][A-Za-z0-9_]*)\s*:/g, '$1"$2":');
-      obj = obj.replaceAll("'", '"');
-      const { xAxis, yAxis, xData, yData } = JSON.parse(obj);
+      let obj = resArray[1].replace("json", "");
+      let { chartType, xAxis, yAxis, title } = JSON.parse(obj);
+
+      const getObjectParams = {
+        Bucket: process.env.AWS_FILES_BUCKET_NAME,
+        Key: datasetObj.key,
+      };
+
+      const command = new GetObjectCommand(getObjectParams);
+      const resp = await s3.send(command);
+      const fileData: any = resp.Body;
+
+      let xData: any[] = [];
+      let yData: any[] = [];
+
+      await new Promise((resolve, reject) => {
+        fileData
+          .pipe(csv())
+          .on("data", (row: any) => {
+            xData.push(row[xAxis]);
+            yData.push(row[yAxis]);
+          })
+          .on("end", () => {
+            resolve("done");
+          })
+          .on("error", (error: Error) => {
+            reject(error);
+          });
+      });
+
+      const aggregatedData = xData.reduce((acc, curr, index) => {
+        if (acc[curr]) {
+          acc[curr] += parseInt(yData[index]);
+        } else {
+          acc[curr] = parseInt(yData[index]);
+        }
+        return acc;
+      }, {});
+
+      // Extract aggregated xData and yData
+      xData = Object.keys(aggregatedData);
+      yData = Object.values(aggregatedData);
+
       await Message.create({
         role: "assistant",
         type: "chart",
+        title,
         content: resArray[0],
-        chartType: "bar",
+        chartType,
         xAxis,
         yAxis,
         xData,
         yData,
         chat: chat._id,
       });
+      console.log("chart done");
     } else {
+      console.log("message done");
       await Message.create({
         role: "assistant",
         type: "text",

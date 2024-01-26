@@ -15,9 +15,17 @@ const MessageSchema = new mongoose.Schema(
     content: {
       type: String,
     },
+    // imageIds: [
+    //   {
+    //     type: String,
+    //   },
+    // ],
     chartType: {
       type: String,
       enum: ["bar", "doughnut", "pie", "line", "polar area", "horizontal bar"],
+    },
+    title: {
+      type: String,
     },
     xAxis: {
       type: String,
