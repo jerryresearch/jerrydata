@@ -1,12 +1,9 @@
 import type { NextAuthOptions } from "next-auth";
-import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { connectToDB } from "./mongoose";
-import clientPromise from "./mongodb";
 import { verifyPassword } from "./verifyPassword";
 import User from "@/models/User";
-import { randomBytes, randomUUID } from "crypto";
 
 export const authOptions: NextAuthOptions = {
   // adapter: MongoDBAdapter(clientPromise),

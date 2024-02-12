@@ -33,6 +33,7 @@
     "csv-parser": "^3.0.0",
     "eslint": "8.50.0",
     "eslint-config-next": "13.5.2",
+    "geist": "^1.2.2",
     "html-to-image": "^1.11.11",
     "lucide-react": "^0.282.0",
     "mongoose": "^7.5.3",

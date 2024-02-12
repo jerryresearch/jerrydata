@@ -8,7 +8,7 @@ interface Props {
 const Button: React.FC<Props> = ({ children, isLoading }) => {
   return (
     <button
-      className={`bg-primary text-white rounded w-full h-full border border-[#EAEDF2] font-medium ${
+      className={`bg-primary text-white rounded-[6px] w-full h-full font-medium ${
         isLoading && "opacity-50 cursor-not-allowed"
       }`}
     >
