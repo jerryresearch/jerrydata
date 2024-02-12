@@ -19,8 +19,16 @@ const DatasetSchema = new mongoose.Schema(
     },
     datatype: {
       type: String,
-      enum: ["CSV", "XLS"],
+      enum: ["CSV", "XLS", "MySQL", "PostgreSQL"],
       required: true,
+    },
+    sql: {
+      host: String,
+      port: Number,
+      database: String,
+      user: String,
+      password: String,
+      connString: String,
     },
     size: {
       type: String,

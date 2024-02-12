@@ -29,6 +29,12 @@ const navLinks = [
     active: "/assets/chatIQ-icon-active.svg",
     image: "/assets/chatIQ-icon.svg",
   },
+  {
+    name: "Stories",
+    href: "/dashboard/stories",
+    active: "/assets/chatIQ-icon-active.svg",
+    image: "/assets/chatIQ-icon.svg",
+  },
 ];
 
 const Sidebar = () => {

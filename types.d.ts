@@ -29,6 +29,14 @@ type Dataset = {
   datatype: string;
   size: string;
   rows: number;
+  sql?: {
+    host: string;
+    port: number;
+    database: string;
+    user: string;
+    password: string;
+    connString: string;
+  };
   headers: [
     {
       name: string;

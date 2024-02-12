@@ -4,6 +4,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import AddReportModal from "./AddReportModal";
 import AutoGenerateModal from "./AutoGenerateModal";
+import Loading from "../Loading";
 
 type Props = {
   userId: string;
@@ -12,6 +13,7 @@ type Props = {
 
 const EmptyPage = ({ userId, datasets }: Props) => {
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCloseModal = () => {
     setOpen(false);
@@ -22,6 +24,10 @@ const EmptyPage = ({ userId, datasets }: Props) => {
   const handleCloseModalAutoGenerate = () => {
     setOpenAutoGenerate(false);
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <section className="flex h-[calc(100vh-49px)] py-5 px-7 items-center justify-center gap-5 flex-shrink-0">
@@ -59,6 +65,7 @@ const EmptyPage = ({ userId, datasets }: Props) => {
       <AutoGenerateModal
         open={openAutoGenerate}
         onClose={handleCloseModalAutoGenerate}
+        setIsLoading={setIsLoading}
         datasets={datasets}
         userId={userId}
       />

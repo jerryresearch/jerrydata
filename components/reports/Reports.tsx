@@ -10,6 +10,7 @@ import AddReportModal from "@/components/reports/AddReportModal";
 import ReportCard from "@/components/reports/ReportCard";
 import Image from "next/image";
 import AutoGenerateModal from "./AutoGenerateModal";
+import Loading from "../Loading";
 
 type Props = {
   reports: Reports[];
@@ -32,6 +33,7 @@ const Reports = ({ reports, userId, datasets }: Props) => {
   };
 
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCloseModal = () => {
     setOpen(false);
@@ -42,6 +44,10 @@ const Reports = ({ reports, userId, datasets }: Props) => {
   const handleCloseModalAutoGenerate = () => {
     setOpenAutoGenerate(false);
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <section>
@@ -116,6 +122,7 @@ const Reports = ({ reports, userId, datasets }: Props) => {
       <AutoGenerateModal
         open={openAutoGenerate}
         onClose={handleCloseModalAutoGenerate}
+        setIsLoading={setIsLoading}
         datasets={datasets}
         userId={userId}
       />

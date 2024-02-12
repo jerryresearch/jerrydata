@@ -4,23 +4,35 @@ import Image from "next/image";
 type Props = {
   open: boolean;
   onClose: () => void;
+  setIsLoading: (val: any) => void;
   datasets: Dataset[];
   userId: string;
 };
 
 import React, { useState } from "react";
 
-const AutoGenerateModal = ({ open, onClose, datasets, userId }: Props) => {
+const AutoGenerateModal = ({
+  open,
+  onClose,
+  datasets,
+  userId,
+  setIsLoading,
+}: Props) => {
   const [selectedDataset, setSelectedDataset] = useState("");
 
   const handleGenerate = async (id: string) => {
     try {
+      setIsLoading(true);
       const response = await autogenerateReport(userId, id);
       console.log(response.message);
       console.log(response.messageList);
     } catch (error) {
       console.log("error in generating report");
       alert("something went wrong");
+    } finally {
+      setIsLoading(false);
+      onClose();
+      location.reload();
     }
   };
 

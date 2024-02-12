@@ -13,7 +13,7 @@ const data = {
   ],
   databases: [
     { name: "mysql", image: "/assets/mysql.svg" },
-    { name: "sql-server", image: "/assets/sql-server.svg" },
+    { name: "postgresql", image: "/assets/sql-server.svg" },
     {
       name: "google-analytics",
       image: "/assets/google-analytics.svg",
@@ -43,7 +43,9 @@ const ConnectionType = ({ id, type }: Props) => {
   const router = useRouter();
 
   const handleNext = () => {
-    router.push(`upload-file/?type=${selectedType}`);
+    if (selectedType == "CSV") router.push(`upload-file/?type=${selectedType}`);
+    if (selectedType.includes("sql"))
+      router.push(`sql/add-connection/?type=${selectedType}`);
   };
 
   const handleBack = () => {};
@@ -75,11 +77,17 @@ const ConnectionType = ({ id, type }: Props) => {
           <p className="text-[17px] font-medium leading-7">Databases</p>
           <div className="flex gap-6 items-start">
             {data.databases.map((database, index) => (
-              <div key={index}>
+              <div
+                key={index}
+                onClick={() => {
+                  if (database.name.includes("sql"))
+                    setSelectedType(database.name);
+                }}
+              >
                 <ImageCard
                   image={database.image}
                   selected={selectedType === database.name}
-                  disabled={true}
+                  disabled={database.name != "postgresql"}
                 />
               </div>
             ))}

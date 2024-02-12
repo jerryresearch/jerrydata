@@ -13,6 +13,7 @@ import Header from "./Header";
 import { useRouter } from "next/navigation";
 import updateDataset from "@/lib/datasets/updateDataset";
 import autogenerateQuestions from "@/lib/datasets/autogenerateQuestions";
+import Loading from "./Loading";
 
 type Props = {
   dataset: Dataset;
@@ -25,6 +26,7 @@ const AddDatasetInfo = ({ id, userId, dataset }: Props) => {
   const [name, setName] = useState(dataset.name);
   const [description, setDescription] = useState(dataset.description);
   const [isUpdated, setIsUpdated] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
 
@@ -35,24 +37,27 @@ const AddDatasetInfo = ({ id, userId, dataset }: Props) => {
   const handleNext = async () => {
     if (isUpdated) {
       try {
+        setIsLoading(true);
         const res = await updateDataset(userId, id, {
           name,
           description,
         });
-        const response = await autogenerateQuestions(userId, id);
-        console.log(response.message);
-        console.log(response.responseMessage);
-        router.push("/dashboard/data");
-        router.refresh();
+        // const response = await autogenerateQuestions(userId, id);
+        // console.log(response.message);
+        // console.log(response.responseMessage);
       } catch (error) {
         console.log("error in updating dataset");
         alert("error updating");
+      } finally {
+        setIsLoading(false);
       }
-    } else {
-      router.push("/dashboard/data");
-      router.refresh();
     }
+    router.push(`auto-generate?id=${id}`);
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F6F8FA]">
