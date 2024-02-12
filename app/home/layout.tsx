@@ -18,7 +18,7 @@ export default async function RootLayout({
   const name = session?.user?.name;
 
   return (
-    <section className={`bg-[#F6F8FA] min-h-screen`}>
+    <section className={`bg-white`}>
       <Navbar name={name} />
       <main className="pt-14">{children}</main>
     </section>
