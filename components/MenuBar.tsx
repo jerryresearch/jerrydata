@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import { usePathname } from "next/navigation";
 
 type Props = {
   id: string;
@@ -8,16 +8,19 @@ type Props = {
 };
 
 const MenuBar = ({ id, selected }: Props) => {
-  const items = ["Info", "Field", "Data"];
+  const pathname = usePathname();
+
+  const items = ["info", "field", "data"];
   return (
-    <div className="w-[180px] flex px-[5px] py-1 rounded bg-white border border-[#EAEDF2]">
+    <div className="w-full flex px-[5px] py-1 bg-white border-b border-[#EEEEFF]">
       {items.map((item) => (
         <Link
-          href={`${item.toLowerCase()}?id=${id}`}
+          href={`${pathname}?type=${item.toLowerCase()}&id=${id}`}
           key={item}
-          className={`px-[12px] py-[6px] ${
-            selected === item &&
-            "bg-primary text-white rounded border border-[#EAEDF2] font-medium"
+          className={`px-[12px] py-[6px] transition-all duration-300 ease-in-out capitalize ${
+            selected === item
+              ? "text-primary border-b-2 border-primary"
+              : "text-[#61656C]"
           }`}
         >
           {item}

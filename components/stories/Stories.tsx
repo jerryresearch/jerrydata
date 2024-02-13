@@ -132,7 +132,7 @@ const Stories = ({ datasets }: Props) => {
             />
             <span className="text-[#61656C]">Refresh</span>
           </button>
-          <button className="flex bg-primary text-white rounded px-4 py-2 h-[42px] gap-2">
+          <button className="flex bg-primary text-white rounded items-center px-4 py-2 h-[42px] gap-2">
             <Image
               src="/assets/story-book.svg"
               alt="chevron down icon"

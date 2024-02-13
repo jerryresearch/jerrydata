@@ -67,7 +67,7 @@ const Page = async ({
           )}`}</p>
         </div>
       </div>
-      <Data headers={dataset.headers} records={records} />
+      {/* <Data headers={dataset.headers} records={records} /> */}
       <Pagination
         href={`${params.name}?id=${id}`}
         length={records.length}

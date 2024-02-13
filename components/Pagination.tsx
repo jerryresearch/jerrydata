@@ -20,7 +20,7 @@ const Pagination = ({
   const start = (currentPage - 1) * 100 + 1;
   const end = start - 1 + length;
   return (
-    <div className="flex justify-between items-center px-7 pt-2 pb-5">
+    <div className="flex justify-between items-center pt-2 pb-5">
       <div className="text-[#ADB3BB]">
         Showing {`${start} - ${end}`} of {totalRecords}
       </div>

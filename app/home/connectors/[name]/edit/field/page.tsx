@@ -22,7 +22,7 @@ const page = async ({
     <EditDatasetFields
       dataset={dataset}
       userId={userId}
-      userName={session?.user?.fullName}
+      userName={session?.user?.name}
     />
   );
 };

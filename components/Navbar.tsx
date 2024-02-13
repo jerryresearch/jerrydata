@@ -37,8 +37,9 @@ type Props = {
 
 const Navbar = ({ name }: Props) => {
   const pathname = usePathname();
+
   return (
-    <nav className="fixed w-full items-center px-[30px] h-14 flex bg-[#FAFAFA] border-b border-[#EEEEFF]">
+    <nav className="fixed w-full z-50 items-center px-[30px] h-14 flex bg-[#FAFAFA] border-b border-[#EEEEFF]">
       <Image
         src="/assets/logo.svg"
         alt="RaptorIQ logo"
@@ -46,42 +47,97 @@ const Navbar = ({ name }: Props) => {
         height={24}
       />
       <ul className="flex gap-[20px] h-full flex-1 justify-center">
-        {navLinks.map((navLink, index) => (
-          <li key={index}>
-            {pathname.includes(navLink.href) ? (
-              <Link
-                href={navLink.href}
-                className="flex h-full gap-[10px] text-[#080D19] items-center border-b-2 border-primary"
-              >
-                <Image
-                  src={navLink.active}
-                  alt="nav-icon"
-                  width={20}
-                  height={20}
-                />
-                <p>{navLink.name}</p>
-                {navLink.name == "Stories" && (
-                  <span className="text-white rounded-full bg-primary w-6 h-6 text-sm flex justify-center items-center">
-                    0
-                  </span>
-                )}
-              </Link>
-            ) : (
-              <Link
-                href={navLink.href}
-                className="flex h-full gap-[10px] items-center text-[#61656C]"
-              >
-                <Image
-                  src={navLink.image}
-                  alt="nav-icon"
-                  width={20}
-                  height={20}
-                />
-                <div>{navLink.name}</div>
-              </Link>
-            )}
-          </li>
-        ))}
+        <li>
+          <Link
+            href={"/home"}
+            className={`px-[10px] flex h-full gap-[10px] items-center ${
+              pathname == "/home"
+                ? "text-[#080D19] border-b-2 border-primary"
+                : "text-[#61656C]"
+            } `}
+          >
+            <Image
+              src={`${
+                pathname == "/home"
+                  ? "/assets/stories-active.svg"
+                  : "/assets/stories.svg"
+              }`}
+              alt="nav-icon"
+              width={20}
+              height={20}
+            />
+            <p>Stories</p>
+            <span className="text-white rounded-full bg-primary w-6 h-6 text-sm flex justify-center items-center">
+              0
+            </span>
+          </Link>
+        </li>
+        <li>
+          <Link
+            href={"/home/connectors"}
+            className={`px-[10px] flex h-full gap-[10px] items-center ${
+              pathname.startsWith("/home/connectors")
+                ? "text-[#080D19] border-b-2 border-primary"
+                : "text-[#61656C]"
+            } `}
+          >
+            <Image
+              src={`${
+                pathname.startsWith("/home/connectors")
+                  ? "/assets/connectors-active.svg"
+                  : "/assets/connectors.svg"
+              }`}
+              alt="nav-icon"
+              width={20}
+              height={20}
+            />
+            <p>Connectors</p>
+          </Link>
+        </li>
+        <li>
+          <Link
+            href={"/home/dashboards"}
+            className={`px-[10px] flex h-full gap-[10px] items-center ${
+              pathname.startsWith("/home/dashboards")
+                ? "text-[#080D19] border-b-2 border-primary"
+                : "text-[#61656C]"
+            } `}
+          >
+            <Image
+              src={`${
+                pathname.startsWith("/home/dashboards")
+                  ? "/assets/dashboards-active.svg"
+                  : "/assets/dashboards.svg"
+              }`}
+              alt="nav-icon"
+              width={20}
+              height={20}
+            />
+            <p>Dashboards</p>
+          </Link>
+        </li>
+        <li>
+          <Link
+            href={"/home/ask-jerry"}
+            className={`px-[10px] flex h-full gap-[10px] items-center ${
+              pathname.startsWith("/home/ask-jerry")
+                ? "text-[#080D19] border-b-2 border-primary"
+                : "text-[#61656C]"
+            } `}
+          >
+            <Image
+              src={`${
+                pathname.startsWith("/home/ask-jerry")
+                  ? "/assets/jerry-active.svg"
+                  : "/assets/jerry.svg"
+              }`}
+              alt="nav-icon"
+              width={20}
+              height={20}
+            />
+            <p>Ask Jerry</p>
+          </Link>
+        </li>
       </ul>
       {/* pop over */}
       <div className="flex items-center gap-2 h-full">

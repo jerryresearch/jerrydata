@@ -2,10 +2,8 @@
 
 import React, { useState } from "react";
 import Datasets from "./Datasets";
-import Filters from "./Filters";
 import Image from "next/image";
 import Link from "next/link";
-import Button from "../Button";
 
 type Props = {
   datasets: Dataset[];
@@ -13,7 +11,9 @@ type Props = {
 };
 
 const DatasetsContainer = ({ datasets, userId }: Props) => {
+  const [page, setPage] = useState(1);
   const [filteredDatasets, setFilteredDatasets] = useState(datasets);
+
   const handleSearch = (query: string) => {
     if (query == "") {
       setFilteredDatasets(datasets);
@@ -27,21 +27,11 @@ const DatasetsContainer = ({ datasets, userId }: Props) => {
   };
 
   return (
-    <section className="h-screen bg-[#F6F8FA] text-sm">
-      <div className="sticky top-0 px-7 py-5 border-b border-[#EAEDF2] flex justify-between items-center">
-        <div className="flex items-center justify-between w-[423px] text-sm">
-          <Filters />
-          <div className="flex gap-2">
-            <input type="checkbox" name="scheduled" id="scheduled" />{" "}
-            <span>Scheduled</span>
-          </div>
-          <div className="flex gap-2">
-            <input type="checkbox" name="scheduled" id="scheduled" />{" "}
-            <span>Has Load Errors</span>
-          </div>
-        </div>
-        <div className="flex gap-3 rounded">
-          <div className="flex gap-2 w-[380px] border border-[#EAEDF2] bg-white rounded pr-[100px] pl-2">
+    <section className="text-sm py-6 px-[60px] text-[#080D19]">
+      <h1 className="font-medium text-2xl">Connectors</h1>
+      <div className="h-[90px] py-6">
+        <div className="flex w-full justify-between">
+          <div className="flex gap-2 border border-[#EEEEFF] rounded-[6px] h-[42px] w-[380px] px-2 py-[10px]">
             <Image
               src="/assets/search-icon.svg"
               alt="search icon"
@@ -52,41 +42,54 @@ const DatasetsContainer = ({ datasets, userId }: Props) => {
               type="text"
               placeholder="Search Data"
               onChange={(e) => handleSearch(e.target.value)}
-              className="px-2 py-[10px] focus:outline-none"
+              className="focus:outline-none flex-1"
             />
           </div>
-          <Link href="data/new/connection-type" className="">
-            <Button isLoading={false}>
-              <div className="flex gap-[10px] w-[184px] h-10 py-2 px-4 items-center justify-center">
-                <Image
-                  src="/assets/plus-icon.svg"
-                  width={24}
-                  height={24}
-                  alt="plus icon"
-                />
-                <span>Add New Dataset</span>
-              </div>
-            </Button>
-          </Link>
+          <div className="flex gap-4">
+            <button className="flex h-[42px] rounded-[6px] gap-[6px] items-center px-5 bg-[#F1F1F1] font-medium">
+              <Image
+                src="/assets/refresh.svg"
+                alt="chevron down icon"
+                width={20}
+                height={20}
+                className="cursor-pointer"
+              />
+              <span className="text-[#61656C]">Refresh</span>
+            </button>
+            <Link
+              href={"data/new/connection-type"}
+              className="flex bg-primary text-white rounded items-center px-4 py-2 h-[42px] gap-2"
+            >
+              <Image
+                src="/assets/plus-icon.svg"
+                alt="add connection icon"
+                width={20}
+                height={20}
+                className="cursor-pointer"
+              />
+              <span>New Connection</span>
+            </Link>
+          </div>
         </div>
       </div>
-      <section className="w-full px-7 py-4">
-        <Datasets datasets={filteredDatasets} userId={userId} />
-      </section>
-      {datasets.length > 10 && (
-        <div className="flex justify-between items-center px-7 py-2">
-          <div className="text-[#ADB3BB]">Showing 1-2 of 2</div>
-          <div className="p-[10px] flex justify-center items-center gap-[5px] rounded border border-[#EAEDF2] bg-white">
-            <div className="py-[6px] px-3 bg-[#DEE8FA] cursor-pointer">1</div>
-            <div className="py-[6px] px-3 cursor-pointer">2</div>
-            <div className="py-[6px] px-3 cursor-pointer">
+      <Datasets datasets={filteredDatasets} userId={userId} />
+      {datasets.length > 1 && (
+        <div className="flex justify-between items-center py-6">
+          <div className="text-[#A9AAAE]">Showing 1-2 of 2</div>
+          <div className="py-[10px] px-2 flex gap-[5px] rounded-[6px]">
+            <div className="py-[2px] px-3 bg-[#EEEEFF] rounded -[6px] font-medium cursor-pointer">
+              1
+            </div>
+            <div className="py-[2px] px-3 cursor-pointer">2</div>
+            <div className="py-[2px] cursor-pointer">
               <Image
-                src="/assets/chevron-right.svg"
+                src="/assets/ellipsis.svg"
                 alt="more"
                 width={24}
-                height={24}
+                height={20}
               />
             </div>
+            <div className="py-[2px] px-3 cursor-pointer">23</div>
           </div>
         </div>
       )}

@@ -2,7 +2,6 @@
 
 import updateDataset from "@/lib/datasets/updateDataset";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type Props = {
@@ -12,7 +11,6 @@ type Props = {
 };
 
 const EditFooter = ({ updates, userId, id }: Props) => {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleUpdate = async () => {
