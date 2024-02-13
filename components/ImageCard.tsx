@@ -4,31 +4,20 @@ import React from "react";
 type Props = {
   image: string;
   selected: boolean;
-  disabled: boolean;
 };
 
-const ImageCard = ({ image, selected, disabled }: Props) => {
+const ImageCard = ({ image, selected }: Props) => {
   return (
     <div
-      className={`w-[150px] h-[150px] cursor-pointer rounded bg-white border relative flex items-center justify-center ${
-        selected && "border border-[#2770EF] shadow-custom"
+      className={`w-[120px] h-[120px] cursor-pointer rounded-[6px] border relative flex items-center justify-center ${
+        selected ? "border-primary shadow-custom" : "border-[#EEEEFF]"
       }`}
     >
-      {selected && (
-        <div className="flex w-5 h-5 bg-[#2770EF] absolute top-[10px] right-[11px] flex-col items-center justify-center rounded-[14px]">
-          <Image
-            src="/assets/check-icon.svg"
-            alt="checked"
-            width={14}
-            height={14}
-          />
-        </div>
-      )}
       <Image
         src={image}
         alt="csv file"
         width={62}
-        height={72}
+        height={60}
         className="w-fit h-fit"
       />
     </div>

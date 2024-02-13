@@ -29,7 +29,7 @@ const DeleteModal = ({ open, onClose, id, userId, name }: Props) => {
           : "hidden"
       }`}
     >
-      <div className="bg-white flex w-[640px] h-[340px] rounded-[6px] flex-col gap-6 flex-shrink-0 items-center text-xl text-[#080D19]">
+      <div className="bg-white flex w-[640px] min-h-[340px] rounded-[6px] flex-col gap-6 flex-shrink-0 items-center text-xl text-[#080D19] pb-6">
         <div className="h-[90px] w-full py-4 px-8 flex items-center rounded-[6px] justify-between flex-shrink-0 border-b border-[#EEEEFF] bg-[#F8FAFC]">
           <div className="flex flex-col gap-1">
             <p className="text-xl font-semibold">Are you sure?</p>

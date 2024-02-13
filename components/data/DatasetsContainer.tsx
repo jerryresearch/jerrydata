@@ -57,7 +57,7 @@ const DatasetsContainer = ({ datasets, userId }: Props) => {
               <span className="text-[#61656C]">Refresh</span>
             </button>
             <Link
-              href={"data/new/connection-type"}
+              href={"connectors/new/connection-type"}
               className="flex bg-primary text-white rounded items-center px-4 py-2 h-[42px] gap-2"
             >
               <Image

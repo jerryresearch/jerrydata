@@ -32,7 +32,7 @@ const EditDatasetInfo = ({ dataset, userId, userName }: Props) => {
       />
       <div className="flex flex-col gap-6 items-start w-[420px] flex-shrink-0">
         <div className="flex flex-col gap-4 self-stretch">
-          <label className="font-medium">Dataset Name</label>
+          <label className="font-medium">Connection Name</label>
           <input
             type="text"
             value={name}

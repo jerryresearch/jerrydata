@@ -14,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: #6366f1;
+    /* --primary: #6366f1; */
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -78,6 +78,7 @@
 
 ::-webkit-scrollbar {
   width: 3px; /* Width of the scrollbar */
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {

@@ -4,6 +4,7 @@ import createDataset from "@/lib/datasets/postgresql/createDataset";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Footer from "../../Footer";
+import Header from "../Header";
 
 type Props = {
   dataset?: Dataset;
@@ -53,89 +54,8 @@ const AddSQLConnection = ({ dataset, id, userId, type }: Props) => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#F6F8FA]">
-      {/* <Header currentStep={currentStep} /> */}
-      <div className="flex-1">
-        <div className="flex gap-4 items-center self-stretch py-10 px-7 text-[#17212F]">
-          <label className="text-sm font-medium min-w-[120px]">
-            Connection String
-          </label>
-          <input
-            type="text"
-            value={connString}
-            onChange={(e) => {
-              setConnString(e.target.value);
-            }}
-            className="flex flex-[1_0_0] items-center py-[14px] px-3 rounded border border-[#EAEDF2] bg-white"
-          />
-        </div>
-        <div className="flex items-center">
-          <div className="h-px mx-7 border border-gray-300 flex-1"></div>
-          <span className="text-gray-300">OR</span>
-          <div className="h-px mx-7 border border-gray-300 flex-1"></div>
-        </div>
-        <section className="flex items-start gap-[60px] py-10 px-7 text-[#17212F]">
-          <div className="flex flex-col gap-6 items-start w-[500px] flex-shrink-0">
-            <div className="flex items-center self-stretch gap-4">
-              <label className="text-sm font-medium w-[120px]">Host</label>
-              <input
-                type="text"
-                value={host}
-                onChange={(e) => {
-                  setHost(e.target.value);
-                }}
-                className="flex flex-[1_0_0] items-center py-[14px] px-3 rounded border border-[#EAEDF2] bg-white"
-              />
-            </div>
-            <div className="flex items-center gap-4 self-stretch">
-              <label className="text-sm font-medium w-[120px]">Port</label>
-              <input
-                type="text"
-                value={port}
-                onChange={(e) => {
-                  setPort(e.target.value);
-                }}
-                className="flex flex-[1_0_0] items-center py-[14px] px-3 rounded border border-[#EAEDF2] bg-white"
-              />
-            </div>
-            <div className="flex items-center gap-4 self-stretch">
-              <label className="text-sm font-medium w-[120px]">Database</label>
-              <input
-                type="text"
-                value={database}
-                onChange={(e) => {
-                  setDatabase(e.target.value);
-                }}
-                className="flex flex-[1_0_0] items-center py-[14px] px-3 rounded border border-[#EAEDF2] bg-white"
-              />
-            </div>
-
-            <div className="flex items-center self-stretch gap-4">
-              <label className="text-sm font-medium w-[120px]">Username</label>
-              <input
-                type="text"
-                value={user}
-                onChange={(e) => {
-                  setUser(e.target.value);
-                }}
-                className="flex flex-[1_0_0] items-center py-[14px] px-3 rounded border border-[#EAEDF2] bg-white"
-              />
-            </div>
-            <div className="flex items-center gap-4 self-stretch">
-              <label className="text-sm font-medium w-[120px]">Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-                className="flex flex-[1_0_0] items-center py-[14px] px-3 rounded border border-[#EAEDF2] bg-white"
-              />
-            </div>
-          </div>
-        </section>
-      </div>
-      <Footer
+    <section>
+      <Header
         step={currentStep}
         nextDisabled={
           !connString && (!host || !port || !database || !user || !password)
@@ -143,7 +63,85 @@ const AddSQLConnection = ({ dataset, id, userId, type }: Props) => {
         handleBack={handleBack}
         handleNext={handleNext}
       />
-    </div>
+      <section className="px-[60px] py-6 flex flex-col gap-6 text-[#080D19]">
+        <h1 className="font-medium text-2xl">Make Connection</h1>
+        <div className="w-[864px] flex flex-col gap-8">
+          <div className="flex flex-col gap-4">
+            <label className="font-medium">Connection String</label>
+            <input
+              type="text"
+              value={connString}
+              onChange={(e) => {
+                setConnString(e.target.value);
+              }}
+              className="py-[14px] px-3 rounded-[6px] border border-[#EEEEFF] bg-white focus:outline-none h-[42px]"
+            />
+          </div>
+          <div className="flex items-center w-full gap-1">
+            <div className="h-px bg-[#EEEEFF] flex-1"></div>
+            <span className="text-[#A9AAAE] text-sm">OR</span>
+            <div className="h-px bg-[#EEEEFF] flex-1"></div>
+          </div>
+          <section className="grid grid-cols-2 gap-6">
+            <div className="flex flex-col gap-4">
+              <label className="font-medium">Host</label>
+              <input
+                type="text"
+                value={host}
+                onChange={(e) => {
+                  setHost(e.target.value);
+                }}
+                className="py-[14px] px-3 rounded-[6px] border border-[#EEEEFF] bg-white h-[42px] focus:outline-none"
+              />
+            </div>
+            <div className="flex flex-col gap-4">
+              <label className="font-medium">Username</label>
+              <input
+                type="text"
+                value={user}
+                onChange={(e) => {
+                  setUser(e.target.value);
+                }}
+                className="py-[14px] px-3 rounded-[6px] border border-[#EEEEFF] bg-white h-[42px] focus:outline-none"
+              />
+            </div>
+            <div className="flex flex-col gap-4">
+              <label className="font-medium">Database</label>
+              <input
+                type="text"
+                value={database}
+                onChange={(e) => {
+                  setDatabase(e.target.value);
+                }}
+                className="py-[14px] px-3 rounded-[6px] border border-[#EEEEFF] bg-white h-[42px] focus:outline-none"
+              />
+            </div>
+            <div className="flex flex-col gap-4">
+              <label className="font-medium">Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+                className="py-[14px] px-3 rounded-[6px] border border-[#EEEEFF] bg-white h-[42px] focus:outline-none"
+              />
+            </div>
+            <div className="flex flex-col gap-4">
+              <label className="font-medium">Port</label>
+              <input
+                type="text"
+                value={port}
+                onChange={(e) => {
+                  setPort(e.target.value);
+                }}
+                className="py-[14px] px-3 rounded-[6px] border border-[#EEEEFF] bg-white h-[42px] focus:outline-none"
+              />
+            </div>
+          </section>
+        </div>
+      </section>
+    </section>
   );
 };
 

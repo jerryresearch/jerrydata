@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Footer from "@/components/Footer";
 import setTable from "@/lib/datasets/postgresql/setTable";
+import Header from "../Header";
 
 type Props = {
   tables: string[];
@@ -39,74 +40,71 @@ const TableSelection = ({ userId, id, tables }: Props) => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#F6F8FA]">
-      {/* <Header currentStep={currentStep} /> */}
-      <div className="flex-1">
-        <section className="px-7 py-10 flex items-start gap-[60px]">
-          <div className="flex flex-col items-start gap-6">
-            <div className="flex justify-center items-center gap-[10px]">
-              <p className="font-medium text-[15px] leading-[21px]">
-                Available Tables
-              </p>
-              <div className="px-2 w-[380px] flex flex-col items-start gap-[10px] self-stretch rounded border border-[#EAEDF2] bg-white">
-                <div className="flex py-[10px] px-2 items-center gap-2 self-stretch">
-                  <Image
-                    src="/assets/search-icon.svg"
-                    alt="search"
-                    width={16}
-                    height={16}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Search by name"
-                    className="text-sm focus:outline-none"
-                    onChange={(e) => setSearchInput(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="flex px-[10px] py-[14px] w-[506px] max-h-80 overflow-y-auto justify-between items-start self-stretch rounded border border-[#EAEDF2] bg-white">
-              <div className="flex flex-col items-start w-[382px]">
-                {filteredTables.map((table, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-col items-start w-[382px] gap-[14px]"
-                  >
-                    <div className="flex px-2 flex-col items-start">
-                      <div className="py-2 flex justify-center items-center gap-[10px] self-stretch">
-                        <div className="flex items-center justify-center gap-[10px]">
-                          <input
-                            type="checkbox"
-                            onChange={() => {
-                              if (selectedTable == table) {
-                                setSelectedTable("");
-                              } else {
-                                setSelectedTable(table);
-                              }
-                            }}
-                            name="name"
-                            id="name"
-                          />
-                          <label htmlFor="name" className="text-sm">
-                            {table}
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-      <Footer
-        step={currentStep}
-        nextDisabled={selectedTable == ""}
+    <section>
+      <Header
+        step={3}
+        nextDisabled={false}
         handleBack={handleBack}
         handleNext={handleNext}
       />
-    </div>
+      <section className="px-[60px] py-6 flex flex-col gap-6 text-[#080D19]">
+        <h1 className="font-medium text-2xl">Select Table</h1>
+        <div className="flex flex-col gap-6 w-[405px]">
+          <div className="flex flex-col gap-4">
+            <p className="font-medium">Available Tables</p>
+            <div className="px-2 w-full rounded-[6px] border border-[#EEEEF]">
+              <div className="flex py-[10px] px-2 items-center gap-2 self-stretch">
+                <Image
+                  src="/assets/search-icon.svg"
+                  alt="search"
+                  width={16}
+                  height={16}
+                />
+                <input
+                  type="text"
+                  placeholder="Search by name"
+                  className="text-sm focus:outline-none"
+                  onChange={(e) => setSearchInput(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="flex px-[10px] py-[14px] w-full max-h-80 overflow-y-auto justify-between items-start self-stretch rounded border border-[#EAEDF2] bg-white">
+            <div className="flex flex-col items-start w-[382px]">
+              {filteredTables.map((table, index) => (
+                <div
+                  key={index}
+                  className="flex flex-col items-start w-[382px] gap-[14px]"
+                >
+                  <div className="flex px-2 flex-col items-start">
+                    <div className="py-2 flex justify-center items-center gap-[10px] self-stretch">
+                      <div className="flex items-center justify-center gap-[10px]">
+                        <input
+                          type="checkbox"
+                          onChange={() => {
+                            if (selectedTable == table) {
+                              setSelectedTable("");
+                            } else {
+                              setSelectedTable(table);
+                            }
+                          }}
+                          name="name"
+                          id="name"
+                          className="accent-primary"
+                        />
+                        <label htmlFor="name" className="text-sm">
+                          {table}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
   );
 };
 

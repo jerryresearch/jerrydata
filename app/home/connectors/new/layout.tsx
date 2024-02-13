@@ -1,5 +1,3 @@
-import React, { useState } from "react";
-
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return <section className="">{children}</section>;
 };

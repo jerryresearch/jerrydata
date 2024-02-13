@@ -57,8 +57,8 @@ const EditHeader = ({ dataset, userName, type, updates, userId }: Props) => {
               {dataset.datatype}
             </span>
           </h1>
-          <div className="flex gap-[10px] items-center">
-            <div className="flex gap-[10px] text-sm">
+          <div className="flex gap-[8px] items-center">
+            <div className="flex gap-[4px] text-sm">
               <span className="text-[#61656C] text-sm">Size</span>
               <span className="">{formatSize(dataset.size)}</span>
             </div>
@@ -99,7 +99,7 @@ const EditHeader = ({ dataset, userName, type, updates, userId }: Props) => {
           <button
             onClick={handleUpdate}
             className={`py-1 px-[14px] w-20 bg-primary rounded-[6px] text-white font-medium ${
-              (isLoading || !updates) && "opacity-50 pointer-events-none"
+              (isLoading || !updates) && "bg-primary/50 pointer-events-none"
             }`}
           >
             Save

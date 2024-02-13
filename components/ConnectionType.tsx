@@ -2,9 +2,8 @@
 
 import React, { useState } from "react";
 import ImageCard from "./ImageCard";
-import Header from "./Header";
-import Footer from "./Footer";
 import { useRouter } from "next/navigation";
+import Header from "./data/Header";
 
 const data = {
   files: [
@@ -13,7 +12,8 @@ const data = {
   ],
   databases: [
     { name: "mysql", image: "/assets/mysql.svg" },
-    { name: "postgresql", image: "/assets/sql-server.svg" },
+    { name: "postgresql", image: "/assets/postgresql.svg" },
+    { name: "sql-server", image: "/assets/sql-server.svg" },
     {
       name: "google-analytics",
       image: "/assets/google-analytics.svg",
@@ -38,12 +38,12 @@ type Props = {
 
 const ConnectionType = ({ id, type }: Props) => {
   const [selectedType, setSelectedType] = useState(type);
-  const currentStep = 1;
 
   const router = useRouter();
 
   const handleNext = () => {
-    if (selectedType == "CSV") router.push(`upload-file/?type=${selectedType}`);
+    if (selectedType == "CSV" || selectedType == "XLS")
+      router.push(`upload-file/?type=${selectedType}`);
     if (selectedType.includes("sql"))
       router.push(`sql/add-connection/?type=${selectedType}`);
   };
@@ -51,70 +51,62 @@ const ConnectionType = ({ id, type }: Props) => {
   const handleBack = () => {};
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#F6F8FA]">
-      <Header currentStep={currentStep} />
-      <section className="px-7 py-10 flex-1 flex flex-col items-start gap-6">
-        <div className="flex flex-col items-start gap-6">
-          <p className="text-[17px] font-medium leading-7">Files</p>
-          <div className="flex gap-6 items-start">
+    <section>
+      <Header
+        step={1}
+        nextDisabled={selectedType == ""}
+        handleBack={handleBack}
+        handleNext={handleNext}
+      />
+      <section className="px-[60px] py-6 flex flex-col gap-6 text-[#080D19]">
+        <h1 className="font-medium text-2xl">Choose Type</h1>
+        <div className="flex flex-col gap-6">
+          <p className="text-[#61656C]">Files</p>
+          <div className="flex gap-6">
             {data.files.map((file, index) => (
-              <div
-                key={index}
-                onClick={() => {
-                  if (file.name == "CSV") setSelectedType(file.name);
-                }}
-              >
+              <div key={index} onClick={() => setSelectedType(file.name)}>
                 <ImageCard
                   image={file.image}
                   selected={selectedType === file.name}
-                  disabled={file.name != "CSV"}
                 />
               </div>
             ))}
           </div>
         </div>
-        <div className="flex flex-col items-start gap-6">
-          <p className="text-[17px] font-medium leading-7">Databases</p>
-          <div className="flex gap-6 items-start">
+        <div className="flex flex-col gap-6">
+          <p className="text-[#61656C]">Databases</p>
+          <div className="flex gap-6">
             {data.databases.map((database, index) => (
               <div
                 key={index}
                 onClick={() => {
-                  if (database.name.includes("sql"))
+                  if (database.name.endsWith("sql"))
                     setSelectedType(database.name);
                 }}
               >
                 <ImageCard
                   image={database.image}
                   selected={selectedType === database.name}
-                  disabled={database.name != "postgresql"}
                 />
               </div>
             ))}
           </div>
         </div>
-        <div className="flex flex-col items-start gap-6">
-          <p className="text-[17px] font-medium leading-7">Cloud Storage</p>
-          <div className="flex gap-6 items-start">
+        <div className="flex flex-col gap-6">
+          <p className="text-[#61656C]">Cloud Storage</p>
+          <div className="flex gap-6">
             {data.cloud.map((storage, index) => (
               <div key={index}>
                 <ImageCard
                   image={storage.image}
                   selected={selectedType === storage.name}
-                  disabled={true}
                 />
               </div>
             ))}
           </div>
         </div>
       </section>
-      <Footer
-        step={currentStep}
-        nextDisabled={selectedType == ""}
-        handleBack={handleBack}
-        handleNext={handleNext}
-      />
-    </div>
+    </section>
   );
 };
 

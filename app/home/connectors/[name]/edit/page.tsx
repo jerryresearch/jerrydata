@@ -1,17 +1,9 @@
-import MenuBar from "@/components/MenuBar";
 import EditDataContainer from "@/components/data/edit/EditDataContainer";
 import EditDatasetFields from "@/components/data/edit/EditDatasetFields";
 import EditDatasetInfo from "@/components/data/edit/EditDatasetInfo";
-import {
-  formatLastLoad,
-  formatModified,
-  formatRows,
-  formatSize,
-} from "@/lib/formatDatasets";
 import getDataset from "@/lib/getDataset";
 import { authOptions } from "@/utils/authOptions";
 import { getServerSession } from "next-auth";
-import Link from "next/link";
 
 const page = async ({
   params,
@@ -47,7 +39,6 @@ const page = async ({
           userName={userName}
         />
       )}
-      {/* <EditFooter id={dataset._id} userId={userId} updates={undefined} /> */}
     </section>
   );
 };
