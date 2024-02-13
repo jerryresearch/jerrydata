@@ -40,13 +40,13 @@ const AutoGenerateModal = ({
     <section
       className={`${
         open
-          ? "fixed inset-0 h-screen w-screen flex items-center justify-center bg-[#334155]/20"
+          ? "fixed inset-0 h-screen w-screen flex items-center justify-center bg-[#1A1B5826]"
           : "hidden"
       }`}
     >
-      <div className="flex flex-col items-center gap-6 bg-white w-[640px] h-[522px] flex-shrink-0 text-[#17212F] shadow-custom rounded-[8px] pb-8">
-        <div className="h-[92px] w-full p-8 inline-flex items-start justify-center gap-[410px] flex-shrink-0 border-b border-[#EAEDF2] bg-[#F8FAFC]">
-          <p className="text-xl font-semibold">Select Dataset</p>
+      <div className="flex flex-col items-center gap-6 bg-white w-[640px] h-[522px] flex-shrink-0 text-[#080D19] shadow-custom rounded-[8px] pb-8">
+        <div className="h-20 w-full py-6 px-8 flex items-center rounded-[6px] justify-between border-b border-[#EEEEFF] bg-[#FAFAFA]">
+          <p className="text-xl font-medium">Select Dataset</p>
           <Image
             src="/assets/dismiss.svg"
             alt="close modal"
@@ -56,26 +56,19 @@ const AutoGenerateModal = ({
             className="cursor-pointer"
           />
         </div>
-        <div className="flex py-[14px] px-[10px] flex-1 overflow-y-auto justify-between items-start mx-auto self-stretch rounded border border-[#EAEDF2] bg-white w-[576px]">
-          <div className="flex flex-col items-start gap-[14px]">
+        <div className="flex py-[14px] px-2 flex-1 overflow-y-auto justify-between items-start mx-auto self-stretch rounded border border-[#EEEEFF] bg-white w-[576px]">
+          <div className="flex flex-col items-start gap-[10px]">
             {datasets.map((dataset) => (
               <div key={dataset._id} className="px-2">
                 <div className="flex py-2 justify-center items-center gap-[10px] self-stretch">
-                  <Image
-                    src="/assets/chevron-right.svg"
-                    alt="down icon"
-                    width={20}
-                    height={20}
-                    className="cursor-pointer"
-                  />
                   <div className="flex items-center justify-center gap-[10px]">
                     <input
-                      type="checkbox"
-                      name={dataset._id}
+                      type="radio"
+                      name={"dataset"}
                       checked={selectedDataset == dataset._id}
                       onChange={() => setSelectedDataset(dataset._id)}
                       id={dataset._id}
-                      className="cursor-pointer"
+                      className="cursor-pointer accent-primary mt-0.5"
                     />
                     <label
                       htmlFor={dataset._id}
@@ -89,10 +82,10 @@ const AutoGenerateModal = ({
             ))}
           </div>
         </div>
-        <div className="flex gap-[10px] justify-end items-center w-[576px]">
+        <div className="flex flex-col gap-4 justify-center items-center w-[576px]">
           <button
             onClick={onClose}
-            className={`rounded border border-[#DEE8FA] px-4 py-2 h-[36px] flex items-center justify-center gap-[10px]`}
+            className={`rounded-[6px] bg-[#F1F1F1] px-6 py-2 h-12 w-full`}
           >
             Cancel
           </button>
@@ -102,9 +95,15 @@ const AutoGenerateModal = ({
               handleGenerate(selectedDataset);
               //   onClose();
             }}
-            className={`rounded text-white bg-primary px-4 py-2 h-[36px] flex items-center justify-center gap-[10px] disabled:opacity-50 disabled:cursor-not-allowed`}
+            className={`rounded-[6px] text-white cursor-pointer bg-primary px-6 py-2 h-12 w-full flex items-center justify-center gap-[10px] disabled:opacity-50 disabled:pointer-events-none`}
           >
-            Generate
+            <Image
+              src="/assets/magic-dashboard-active.svg"
+              alt="magic dashboard"
+              width={20}
+              height={20}
+            />
+            <span>Generate Magic Dashboard</span>
           </button>
         </div>
       </div>

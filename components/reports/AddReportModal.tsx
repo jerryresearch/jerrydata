@@ -36,13 +36,13 @@ const AddReportModal = ({ open, onClose, userId }: Props) => {
     <section
       className={`${
         open
-          ? "fixed inset-0 h-screen w-screen flex items-center justify-center bg-[#334155]/20"
+          ? "fixed inset-0 h-screen w-screen flex items-center justify-center bg-[#1A1B5826]"
           : "hidden"
       }`}
     >
-      <div className="flex flex-col items-center gap-6 bg-white w-[640px] h-[524px] flex-shrink-0 text-[#17212F] shadow-custom rounded-[8px]">
-        <div className="h-[92px] w-full p-8 inline-flex items-start justify-center gap-[442px] flex-shrink-0 border-b border-[#EAEDF2] bg-[#F8FAFC]">
-          <p className="text-xl font-semibold">Add Report</p>
+      <div className="flex flex-col items-center gap-6 bg-white w-[640px] h-[524px] flex-shrink-0 text-[#080D19] shadow-custom rounded-[6px]">
+        <div className="h-20 w-full rounded-[6px] py-6 px-8 flex items-center justify-between flex-shrink-0 border-b border-[#EEEEFF] bg-[#FAFAFA]">
+          <p className="text-xl font-medium">New Dashboard</p>
           <Image
             src="/assets/dismiss.svg"
             alt="close modal"
@@ -52,49 +52,49 @@ const AddReportModal = ({ open, onClose, userId }: Props) => {
             className="cursor-pointer"
           />
         </div>
-        <div className="flex flex-col gap-4 w-[576px] justify-center items-start text-sm">
-          <label htmlFor="title" className="font-medium">
-            Title
-          </label>
-          <input
-            type="text"
-            name="title"
-            id="title"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Enter title name here"
-            className="flex h-10 py-[14px] px-3 items-center self-stretch rounded border border-[#EAEDF2] bg-white"
-          />
-        </div>
-        <div className="flex flex-col gap-4 w-[576px] justify-center items-start text-sm">
-          <label htmlFor="description" className="font-medium">
-            Description
-          </label>
-          <textarea
-            name="description"
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Description"
-            className="h-[180px] py-[14px] px-3 flex items-start self-stretch rounded border border-[#EAEDF2] bg-white"
-          ></textarea>
-        </div>
-        <div className="flex gap-[10px] justify-end items-center w-[576px]">
+        <form className="flex flex-col gap-6 w-[576px] items-center h-[266px]">
+          <div className="flex flex-col gap-3 w-full">
+            <label htmlFor="title" className="font-medium">
+              <span className="text-[#D30A0A]">* </span>Dashboard Name
+            </label>
+            <input
+              type="text"
+              name="title"
+              id="title"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter name here"
+              className="flex h-10 py-[14px] px-3 items-center self-stretch rounded border border-[#EAEDF2] bg-white"
+            />
+          </div>
+          <div className="flex flex-col gap-3 w-full">
+            <label htmlFor="description" className="font-medium">
+              Description
+            </label>
+            <textarea
+              name="description"
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Description"
+              className="h-[120px] py-[14px] px-3 flex items-start self-stretch rounded border border-[#EAEDF2] bg-white"
+            ></textarea>
+          </div>
+        </form>
+        <div className="flex flex-col gap-4 justify-center items-center w-[576px]">
           <button
             onClick={onClose}
-            disabled={isLoading}
-            className={`rounded border border-[#DEE8FA] px-4 py-2 h-[36px] flex items-center justify-center gap-[10px]`}
+            className={`rounded-[6px] bg-[#F1F1F1] px-6 py-2 h-12 w-full`}
           >
             Cancel
           </button>
           <button
             onClick={handleCreate}
             disabled={isLoading}
-            className={`rounded text-white bg-primary px-4 py-2 h-[36px] flex items-center justify-center gap-[10px] ${
-              isLoading && "opacity-50 cursor-progress"
-            }`}
+            className={`rounded-[6px] text-white cursor-pointer bg-primary px-6 py-2 h-12 w-full disabled:opacity-50 disabled:pointer-events-none`}
           >
-            Save
+            <span>Create New Dashboard</span>
           </button>
         </div>
       </div>

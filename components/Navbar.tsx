@@ -39,7 +39,7 @@ const Navbar = ({ name }: Props) => {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed w-full z-50 items-center px-[30px] h-14 flex bg-[#FAFAFA] border-b border-[#EEEEFF]">
+    <nav className="fixed w-full z-0 items-center px-[30px] h-14 flex bg-[#FAFAFA] border-b border-[#EEEEFF]">
       <Image
         src="/assets/logo.svg"
         alt="RaptorIQ logo"

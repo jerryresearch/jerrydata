@@ -40,15 +40,20 @@ const ReportsActions = ({ report, userId }: Props) => {
   return (
     <Popover open={popUpOpen} onOpenChange={setPopUpOpen}>
       <PopoverTrigger>
-        <Image src="/assets/ellipsis.svg" alt="more" width={24} height={20} />
+        <Image
+          src="/assets/vertical-ellipsis.svg"
+          alt="more"
+          width={20}
+          height={20}
+        />
       </PopoverTrigger>
-      <PopoverContent className="flex flex-col p-2 rounded bg-white w-[171px] text-sm shadow-custom">
+      <PopoverContent className="flex flex-col p-2 rounded-[6px] bg-white w-[180px] text-[#080D19] shadow-custom">
         <span
           onClick={() => {
             setPopUpOpen(false);
             setEditOpen(true);
           }}
-          className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
+          className="px-3 py-[12px] rounded hover:bg-[#F8FAFC] cursor-pointer"
         >
           Edit title
         </span>
@@ -69,7 +74,7 @@ const ReportsActions = ({ report, userId }: Props) => {
             setPopUpOpen(false);
             handleDuplicate();
           }}
-          className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
+          className="px-3 py-[12px] rounded hover:bg-[#F8FAFC] cursor-pointer"
         >
           Duplicate
         </span>
@@ -78,7 +83,7 @@ const ReportsActions = ({ report, userId }: Props) => {
             setPopUpOpen(false);
             setOpen(true);
           }}
-          className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer text-[#D30A0A]"
+          className="px-3 py-[12px] rounded hover:bg-[#F8FAFC] cursor-pointer"
         >
           Delete
         </span>
