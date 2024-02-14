@@ -22,34 +22,19 @@ const EmptyPage = ({ report }: Props) => {
   const reportId = searchParams.get("id");
 
   return (
-    <section>
+    <section className="flex flex-col w-full h-[calc(100vh-56px)] flex-shrink-0">
       <Header name={report?.name} chartsCount={chartsCount} />
-      <section className="flex h-[calc(100vh-129px)] py-5 px-7 items-center justify-center gap-5 flex-shrink-0">
-        <div className="flex flex-col items-center gap-6">
-          <Image
-            src="/assets/no-reports.svg"
-            alt="no reports"
-            width={82}
-            height={88}
-          />
-          <div className="flex flex-col items-center">
-            <h1 className="text-[#17212F] text-xl font-semibold gap-[10px]">
-              No Charts
-            </h1>
-            <p className="text-[#ADB3BB] text-sm mt-[10px]">
-              You can add a chart to the report.
-            </p>
-          </div>
-          <div className="inline-flex flex-col justify-center items-center gap-[10px]">
-            <Link
-              href={`${pathname}/new?id=${reportId}`}
-              className=" h-[36px] flex items-center justify-center gap-[10px] self-stretch px-4 py-2 rounded bg-primary text-white"
-            >
-              Add Chart
-            </Link>
-          </div>
-        </div>
-      </section>
+      <div className="flex-1 flex flex-col justify-center px-[60px] items-center gap-[40px]">
+        <Image
+          src="/assets/no-dashboards.svg"
+          alt="no reports"
+          width={124}
+          height={84}
+        />
+        <h1 className="text-[#A9AAAE] text-2xl font-medium gap-[10px]">
+          No Charts found
+        </h1>
+      </div>
     </section>
   );
 };

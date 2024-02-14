@@ -1,5 +1,6 @@
 import CreateChart from "@/components/charts/CreateChart";
 import getDatasets from "@/lib/getDatasets";
+import getReport from "@/lib/reports/getReport";
 import { authOptions } from "@/utils/authOptions";
 import { getServerSession } from "next-auth";
 import React from "react";
@@ -16,8 +17,9 @@ const Page = async ({
   const reportId = searchParams?.id || "";
 
   const datasets: Dataset[] = await getDatasets(userId);
+  const report: Reports = await getReport(userId, reportId);
 
-  return <CreateChart datasets={datasets} />;
+  return <CreateChart datasets={datasets} report={report} />;
 };
 
 export default Page;

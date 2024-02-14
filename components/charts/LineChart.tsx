@@ -35,10 +35,11 @@ const LineChart = ({ data }: Props) => {
     datasets: [
       {
         label: yAxis,
-        backgroundColor: "#16CC62",
-        // borderColor: "#16CC62",
-        // pointBorderColor: "rgba(75,192,192,1)",
-        // pointBackgroundColor: "#F00",
+        backgroundColor: "#6366F1",
+        // backgroundColor: ["#6366F1", "#D2D2FF", "#EEEEFF"],
+        borderColor: "#000",
+        borderWidth: 1,
+        pointBorderColor: "#6366F1",
         data: yData,
       },
     ],

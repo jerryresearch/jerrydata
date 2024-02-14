@@ -73,7 +73,7 @@ const Chart = ({ chart }: Props) => {
     <section
       id={chart._id}
       ref={elementRef}
-      className="w-full rounded border border-[#EAEDF2] bg-white flex flex-col text-[10px] py-4 font-semibold items-center justify-center gap-[10px]"
+      className="w-full h-full rounded-[6px] border border-[#EEEEFF] flex flex-col text-[10px] py-4 font-medium items-center justify-center gap-[10px]"
     >
       <div className="flex items-center w-full px-8">
         <header className="flex-1 text-base h-5 2xl:h-10 text-center">
@@ -125,19 +125,21 @@ const Chart = ({ chart }: Props) => {
           />
         </div>
       </div>
-      {chart.chartType == "bar" ? (
-        <BarChart data={chart} />
-      ) : chart.chartType == "line" ? (
-        <LineChart data={chart} />
-      ) : chart.chartType == "pie" ? (
-        <PieChart data={chart} />
-      ) : chart.chartType == "doughnut" ? (
-        <DoughnutChart data={chart} />
-      ) : chart.chartType == "polar area" ? (
-        <PloarAreaChart data={chart} />
-      ) : (
-        <HorizontalBarChart data={chart} />
-      )}
+      <div className="w-full flex-1 flex items-center">
+        {chart.chartType == "bar" ? (
+          <BarChart data={chart} />
+        ) : chart.chartType == "line" ? (
+          <LineChart data={chart} />
+        ) : chart.chartType == "pie" ? (
+          <PieChart data={chart} />
+        ) : chart.chartType == "doughnut" ? (
+          <DoughnutChart data={chart} />
+        ) : chart.chartType == "polar area" ? (
+          <PloarAreaChart data={chart} />
+        ) : (
+          <HorizontalBarChart data={chart} />
+        )}
+      </div>
     </section>
   );
 };

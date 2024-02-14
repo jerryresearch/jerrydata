@@ -27,7 +27,7 @@ const ReportCard = ({ userId, report }: Props) => {
     <div className="flex shadow-custom p-6 rounded-[6px] items-start justify-between gap-1 h-full">
       <div className="flex flex-col gap-[10px] justify-start">
         <Link
-          href={`reports/${name}/?id=${_id}`}
+          href={`dashboards/${name}/?id=${_id}`}
           className="text-xl font-medium text-[#080D19]"
         >
           {name.length > 26 ? name.substring(0, 26) + "..." : name}

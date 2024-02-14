@@ -1,6 +1,6 @@
 "use client";
+
 import React, { useRef } from "react";
-import AnalyticCard from "../AnalyticCard";
 import Header from "./Header";
 import Chart from "./Chart";
 import { toPng } from "html-to-image";
@@ -12,7 +12,6 @@ type Props = {
 };
 
 const ChartsContainer = ({ charts, report }: Props) => {
-  console.log(charts);
   const elementRef = useRef(null);
   const options = {
     page: {
@@ -22,7 +21,6 @@ const ChartsContainer = ({ charts, report }: Props) => {
   };
 
   const htmlToImageConvert = () => {
-    console.log("start");
     // @ts-ignore
     toPng(elementRef?.current, { cacheBust: false })
       .then((dataUrl) => {
@@ -34,7 +32,6 @@ const ChartsContainer = ({ charts, report }: Props) => {
       .catch((err) => {
         console.log(err);
       });
-    console.log("done");
   };
 
   const htmlToPDF = () => {
@@ -50,7 +47,7 @@ const ChartsContainer = ({ charts, report }: Props) => {
         name={report.name}
         chartsCount={charts.length}
       />
-      <section className="my-6 px-7 flex flex-col gap-6">
+      <section className="my-6 px-[60px] flex flex-col gap-6">
         {/* <div className="grid grid-cols-4 gap-6">
           <AnalyticCard name="Key Analytic 1" value="324" />
           <AnalyticCard name="Key Analytic 2" value="40 Hours" />

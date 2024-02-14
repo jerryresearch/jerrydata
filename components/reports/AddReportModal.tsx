@@ -19,7 +19,6 @@ const AddReportModal = ({ open, onClose, userId }: Props) => {
   const [description, setDescription] = useState<string>("");
 
   const handleCreate = async () => {
-    console.log(name, description);
     setIsLoading(true);
     try {
       const res = await createReport(userId, { name, description });
@@ -65,7 +64,7 @@ const AddReportModal = ({ open, onClose, userId }: Props) => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter name here"
-              className="flex h-10 py-[14px] px-3 items-center self-stretch rounded border border-[#EAEDF2] bg-white"
+              className="flex h-10 py-[14px] px-3 items-center self-stretch rounded-[6px] focus:outline-none border border-[#EEEEFF] bg-white"
             />
           </div>
           <div className="flex flex-col gap-3 w-full">
@@ -78,7 +77,7 @@ const AddReportModal = ({ open, onClose, userId }: Props) => {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Description"
-              className="h-[120px] py-[14px] px-3 flex items-start self-stretch rounded border border-[#EAEDF2] bg-white"
+              className="h-[120px] py-[14px] px-3 flex items-start self-stretch rounded-[6px] focus:outline-none border border-[#EEEEFF] bg-white"
             ></textarea>
           </div>
         </form>

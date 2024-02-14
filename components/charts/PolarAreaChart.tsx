@@ -33,7 +33,7 @@ const PloarAreaChart = ({ data }: Props) => {
     datasets: [
       {
         data: yData,
-        backgroundColor: ["#2272E3", "#FFD111", "#16CC62"],
+        backgroundColor: ["#6366F1", "#D2D2FF", "#EEEEFF"],
         // hoverBackgroundColor: [ Add more colors as needed ],
       },
     ],
@@ -59,7 +59,7 @@ const PloarAreaChart = ({ data }: Props) => {
   };
 
   return (
-    <div className="w-3/5">
+    <div className="w-3/5 mx-auto">
       <PolarArea data={polarChartData} options={options} />
     </div>
   );

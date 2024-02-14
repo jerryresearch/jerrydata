@@ -91,7 +91,7 @@ const ChartActions = ({ chart, downloadPNG, downloadPDF }: Props) => {
             setPopUpOpen(false);
             setOpen(true);
           }}
-          className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer text-[#D30A0A]"
+          className="px-3 py-[12px] flex gap-2 items-center rounded hover:bg-[#F8FAFC] cursor-pointer"
         >
           Delete
         </span>

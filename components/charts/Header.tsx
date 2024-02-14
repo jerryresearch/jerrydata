@@ -31,54 +31,54 @@ const Header = ({ name, chartsCount, onDownloadPNG, onDownloadPDF }: Props) => {
   };
 
   return (
-    <div className="flex h-[80px] py-5 px-7 justify-between items-center border-b border-b-[#EAEDF2]">
-      <Link href="/dashboard/reports">
-        <p className="flex items-center gap-2">
+    <div className="flex py-5 px-[60px] justify-between items-center border-b border-b-[#EEEEFF] text-[#080D19]">
+      <Link href="/home/dashboards" className="flex items-center gap-4">
+        <Image src="/assets/back.svg" alt="back icon" width={20} height={20} />
+        <span className="font-medium text-xl">{name}</span>
+      </Link>
+      <div className="h-[42px] flex gap-4">
+        {chartsCount > 0 && (
+          <button
+            className={`h-full py-1 px-5 rounded-[6px] border border-[#EEEEFF] bg-white text-[#61656C] font-medium`}
+            onClick={() => {
+              onDownloadPNG && onDownloadPNG();
+            }}
+          >
+            Download as PNG
+          </button>
+        )}
+        {chartsCount > 0 && (
+          <button
+            className={`h-full py-1 px-5 rounded-[6px] border border-[#EEEEFF] bg-white text-[#61656C] font-medium`}
+            onClick={() => {
+              onDownloadPDF && onDownloadPDF();
+            }}
+          >
+            Download as PDF
+          </button>
+        )}
+        <button
+          className={`flex h-full py-1 px-5 items-center gap-[6px] rounded-[6px] bg-[#F1F1F1] text-[#61656C] font-medium`}
+        >
           <Image
-            src="/assets/chevron-left.svg"
+            src="/assets/refresh.svg"
             alt="back icon"
             width={20}
             height={20}
           />
-          <span>{name}</span>
-        </p>
-      </Link>
-      <div className="h-10 text-sm flex gap-2">
-        <button
-          className={`inline-flex h-full py-2 px-4 justify-center items-center gap-[10px] flex-shrink-0 rounded border border-[#DEE8FA] bg-white ${
-            chartsCount == 0 && "opacity-50"
-          }`}
-        >
-          Refresh
-        </button>
-        <button
-          className={`inline-flex h-full py-2 px-4 justify-center items-center gap-[10px] flex-shrink-0 rounded border border-[#DEE8FA] bg-white ${
-            chartsCount == 0 && "opacity-50"
-          }`}
-          onClick={() => {
-            // if (chartsCount > 0) {
-            //   setOpen(true);
-            // }
-            onDownloadPNG && onDownloadPNG();
-          }}
-        >
-          Download as PNG
-        </button>
-        <button
-          className={`inline-flex h-full py-2 px-4 justify-center items-center gap-[10px] flex-shrink-0 rounded border border-[#DEE8FA] bg-white ${
-            chartsCount == 0 && "opacity-50"
-          }`}
-          onClick={() => {
-            onDownloadPDF && onDownloadPDF();
-          }}
-        >
-          Download as PDF
+          <span>Refresh</span>
         </button>
         <Link
           href={`${pathname}/new?id=${reportId}`}
-          className="inline-flex h-full py-2 px-4 justify-center items-center gap-[10px] flex-shrink-0 rounded bg-primary text-white"
+          className="flex h-full py-1 px-5 items-center gap-[6px] rounded-[6px] bg-primary text-white font-medium"
         >
-          Add Chart
+          <Image
+            src="/assets/plus-icon.svg"
+            alt="back icon"
+            width={20}
+            height={20}
+          />
+          <span>Add Chart</span>
         </Link>
         <ShareChartModal open={open} onClose={handleCloseModal} />
       </div>
