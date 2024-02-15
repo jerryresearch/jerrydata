@@ -7,15 +7,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import ChatActions from "./ChatActions";
 import Message from "./Message";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import getChat from "@/lib/chats/getChat";
 import Loading from "../Loading";
 import createChat from "@/lib/chats/createChat";
 import sendMessage from "@/lib/chats/sendMessage";
 import updateChat from "@/lib/chats/updateChat";
+import DeleteChatModal from "./DeleteChatModal";
 
 type Props = {
   datasets: Dataset[];
@@ -24,20 +24,24 @@ type Props = {
 const Chat = ({ datasets }: Props) => {
   const { data: session } = useSession();
   const searchParams = useSearchParams();
-  const router = useRouter();
   const pathname = usePathname();
 
   // @ts-ignore
   const userId = session?.user?._id || session?.user?.id;
   const chatId = searchParams.get("id") || "";
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState("New Chat");
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState<Chat | undefined>();
   const [messages, setMessages] = useState<Message[] | undefined>();
   const [selectedDataset, setSelectedDataset] = useState("");
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
+  const handleCloseDeleteModal = () => {
+    setOpenDeleteModal(false);
+  };
 
   const chatContainerRef = useRef(null);
 
@@ -69,12 +73,14 @@ const Chat = ({ datasets }: Props) => {
       let res;
       if (chatId == "") {
         res = await createChat(userId, data);
-        router.replace(pathname + `?id=${res.chat._id}`);
+        location.replace(pathname + `?id=${res.chat._id}`);
       }
       res = await sendMessage(userId, chatId, { message });
       setMessage("");
       setMessages(res.messages);
+      console.log(res.asstMessages);
     } catch (error) {
+      console.log(error);
       console.log("error sending message");
     }
     setIsLoading(false);
@@ -101,6 +107,8 @@ const Chat = ({ datasets }: Props) => {
         setTitle(res.chat.title);
         setSelectedDataset(res.chat.dataset);
         setMessages(res.messages);
+        console.log(res.asstMessages);
+        console.log(res.messages);
       } catch (error) {
         console.log("error getting chat data");
       } finally {
@@ -115,6 +123,7 @@ const Chat = ({ datasets }: Props) => {
     if (chatId != "") {
       fetchData();
     }
+    setIsLoading(false);
   }, [setIsLoading, chatId, userId]);
 
   if (isLoading) {
@@ -122,8 +131,8 @@ const Chat = ({ datasets }: Props) => {
   }
 
   return (
-    <section className="flex-[1_0_0] flex flex-col self-stretch rounded border border-[#EAEDF2] bg-white">
-      <div className="border border-[#EAEDF2] flex py-[14px] px-7 justify-between items-center bg-white">
+    <section className="flex-[1_0_0] flex flex-col self-stretch bg-white">
+      <div className="border-b border-[#EEEEFF] flex py-4 px-6 justify-between items-center bg-white">
         {isEditing ? (
           <span className="flex justify-center gap-[10px]">
             <input
@@ -160,22 +169,23 @@ const Chat = ({ datasets }: Props) => {
           </span>
         ) : (
           <div className="flex gap-[10px] items-center">
-            <span className="font-semibold">{chat ? chat.title : title}</span>
+            <span className="font-medium">{chat ? chat.title : title}</span>
             <Image
               className="cursor-pointer"
               onClick={() => setIsEditing(true)}
-              src="/assets/edit-icon.svg"
+              src="/assets/edit.svg"
               alt="edit icon"
-              width={16}
-              height={16}
+              width={20}
+              height={20}
             />
           </div>
         )}
         <div className="flex gap-[10px] items-center">
-          <div className="flex w-[204px] h-10 py-2 px-3 justify-between items-center rounded border border-[#EAEDF2] bg-white">
+          <div className="font-medium">Dataset</div>
+          <div className="flex w-[240px] h-10 py-2 px-3 justify-between items-center rounded-[6px] border border-[#EEEEFF] bg-white">
             <Popover>
               <PopoverTrigger className="flex justify-between items-center w-full gap-1">
-                <span className="text-sm truncate ">
+                <span className="truncate ">
                   {selectedDataset
                     ? datasets.find((dataset) => dataset._id == selectedDataset)
                         ?.name
@@ -215,7 +225,7 @@ const Chat = ({ datasets }: Props) => {
               </PopoverContent>
             </Popover>
           </div>
-          <div className="flex w-[280px] flex-col pl-2 h-10 pr-[100px] items-start gap-[10px] rounded border border-[#EAEDF2] bg-white">
+          <div className="flex w-[280px] flex-col pl-2 h-10 pr-[100px] items-start gap-[10px] rounded-[6px] border border-[#EEEEFF] bg-white">
             <div className="items-center h-full px-2 flex gap-2 self-stretch">
               <Image
                 src="/assets/search-icon.svg"
@@ -231,41 +241,61 @@ const Chat = ({ datasets }: Props) => {
             </div>
           </div>
           <div
-            className={`flex w-10 h-10 items-center justify-center gap-2 py-5  rounded border border-[#EAEDF2] bg-white ${
+            className={`flex w-10 h-10 items-center justify-center gap-2 py-5  rounded-[6px] border border-[#EEEEFF] bg-white ${
               !chatId && "pointer-events-none opacity-50"
             }`}
           >
-            <ChatActions chatId={chatId} title={chat?.title || ""} />
+            {/* <ChatActions chatId={chatId} title={chat?.title || ""} /> */}
+            <Image
+              onClick={() => setOpenDeleteModal(true)}
+              src="/assets/delete.svg"
+              alt="search icon"
+              width={20}
+              height={20}
+              className="cursor-pointer"
+            />
           </div>
         </div>
       </div>
-      <section
-        ref={chatContainerRef}
-        className="flex-1 overflow-auto px-7 mt-6 mb-[14px] flex flex-col gap-[14px]"
-      >
-        {messages &&
-          messages.map((item, index) => <Message key={index} message={item} />)}
-      </section>
-      <form
-        onSubmit={handleSubmit}
-        className="flex w-full px-[29px] mb-5 h-10 gap-2"
-      >
-        <div className="flex-1 flex items-start flex-col gap-[10px] rounded border border-[#EAEDF2] bg-white pl-2 pr-[100px]">
-          <input
-            type="text"
-            placeholder="Type here"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            className="flex items-center py-[7px] px-2 gap-2 self-stretch focus:outline-none"
-          />
-        </div>
-        <button
-          type="submit"
-          className="bg-primary text-white rounded h-10 py-2 px-4 flex justify-center items-center flex-shrink-0"
+      <div className="flex-[1_0_0] flex flex-col rounded-[6px] p-[30px]">
+        <section
+          ref={chatContainerRef}
+          className="flex-[1_0_0] flex flex-col gap-6 px-[30px] py-4 rounded-[8px] bg-[#FAFAFA] overflow-auto"
         >
-          Send message
-        </button>
-      </form>
+          <div className="flex flex-col gap-6 flex-[1_0_0] justify-end">
+            {messages &&
+              messages.map((item, index) => (
+                <Message key={index} message={item} />
+              ))}
+          </div>
+          <form
+            onSubmit={handleSubmit}
+            className="flex sticky bottom-0 border border-[#EEEEFF] rounded-[124px] px-[10px] py-3 bg-white"
+          >
+            <input
+              type="text"
+              placeholder="Enter your prompt here"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="rounded-[124px] flex-1 px-2 focus:outline-none"
+            />
+            <Image
+              src="/assets/send.svg"
+              alt="send"
+              width={20}
+              height={20}
+              className="cursor-pointer"
+            />
+          </form>
+        </section>
+      </div>
+      <DeleteChatModal
+        open={openDeleteModal}
+        onClose={handleCloseDeleteModal}
+        id={chatId}
+        userId={userId}
+        title={title}
+      />
     </section>
   );
 };

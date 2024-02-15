@@ -1,7 +1,5 @@
 "use client";
 
-import EditFooter from "@/components/data/edit/EditFooter";
-import MenuBar from "@/components/MenuBar";
 import Image from "next/image";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -10,7 +8,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import React, { useState, useEffect } from "react";
-import { formatLastLoad, formatRows, formatSize } from "@/lib/formatDatasets";
+import EditHeader from "./EditHeader";
 
 type Props = {
   dataset: Dataset;
@@ -67,18 +65,18 @@ const EditDatasetFields = ({ dataset, userId, userName }: Props) => {
   );
 
   const [filteredHeaders, setFilteredHeaders] = useState(
-    dataset.headers.filter((row) =>
+    newupdatedheaders.filter((row) =>
       row.name.toLowerCase().includes(searchInput.toLowerCase())
     )
   );
 
   useEffect(() => {
     setFilteredHeaders(
-      dataset.headers.filter((row) =>
+      newupdatedheaders.filter((row) =>
         row.name.toLowerCase().includes(searchInput.toLowerCase())
       )
     );
-  }, [searchInput, dataset.headers]);
+  }, [searchInput, newupdatedheaders]);
 
   const [selectedAttributes, setSelectedAttributes] = useState<
     Array<SelectedAttributes>
@@ -100,7 +98,7 @@ const EditDatasetFields = ({ dataset, userId, userName }: Props) => {
       const updatedFilteredHeaders = [...prevFilteredHeaders];
       updatedFilteredHeaders[index] = {
         ...updatedFilteredHeaders[index],
-        isDisabled: !updatedFilteredHeaders[index].isDisabled,
+        isHidden: !updatedFilteredHeaders[index].isHidden,
       };
       return updatedFilteredHeaders;
     });
@@ -208,110 +206,96 @@ const EditDatasetFields = ({ dataset, userId, userName }: Props) => {
   };
 
   return (
-    <section className="bg-[#F6F8FA] min-h-screen flex flex-col">
-      <div className="sticky top-0 z-10 flex items-center bg-[#DEE8FA] py-3 px-7">
-        <h1 className="font-semibold text-lg">Edit Dataset</h1>
+    <div className="flex flex-col gap-4 text-[#080D19]">
+      <EditHeader
+        updates={isUpdated ? { headers: newupdatedheaders } : undefined}
+        userId={userId}
+        dataset={dataset}
+        userName={userName}
+        type="field"
+      />
+      <div className="flex gap-[10px] px-2 py-[10px] rounded-[6px] border border-[#EEEEFF] h-[42px] w-[380px]">
+        <Image
+          src="/assets/search-icon.svg"
+          alt="search icon"
+          width={16}
+          height={16}
+        />
+        <input
+          type="text"
+          placeholder="Search Fields"
+          onChange={(e) => setSearchInput(e.target.value)}
+          className="focus:outline-none flex-1"
+        />
       </div>
-      <div className="flex px-7 py-5  flex-col justify-center items-start gap-[10px] border-b border-[#EAEDF2] bg-[#F6F8FA]">
-        <div className="flex gap-2">
-          <Image
-            src={"/assets/csv.svg"}
-            alt="file image"
-            width={26}
-            height={26}
-          />
-          <h1>{dataset.name}</h1>
-        </div>
-        <div className="flex items-start gap-[10px] text-[#ADB3BB]">
-          <p>{formatSize(dataset.size)}</p>
-          <p>|</p>
-          <p>{formatRows(dataset.rows)}</p>
-          <p>|</p>
-          <p>{dataset.columns}</p>
-          <p>|</p>
-          <p>{`Created by ${userName} ${formatLastLoad(dataset.createdAt)}`}</p>
-          <p>|</p>
-          <p>{`Modified ${formatLastLoad(dataset.updatedAt)}`}</p>
-          <p>|</p>
-          <p>{`Last completed data load ${formatLastLoad(
-            dataset.lastLoad
-          )}`}</p>
-        </div>
-      </div>
-      <div className="flex px-7 py-5 items-center gap-[10px] bg-[#F6F8FA]">
-        <MenuBar selected={"Field"} id={dataset._id} />
-      </div>
-      <div className="flex-1">
-        <section className="py-4 px-7">
-          <div className="overflow-x-scroll w-full p-5 rounded border border-[#EAEDF2] bg-white">
-            <table className="w-full table-auto min-w-max text-left bg-white rounded text-sm text-[#17212F]">
-              {/* row */}
-              <thead>
-                <tr className="rounded bg-[#F8FAFC]">
-                  <th className="p-5 font-medium text-sm text-[#17212F]">NP</th>
-                  <th className="p-5 font-medium text-sm text-[#17212F]">
-                    Name
-                  </th>
-                  <th className="p-5 font-medium text-sm text-[#17212F]">
-                    <div className="flex items-center justify-between">
-                      <span>Column Type</span>
-                      <Image
-                        src="/assets/info-icon.svg"
-                        alt="info"
-                        width={20}
-                        height={20}
-                      />
-                    </div>
-                  </th>
-                  <th className="p-5 font-medium text-sm text-[#17212F]">
-                    <div className="flex items-center justify-between">
-                      <span>Default Aggregate</span>
-                      <Image
-                        src="/assets/info-icon.svg"
-                        alt="info"
-                        width={20}
-                        height={20}
-                      />
-                    </div>
-                  </th>
-                  <th className="p-5 font-medium text-sm text-[#17212F]">
-                    <div className="flex items-center justify-between">
-                      <span>Date Field Type</span>
-                      <Image
-                        src="/assets/info-icon.svg"
-                        alt="info"
-                        width={20}
-                        height={20}
-                      />
-                    </div>
-                  </th>
-                  <th className="p-5 font-medium text-sm text-[#17212F]">
-                    <div className="flex items-center justify-between">
-                      <span>Default Geo Type</span>
-                      <Image
-                        src="/assets/info-icon.svg"
-                        alt="info"
-                        width={20}
-                        height={20}
-                      />
-                    </div>
-                  </th>
-                  <th className="p-5 font-medium text-sm text-[#17212F]">
-                    Hidden
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredHeaders?.map((row, index) => {
+      <section className="py-4">
+        <div className="w-full rounded-[6px] border border-[#EEEEFF] bg-white">
+          <table className="w-full table-auto min-w-max text-left bg-white rounded">
+            {/* row */}
+            <thead>
+              <tr className="rounded-[6px] bg-[#FAFAFA] border-b border-[#EEEEFF] text-[#080D19]">
+                <th className="p-5 font-normal">NP</th>
+                <th className="p-5 font-normal">Name</th>
+                <th className="p-5 font-normal">
+                  <div className="flex items-center justify-between">
+                    <span>Column Type</span>
+                    <Image
+                      src="/assets/info.svg"
+                      alt="info"
+                      width={20}
+                      height={20}
+                    />
+                  </div>
+                </th>
+                <th className="p-5 font-normal">
+                  <div className="flex items-center justify-between">
+                    <span>Default Aggregate</span>
+                    <Image
+                      src="/assets/info.svg"
+                      alt="info"
+                      width={20}
+                      height={20}
+                    />
+                  </div>
+                </th>
+                <th className="p-5 font-normal">
+                  <div className="flex items-center justify-between">
+                    <span>Date Field Type</span>
+                    <Image
+                      src="/assets/info.svg"
+                      alt="info"
+                      width={20}
+                      height={20}
+                    />
+                  </div>
+                </th>
+                <th className="p-5 font-normal">
+                  <div className="flex items-center justify-between">
+                    <span>Default Geo Type</span>
+                    <Image
+                      src="/assets/info.svg"
+                      alt="info"
+                      width={20}
+                      height={20}
+                    />
+                  </div>
+                </th>
+                <th className="p-5 font-normal">Hidden</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredHeaders
+                ?.filter((row) => !row.isDisabled)
+                .map((row, index) => {
                   // if (!row.isDisabled)
                   return (
                     <tr
                       key={index}
-                      className={`text-sm ${
-                        row.isDisabled ? "text-[#ADB3BB]" : "text-[#17212F]"
-                      } text-[#17212F] font-medium border-b border-b-[#EAEDF2]`}
+                      className={`bg-white ${
+                        row.isHidden ? "text-[#A9AAAE]" : "text-[#080D19] "
+                      } border-b border-b-[#EEEEFF]`}
                     >
-                      <td className="p-5 font-medium">{count++}</td>
+                      <td className="p-5">{count++}</td>
                       <td className="p-5">
                         {/* <Image
                     src={row.image}
@@ -326,7 +310,7 @@ const EditDatasetFields = ({ dataset, userId, userName }: Props) => {
                           <Popover modal={true}>
                             <div className="flex items-center justify-between p-5">
                               <span
-                                className={`${disabled && "text-[#ADB3BB]"} ${
+                                className={`${disabled && "text-[#A9AAAE]"} ${
                                   !(
                                     (field === "Default Aggregate" &&
                                       selectedAttributes[index].columnType ===
@@ -343,9 +327,9 @@ const EditDatasetFields = ({ dataset, userId, userName }: Props) => {
                                     (field === "Geo Field Type" &&
                                       selectedAttributes[index]
                                         .dateFieldType !== "None")
-                                  ) && !row.isDisabled
-                                    ? "text-[#17212F]"
-                                    : "text-[#ADB3BB]"
+                                  ) && !row.isHidden
+                                    ? "text-[#080D19]"
+                                    : "text-[#A9AAAE]"
                                 }`}
                               >
                                 {(() => {
@@ -390,7 +374,7 @@ const EditDatasetFields = ({ dataset, userId, userName }: Props) => {
                                 selectedAttributes[index].dateFieldType !==
                                   "None"
                               ) &&
-                              !row.isDisabled ? (
+                              !row.isHidden ? (
                                 <PopoverTrigger>
                                   <Image
                                     src="/assets/chevron-down.svg"
@@ -430,23 +414,17 @@ const EditDatasetFields = ({ dataset, userId, userName }: Props) => {
                       <td className="p-5">
                         <Switch
                           onClick={() => handleOnClickSwitch(index)}
-                          checked={row.isDisabled}
+                          checked={row.isHidden}
                         />
                       </td>
                     </tr>
                   );
                 })}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      </div>
-      <EditFooter
-        id={dataset._id}
-        userId={userId}
-        updates={isUpdated ? { headers: newupdatedheaders } : undefined}
-      />
-    </section>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
   );
 };
 

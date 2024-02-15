@@ -1,12 +1,9 @@
 import type { NextAuthOptions } from "next-auth";
-import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { connectToDB } from "./mongoose";
-import clientPromise from "./mongodb";
 import { verifyPassword } from "./verifyPassword";
 import User from "@/models/User";
-import { randomBytes, randomUUID } from "crypto";
 
 export const authOptions: NextAuthOptions = {
   // adapter: MongoDBAdapter(clientPromise),
@@ -31,7 +28,6 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        console.log("normal");
         if (!credentials?.email || !credentials.password) {
           return null;
         }
@@ -46,17 +42,12 @@ export const authOptions: NextAuthOptions = {
           if (!isValid) {
             return null;
           }
-          //   const isVerified = user[0].email_verified;
-          //   if (!isVerified) {
-          //     throw new Error("User is not verified.");
-          //     return;
-          //   }
           // Any object returned will be saved in `user` property of the JWT
           return {
             _id: user._id,
             name: user.name,
             email: user.email,
-            // emailVerified: user.emailVerified,
+            image: user.image,
           } as any;
         } else {
           // If you return null then an error will be displayed advising the user to check their details.
@@ -123,6 +114,7 @@ export const authOptions: NextAuthOptions = {
           const newUser = await User.create({
             name: user.profile.given_name || user.profile.name,
             email: user.profile.email,
+            image: user.profile.image,
           });
         } catch (err) {
           console.log("Error", err);
@@ -143,6 +135,7 @@ export const authOptions: NextAuthOptions = {
           id: userData._id,
           name: userData.name,
           email: userData.email,
+          image: userData.image,
         },
       };
     },

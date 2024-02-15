@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import ChartActions from "./ChartActions";
 import BarChart from "./BarChart";
 import LineChart from "./LineChart";
@@ -12,6 +12,8 @@ import Image from "next/image";
 import updateChart from "@/lib/charts/updateChart";
 import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
+import { toPng } from "html-to-image";
+import generatePDF, { Margin } from "react-to-pdf";
 
 type Props = {
   chart: Chart;
@@ -27,6 +29,14 @@ const Chart = ({ chart }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(chart.title);
 
+  const elementRef = useRef(null);
+  const options = {
+    page: {
+      margin: Margin.LARGE,
+    },
+    filename: `${title}.pdf`,
+  };
+
   const handleUpdate = async () => {
     try {
       let data = chart;
@@ -38,8 +48,33 @@ const Chart = ({ chart }: Props) => {
     }
   };
 
+  const htmlToImageConvert = () => {
+    console.log("start");
+    // @ts-ignore
+    toPng(elementRef?.current, { cacheBust: false })
+      .then((dataUrl) => {
+        const link = document.createElement("a");
+        link.download = `${title}.png`;
+        link.href = dataUrl;
+        link.click();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    console.log("done");
+  };
+
+  const htmlToPDF = () => {
+    const getTargetElement = () => document.getElementById(chart._id);
+    generatePDF(getTargetElement, options);
+  };
+
   return (
-    <section className="w-full rounded border border-[#EAEDF2] bg-white flex flex-col text-[10px] py-4 font-semibold items-center justify-center gap-[10px]">
+    <section
+      id={chart._id}
+      ref={elementRef}
+      className="w-full h-full rounded-[6px] border border-[#EEEEFF] flex flex-col text-[10px] py-4 font-medium items-center justify-center gap-[10px]"
+    >
       <div className="flex items-center w-full px-8">
         <header className="flex-1 text-base h-5 2xl:h-10 text-center">
           {isEditing ? (
@@ -83,22 +118,28 @@ const Chart = ({ chart }: Props) => {
           )}
         </header>
         <div className="justify-self-end">
-          <ChartActions chart={chart} />
+          <ChartActions
+            chart={chart}
+            downloadPNG={htmlToImageConvert}
+            downloadPDF={htmlToPDF}
+          />
         </div>
       </div>
-      {chart.chartType == "bar" ? (
-        <BarChart data={chart} />
-      ) : chart.chartType == "line" ? (
-        <LineChart data={chart} />
-      ) : chart.chartType == "pie" ? (
-        <PieChart data={chart} />
-      ) : chart.chartType == "doughnut" ? (
-        <DoughnutChart data={chart} />
-      ) : chart.chartType == "polar area" ? (
-        <PloarAreaChart data={chart} />
-      ) : (
-        <HorizontalBarChart data={chart} />
-      )}
+      <div className="w-full flex-1 flex items-center">
+        {chart.chartType == "bar" ? (
+          <BarChart data={chart} />
+        ) : chart.chartType == "line" ? (
+          <LineChart data={chart} />
+        ) : chart.chartType == "pie" ? (
+          <PieChart data={chart} />
+        ) : chart.chartType == "doughnut" ? (
+          <DoughnutChart data={chart} />
+        ) : chart.chartType == "polar area" ? (
+          <PloarAreaChart data={chart} />
+        ) : (
+          <HorizontalBarChart data={chart} />
+        )}
+      </div>
     </section>
   );
 };

@@ -5,6 +5,9 @@ const nextConfig = {
     serverActions: true,
   },
   reactStrictMode: false,
+  images: {
+    domains: ["raptoriq-images.s3.amazonaws.com"],
+  },
 };
 
 module.exports = nextConfig;

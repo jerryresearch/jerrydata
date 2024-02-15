@@ -1,26 +1,23 @@
 "use client";
 
-import React, { useState } from "react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import Image from "next/image";
-import { Switch } from "@/components/ui/switch";
+import React, { ChangeEvent, useState } from "react";
 import ChangePasswordModal from "./ChangePasswordModal";
 import updateProfile from "@/lib/profile/updateProfile";
+import Image from "next/image";
+import uploadImage from "@/lib/profile/uploadImage";
 
 type Props = {
   name: string;
   email: string;
   userId: string;
+  image: string;
 };
 
-const EditProfile = ({ name, email, userId }: Props) => {
+const EditProfile = ({ name, email, userId, image }: Props) => {
   const [isUpdated, setIsUpdated] = useState(false);
   const [firstName, setFirstName] = useState(name.split(" ")[0]);
   const [lastName, setLastName] = useState(name.split(" ")[1] || "");
+
   const [updatedEmail, setEmail] = useState(email);
 
   const [open, setOpen] = useState(false);
@@ -29,10 +26,42 @@ const EditProfile = ({ name, email, userId }: Props) => {
     setOpen(false);
   };
 
+  const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    const fileInput = event.target;
+    const file = fileInput.files?.[0];
+
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
+      try {
+        const res = await uploadImage(userId, formData);
+        location.reload();
+      } catch (error) {
+        alert(error);
+      }
+    }
+  };
+
+  const handleRemoveImage = async () => {
+    const data = {
+      name: `${firstName} ${lastName}`,
+      email: email,
+      image: "",
+    };
+    try {
+      const res = await updateProfile(userId, data);
+      location.reload();
+    } catch (error) {
+      console.log("error updating profile");
+      alert(error);
+    }
+  };
+
   const handleSubmit = async () => {
     const data = {
       name: `${firstName} ${lastName}`,
       email: email,
+      image: image,
     };
     try {
       const res = await updateProfile(userId, data);
@@ -44,14 +73,58 @@ const EditProfile = ({ name, email, userId }: Props) => {
   };
 
   return (
-    <section className="bg-[#F6F8FA] min-h-screen">
-      <div className="flex items-center bg-[#DEE8FA] py-3 px-7">
-        <h1 className="font-semibold text-lg">My Profile</h1>
+    <section className="text-[#080D19]">
+      <div className="px-[60px] py-6 flex items-center justify-between border-b border-[#EEEEFF]">
+        <h1 className="text-2xl font-medium">My Profile</h1>
+        <button
+          onClick={handleSubmit}
+          className={`py-1 px-[14px] flex items-center justify-center rounded-[6px] h-[42px] bg-primary text-white ${
+            !isUpdated && "bg-primary/50 pointer-events-none"
+          }`}
+        >
+          Save Changes
+        </button>
       </div>
-      <div className="px-7 py-10 flex items-start gap-[60px]">
-        <div className="flex flex-col gap-6 justify-end items-end w-[500px] flex-shrink-0">
-          <div className="flex gap-4 items-center self-stretch">
-            <label className="text-sm font-medium w-[120px]">First Name</label>
+      <div className="px-[60px] py-6 flex flex-col items-start gap-[24px]">
+        <div className="flex gap-4 items-center">
+          <div className="w-[143px] h-[143px] relative rounded-full object-cover flex items-center justify-center">
+            <Image
+              src={`${image || "/assets/avatar.svg"}`}
+              alt="no reports"
+              fill={true}
+              className="rounded-full object-cover"
+            />
+          </div>
+          <div className="h-[42px] cursor-pointer rounded-[6px]  bg-[#F1F1F1] text-[#61656C] font-medium">
+            <input
+              type="file"
+              name="profile"
+              id="profile"
+              accept="image/*"
+              onChange={(event) => {
+                handleFileUpload(event);
+                // @ts-ignore
+                event.target.value = null; // This line resets the input field
+              }}
+              className="hidden"
+            />
+            <label
+              htmlFor="profile"
+              className="cursor-pointer h-full flex items-center px-[14px]"
+            >
+              Upload Photo
+            </label>
+          </div>
+          <button
+            onClick={handleRemoveImage}
+            className="text-[#D30A0A] underline font-medium"
+          >
+            Remove Photo
+          </button>
+        </div>
+        <div className="flex flex-col gap-6 w-[420px]">
+          <div className="flex flex-col gap-4">
+            <label className="font-medium">First Name</label>
             <input
               type="text"
               name="firstName"
@@ -60,11 +133,11 @@ const EditProfile = ({ name, email, userId }: Props) => {
                 setFirstName(e.target.value);
                 setIsUpdated(true);
               }}
-              className="flex flex-[1_0_0] items-center py-[14px] px-3 rounded border border-[#EAEDF2] bg-white"
+              className="h-[42px] px-3 rounded-[6px] border border-[#EEEEFF] bg-white focus:outline-none"
             />
           </div>
-          <div className="flex gap-4 items-center self-stretch">
-            <label className="text-sm font-medium w-[120px]">Last Name</label>
+          <div className="flex flex-col gap-4">
+            <label className="font-medium">Last Name</label>
             <input
               type="text"
               name="lastName"
@@ -73,11 +146,11 @@ const EditProfile = ({ name, email, userId }: Props) => {
                 setLastName(e.target.value);
                 setIsUpdated(true);
               }}
-              className="flex flex-[1_0_0] items-center py-[14px] px-3 rounded border border-[#EAEDF2] bg-white"
+              className="h-[42px] px-3 rounded-[6px] border border-[#EEEEFF] bg-white focus:outline-none"
             />
           </div>
-          <div className="flex gap-4 items-center self-stretch">
-            <label className="text-sm font-medium w-[120px]">Email</label>
+          <div className="flex flex-col gap-4">
+            <label className="font-medium">Email</label>
             <input
               type="email"
               name="email"
@@ -86,64 +159,23 @@ const EditProfile = ({ name, email, userId }: Props) => {
                 setEmail(e.target.value);
                 setIsUpdated(true);
               }}
-              className="flex flex-[1_0_0] items-center py-[14px] px-3 rounded border border-[#EAEDF2] bg-white"
+              className="h-[42px] px-3 rounded-[6px] border border-[#EEEEFF] bg-white focus:outline-none"
             />
           </div>
-          <div className="flex justify-between items-center w-[364px]">
-            <button
-              onClick={() => setOpen(true)}
-              className="py-2 px-4 flex items-center justify-center gap-[10px] rounded bg-[#DEE8FA]"
-            >
-              Change Password
-            </button>
-            <button
-              onClick={handleSubmit}
-              className={`py-2 px-4 flex items-center justify-center gap-[10px] rounded bg-primary text-white ${
-                !isUpdated && "opacity-50 pointer-events-none"
-              }`}
-            >
-              Edit
-            </button>
-          </div>
-        </div>
-        <div className="flex flex-col items-start gap-6 flex-shrink-0 w-[500px]">
-          <div className="flex items-center self-stretch gap-4">
-            <label className="text-sm font-medium w-[120px]">Time Zone</label>
-            <Popover>
-              <PopoverTrigger className="flex py-[14px] px-3 justify-between flex-[1_0_0] items-center border border-[#EAEDF2] bg-white">
-                <span className="flex-[1_0_0] text-start">UTC+00:00</span>
-                <Image
-                  src="/assets/chevron-down.svg"
-                  alt="chevron down icon"
-                  width={16}
-                  height={16}
-                />
-              </PopoverTrigger>
-              <PopoverContent className="w-[364px] bg-white">
-                <ul className="">
-                  <li className="flex gap-2 items-center py-2 cursor-pointer hover:bg-[#F8FAFC] rounded">
-                    UTC+05:00
-                  </li>
-                  <li className="flex gap-2 items-center py-2 cursor-pointer hover:bg-[#F8FAFC] rounded">
-                    UTC+05:30
-                  </li>
-                </ul>
-              </PopoverContent>
-            </Popover>
-          </div>
-          <div className="flex items-center self-stretch gap-4">
-            <label className="w-[120px] text-sm font-medium">
-              Email Notification
-            </label>
-            <Switch />
-          </div>
+
+          <button
+            onClick={() => setOpen(true)}
+            className="h-[42px] w-fit px-[14px] rounded-[6px] font-medium bg-[#F1F1F1] text-[#61656C]"
+          >
+            Change Password
+          </button>
         </div>
       </div>
-      <div className="fixed right-0 left-16 bottom-0 h-10 px-7 py-2 bg-white flex justify-center items-center gap-[10px] text-sm text-[#17212F]">
+      {/* <div className="fixed right-0 left-16 bottom-0 h-10 px-7 py-2 bg-white flex justify-center items-center gap-[10px] text-sm text-[#17212F]">
         <span>License: Enterprise free trial</span>
         <span>|</span>
         <span>Joined on 29-September-2023</span>
-      </div>
+      </div> */}
       <ChangePasswordModal
         userId={userId}
         open={open}

@@ -11,7 +11,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    router.push("/user/login");
+    router.push("/home");
   }, [router]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {

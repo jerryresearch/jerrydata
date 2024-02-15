@@ -11,6 +11,7 @@ const Header = ({ currentStep }: Props) => {
     { number: 3, title: "Select Table" },
     { number: 4, title: "Edit fields" },
     { number: 5, title: "Add Dataset Info" },
+    { number: 6, title: "Auto Generate" },
   ];
   return (
     <div className="sticky top-0 z-10 h-[49px] px-7 py-3 flex justify-between items-center bg-[#DEE8FA]">

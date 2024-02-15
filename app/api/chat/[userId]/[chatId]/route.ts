@@ -4,6 +4,9 @@ import { connectToDB } from "@/utils/mongoose";
 import { NextResponse } from "next/server";
 import { OpenAI } from "openai";
 import Message from "@/models/Message";
+import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import csv from "csv-parser";
+import Dataset from "@/models/Dataset";
 
 type Props = {
   params: {
@@ -11,6 +14,16 @@ type Props = {
     chatId: string;
   };
 };
+
+// create a s3 client
+// @ts-ignore
+const s3 = new S3Client({
+  region: process.env.AWS_BUCKET_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
+});
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -57,13 +70,14 @@ export async function POST(
     const { message } = await req.json();
 
     const chat = await Chat.findOne({ _id: chatId, createdBy: userId });
+    const dataset = await Dataset.findById(chat.dataset);
     const assistantId = chat.assistant.id;
 
     await openai.beta.threads.messages.create(chat.thread.id, {
       role: "user",
       content:
         message +
-        " If possible, give a javascript object for that information that has 4 fields. xAxis, yAxis, xData and yData",
+        " If possible, generate the JSON object that includes the fields chartType, xAxis, yAxis, title.",
     });
 
     await Message.create({
@@ -76,12 +90,13 @@ export async function POST(
     // Run the Assistant
     let myRun = await openai.beta.threads.runs.create(chat.thread.id, {
       assistant_id: assistantId,
-      instructions: "In the result, if possible, give a javascript object",
+      // instructions: "In the result, if possible, give a javascript object",
     });
 
     let runStatus = myRun.status;
+    console.log("fetch resp");
     while (runStatus === "queued" || runStatus === "in_progress") {
-      await delay(15000); // 15 seconds delay
+      await delay(1000); // 1 seconds delay
       myRun = await openai.beta.threads.runs.retrieve(chat.thread.id, myRun.id);
       runStatus = myRun.status;
     }
@@ -96,29 +111,107 @@ export async function POST(
 
     // Retrieve the Messages added by the Assistant to the Thread
     const messages = await openai.beta.threads.messages.list(chat.thread.id);
+
+    // let images = [];
+    // let messageContent = "";
+
+    // if (Array.isArray(messages.data[0].content)) {
+    //   const content = messages.data[0].content;
+    //   for (let i = 0; i < content.length; i++) {
+    //     const item = content[i];
+    //     if (item.type == "image_file") {
+    //       const response = await openai.files.content(item.image_file.file_id);
+    //       const image_data = await response.arrayBuffer();
+    //       const image_data_buffer = Buffer.from(image_data).toString("base64");
+    //       images.push(image_data_buffer);
+    //     } else if (item.type == "text") {
+    //       messageContent += `
+    //       ${item.text.value}
+    //       `;
+    //     }
+    //   }
+    //   await Message.create({
+    //     role: "assistant",
+    //     content: messageContent,
+    //     imageIds: images,
+    //     chat: chat._id,
+    //   });
+    // } else {
+    //   messageContent = "Something went wrong";
+    //   await Message.create({
+    //     role: "assistant",
+    //     content: messageContent,
+    //     chat: chat._id,
+    //   });
+    // }
+
     const responseMessage =
       Array.isArray(messages.data[0].content) &&
       messages.data[0].content[0]?.type === "text"
         ? messages.data[0].content[0].text.value
         : "No text content found";
 
+    console.log(responseMessage);
     const resArray = responseMessage.split("```");
-    if (resArray.length >= 2) {
-      let obj = resArray[1].replace("javascript", "");
-      obj = obj.replace(/([{,]?\s*)([A-Za-z_][A-Za-z0-9_]*)\s*:/g, '$1"$2":');
-      obj = obj.replaceAll("'", '"');
-      const { xAxis, yAxis, xData, yData } = JSON.parse(obj);
+    if (resArray.length >= 3) {
+      let obj = resArray[1].replace("json", "");
+      let { chartType, xAxis, yAxis, title } = JSON.parse(obj);
+
+      const getObjectParams = {
+        Bucket: process.env.AWS_FILES_BUCKET_NAME,
+        Key: dataset.key,
+      };
+
+      const command = new GetObjectCommand(getObjectParams);
+      const resp = await s3.send(command);
+      const fileData: any = resp.Body;
+
+      let xData: any[] = [];
+      let yData: any[] = [];
+
+      await new Promise((resolve, reject) => {
+        fileData
+          .pipe(csv())
+          .on("data", (row: any) => {
+            xData.push(row[xAxis]);
+            yData.push(row[yAxis]);
+          })
+          .on("end", () => {
+            resolve("done");
+          })
+          .on("error", (error: Error) => {
+            reject(error);
+          });
+      });
+
+      const aggregatedData = xData.reduce((acc, curr, index) => {
+        if (acc[curr]) {
+          acc[curr] += parseInt(yData[index]);
+        } else {
+          acc[curr] = parseInt(yData[index]);
+        }
+        return acc;
+      }, {});
+
+      // Extract aggregated xData and yData
+      xData = Object.keys(aggregatedData);
+      yData = Object.values(aggregatedData);
+
       await Message.create({
         role: "assistant",
         type: "chart",
-        chartType: "bar",
+        title,
+        content: resArray[0],
+        chartType,
         xAxis,
         yAxis,
         xData,
         yData,
         chat: chat._id,
       });
+      console.log("chart done");
     } else {
+      console.log("message done");
       await Message.create({
         role: "assistant",
         type: "text",
@@ -130,7 +223,12 @@ export async function POST(
     const messagesList = await Message.find({ chat: chatId });
 
     return NextResponse.json(
-      { chat, messages: messagesList, message: "chat created" },
+      {
+        chat,
+        messages: messagesList,
+        asstMessages: messages,
+        message: "chat created",
+      },
       { status: 201 }
     );
   } catch (error) {

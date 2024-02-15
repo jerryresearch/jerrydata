@@ -3,7 +3,9 @@ import Dataset from "@/models/Dataset";
 import User from "@/models/User";
 import { connectToDB } from "@/utils/mongoose";
 import mongoose from "mongoose";
+import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { NextResponse } from "next/server";
+import csv from "csv-parser";
 import { OpenAI } from "openai";
 import Message from "@/models/Message";
 
@@ -12,6 +14,16 @@ type Props = {
     userId: string;
   };
 };
+
+// create a s3 client
+// @ts-ignore
+const s3 = new S3Client({
+  region: process.env.AWS_BUCKET_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
+});
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -56,8 +68,26 @@ export async function POST(req: Request, { params: { userId } }: Props) {
     }
 
     const assistant = await openai.beta.assistants.create({
-      instructions:
-        "You are an analytics bot. Access the dataset provided (in CSV or Excel format) and utilize its information to respond accurately to user questions based on the dataset's analytics. If possible give the result that contains a javascript object with 4 fields. They are: xAxis, yAxis, xData and yData. xAxis and yAxis are column names for x axis and y axis of the chart and xData and yData are arrays which contain values of these columns",
+      instructions: `
+      Interpret User Queries: When you receive a user query regarding data analysis and visualization, analyze the query to understand the key components necessary for creating a chart. Focus on identifying the metrics or dimensions mentioned in the query.
+
+      Determine Chart Parameters:
+      Chart Type: Based on the query, determine the most appropriate type of chart from "bar", "doughnut", "pie", "line", "polar area", "horizontal bar". Consider the nature of the data and the user's intent in your decision.
+      X and Y Axes: Identify which data columns should be mapped to the x-axis and y-axis. These should be directly derived from the key components of the user's query and both of them should be exactly a column name from the dataset.
+      Chart Title: Generate a concise and informative title for the chart that reflects the user's intent and the data being visualized.
+      Generate Standardized JSON Output: Your response should be a JSON object containing the details necessary for creating the chart. The format of your response should be as follows:
+      {
+        "chartType": "<Identified Chart Type>",
+        "xAxis": "<Column for X-axis>",
+        "yAxis": "<Column for Y-axis>",
+        "title": "<Generated Chart Title>"
+      }
+      
+      Clarity and Precision: Ensure that your responses are clear and directly address the user's query. The output should be unambiguous and precisely formatted as per the JSON structure outlined.
+
+      User-Centric Approach: Always prioritize the user's analytical needs and the context of their query when generating the output. Your response should facilitate an intuitive and insightful visualization of the data as per the user's request.
+
+      `,
       name: "Analytics Assistant",
       tools: [{ type: "code_interpreter" }, { type: "retrieval" }],
       model: "gpt-3.5-turbo-1106",
@@ -67,30 +97,13 @@ export async function POST(req: Request, { params: { userId } }: Props) {
     const assistantId = assistant.id;
 
     const thread = await openai.beta.threads.create({});
-    await openai.beta.threads.messages.create(thread.id, {
-      role: "user",
-      content: "Hello",
-    });
-    let firstRun = await openai.beta.threads.runs.create(thread.id, {
-      assistant_id: assistantId,
-    });
-
-    let firstRunStatus = firstRun.status;
-    while (firstRunStatus === "queued" || firstRunStatus === "in_progress") {
-      await delay(15000); // 15 seconds delay
-      firstRun = await openai.beta.threads.runs.retrieve(
-        thread.id,
-        firstRun.id
-      );
-      firstRunStatus = firstRun.status;
-    }
 
     // Step 1: Add Messages to the Thread
     await openai.beta.threads.messages.create(thread.id, {
       role: "user",
       content:
         message +
-        " If possible, give a javascript object for that information that has 4 fields. xAxis, yAxis, xData and yData",
+        " If possible, generate the JSON object that includes the fields chartType, xAxis, yAxis, title.",
     });
 
     const chat = await Chat.create({
@@ -111,12 +124,13 @@ export async function POST(req: Request, { params: { userId } }: Props) {
     // Step 2: Run the Assistant
     let myRun = await openai.beta.threads.runs.create(thread.id, {
       assistant_id: assistantId,
-      instructions: "In the result, if possible, give a javascript object",
+      // instructions: "In the result, if possible, give a javascript object",
     });
 
     let runStatus = myRun.status;
+    console.log("fetch resp");
     while (runStatus === "queued" || runStatus === "in_progress") {
-      await delay(15000); // 15 seconds delay
+      await delay(1000); // 1 second delay
       myRun = await openai.beta.threads.runs.retrieve(thread.id, myRun.id);
       runStatus = myRun.status;
     }
@@ -131,26 +145,104 @@ export async function POST(req: Request, { params: { userId } }: Props) {
 
     // Step 4: Retrieve the Messages added by the Assistant to the Thread
     const messages = await openai.beta.threads.messages.list(thread.id);
+
+    // if (Array.isArray(messages.data[0].content)) {
+    //   const content = messages.data[0].content;
+    //   for (let i = 0; i < content.length; i++) {
+    //     const item = content[i];
+    //     if (item.type == "image_file") {
+    //       const response = await openai.files.content(item.image_file.file_id);
+    //       const image_data = await response.arrayBuffer();
+    //       const image_data_buffer = Buffer.from(image_data).toString("base64");
+    //       images.push(image_data_buffer);
+    //     } else if (item.type == "text") {
+    //       messageContent += `
+    //       ${item.text.value}
+    //       `;
+    //     }
+    //   }
+    //   await Message.create({
+    //     role: "assistant",
+    //     content: messageContent,
+    //     imageIds: images,
+    //     chat: chat._id,
+    //   });
+    // } else {
+    //   messageContent = "Something went wrong";
+    //   await Message.create({
+    //     role: "assistant",
+    //     content: messageContent,
+    //     chat: chat._id,
+    //   });
+    // }
+
     const responseMessage =
       Array.isArray(messages.data[0].content) &&
       messages.data[0].content[0]?.type === "text"
         ? messages.data[0].content[0].text.value
         : "No text content found";
 
+    console.log(responseMessage);
     const resArray = responseMessage.split("```");
     if (resArray.length >= 3) {
-      const obj = JSON.parse(resArray[1].replace("javascript", ""));
+      let obj = resArray[1].replace("json", "");
+      let { chartType, xAxis, yAxis, title } = JSON.parse(obj);
+
+      const getObjectParams = {
+        Bucket: process.env.AWS_FILES_BUCKET_NAME,
+        Key: datasetObj.key,
+      };
+
+      const command = new GetObjectCommand(getObjectParams);
+      const resp = await s3.send(command);
+      const fileData: any = resp.Body;
+
+      let xData: any[] = [];
+      let yData: any[] = [];
+
+      await new Promise((resolve, reject) => {
+        fileData
+          .pipe(csv())
+          .on("data", (row: any) => {
+            xData.push(row[xAxis]);
+            yData.push(row[yAxis]);
+          })
+          .on("end", () => {
+            resolve("done");
+          })
+          .on("error", (error: Error) => {
+            reject(error);
+          });
+      });
+
+      const aggregatedData = xData.reduce((acc, curr, index) => {
+        if (acc[curr]) {
+          acc[curr] += parseInt(yData[index]);
+        } else {
+          acc[curr] = parseInt(yData[index]);
+        }
+        return acc;
+      }, {});
+
+      // Extract aggregated xData and yData
+      xData = Object.keys(aggregatedData);
+      yData = Object.values(aggregatedData);
+
       await Message.create({
         role: "assistant",
         type: "chart",
-        chartType: "bar",
-        xAxis: obj.xAxis,
-        yAxis: obj.yAxis,
-        xData: obj.xData,
-        yData: obj.yData,
+        title,
+        content: resArray[0],
+        chartType,
+        xAxis,
+        yAxis,
+        xData,
+        yData,
         chat: chat._id,
       });
+      console.log("chart done");
     } else {
+      console.log("message done");
       await Message.create({
         role: "assistant",
         type: "text",
@@ -162,7 +254,12 @@ export async function POST(req: Request, { params: { userId } }: Props) {
     const messagesList = await Message.find({ chat: chat._id });
 
     return NextResponse.json(
-      { chat, messages: messagesList, message: "chat created" },
+      {
+        chat,
+        messages: messagesList,
+        asstMessages: messages,
+        message: "chat created",
+      },
       { status: 201 }
     );
   } catch (error) {

@@ -29,6 +29,14 @@ type Dataset = {
   datatype: string;
   size: string;
   rows: number;
+  sql?: {
+    host: string;
+    port: number;
+    database: string;
+    user: string;
+    password: string;
+    connString: string;
+  };
   headers: [
     {
       name: string;
@@ -61,7 +69,9 @@ type Message = {
   _id: string;
   role: string;
   type: string;
+  chartType: string;
   content: string;
+  title: string;
   xAxis: string;
   yAxis: string;
   xData: any[];

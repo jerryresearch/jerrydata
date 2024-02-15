@@ -1,4 +1,4 @@
-export function formatLastLoad(lastLoad: string) {
+export function formatModified(lastLoad: string) {
   const currentTimestamp = new Date(); // Current time
   const lastLoadTimestamp = new Date(lastLoad);
 
@@ -17,6 +17,20 @@ export function formatLastLoad(lastLoad: string) {
   }
 }
 
+export function formatLastLoad(date: any) {
+  const dateTime = new Date(date);
+
+  const optionsTime = { hour: "2-digit", minute: "2-digit" };
+  const optionsDate = { day: "2-digit", month: "long", year: "numeric" };
+
+  // @ts-ignore
+  const time = dateTime.toLocaleTimeString("en-US", optionsTime);
+  // @ts-ignore
+  const formattedDate = dateTime.toLocaleDateString("en-US", optionsDate);
+
+  return `${time.toLowerCase()}, ${formattedDate}`;
+}
+
 export function formatSize(value: string) {
   const size = parseInt(value);
   const sizeInKB = size / 1024;
@@ -26,7 +40,7 @@ export function formatSize(value: string) {
   } else if (sizeInKB >= 1) {
     return sizeInKB.toFixed(1) + " kb";
   } else {
-    return size + " bytes";
+    return size + " b";
   }
 }
 

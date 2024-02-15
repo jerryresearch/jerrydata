@@ -2,7 +2,6 @@
 
 import updateDataset from "@/lib/datasets/updateDataset";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type Props = {
@@ -12,19 +11,20 @@ type Props = {
 };
 
 const EditFooter = ({ updates, userId, id }: Props) => {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleUpdate = async () => {
     if (userId && updates) {
       setIsLoading(true);
-      const res = await updateDataset(userId, id, updates);
-      setIsLoading(false);
-      if (!res?.ok) {
+      try {
+        const res = await updateDataset(userId, id, updates);
+        console.log(res);
+        location.reload();
+      } catch (error) {
+        console.log("error in updating dataset");
         alert("error updating");
-        return;
       }
-      router.refresh();
+      setIsLoading(false);
     }
   };
 

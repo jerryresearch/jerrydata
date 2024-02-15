@@ -12,12 +12,12 @@ type Props = {
 
 const ChangePasswordModal = ({ open, onClose, userId }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [oldPassword, setOldPassword] = useState("");
+  // const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleSubmit = async () => {
-    if (!oldPassword || !newPassword || !confirmPassword) {
+    if (!newPassword || !confirmPassword) {
       console.log("fill all details");
     }
     if (newPassword !== confirmPassword) {
@@ -25,7 +25,7 @@ const ChangePasswordModal = ({ open, onClose, userId }: Props) => {
     }
     try {
       setIsLoading(true);
-      const res = await updatePassword(userId, { oldPassword, newPassword });
+      const res = await updatePassword(userId, { newPassword });
       location.reload();
     } catch (error) {
       console.log("error updating password");
@@ -39,13 +39,13 @@ const ChangePasswordModal = ({ open, onClose, userId }: Props) => {
     <section
       className={`${
         open
-          ? "fixed inset-0 h-screen w-screen flex items-center justify-center bg-[#334155]/20"
+          ? "fixed inset-0 h-screen w-screen flex items-center justify-center bg-[#1A1B5826]"
           : "hidden"
       }`}
     >
-      <div className="flex w-[640px] min-h-[544px] flex-col gap-6 flex-shrink-0 items-center pb-[34px] shadow-custom rounded-[8px] bg-white text-xl text-[#17212F]">
-        <div className="h-[92px] p-8 flex items-center justify-center gap-[377px] flex-shrink-0 border-b border-[#EAEDF2] bg-[#F8FAFC]">
-          <p className="text-xl font-semibold">Change Password</p>
+      <div className="text-[#080D19] flex w-[640px] min-h-[420px] flex-col gap-6 flex-shrink-0 items-center pb-[34px] shadow-custom rounded-[8px] bg-white text-xl">
+        <div className="h-[92px] p-8 flex items-center justify-center gap-[377px] flex-shrink-0 border-b border-[#EAEDF2] bg-[#F8FAFC] rounded-[8px]">
+          <p className="text-xl font-medium">Change Password</p>
           <Image
             src="/assets/dismiss.svg"
             alt="close modal"
@@ -55,7 +55,7 @@ const ChangePasswordModal = ({ open, onClose, userId }: Props) => {
             className="cursor-pointer"
           />
         </div>
-        <div className="w-[576px] flex flex-col items-start justify-center  gap-3 text-sm font-medium text-[#17212F]">
+        {/* <div className="w-[576px] flex flex-col items-start justify-center  gap-3 text-sm font-medium">
           <label htmlFor="old password" className="self-stretch">
             Old password
           </label>
@@ -67,8 +67,8 @@ const ChangePasswordModal = ({ open, onClose, userId }: Props) => {
             onChange={(e) => setOldPassword(e.target.value)}
             className="border border-[#EAEDF2] bg-white rounded py-[14px] px-3 flex items-center self-stretch"
           />
-        </div>
-        <div className="w-[576px] flex flex-col items-start justify-center  gap-3 text-sm font-medium text-[#17212F]">
+        </div> */}
+        <div className="w-[576px] flex flex-col items-start justify-center gap-4 font-medium">
           <label htmlFor="new password" className="self-stretch">
             New password
           </label>
@@ -78,10 +78,10 @@ const ChangePasswordModal = ({ open, onClose, userId }: Props) => {
             id="new password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
-            className="border border-[#EAEDF2] bg-white rounded py-[14px] px-3 flex items-center self-stretch"
+            className="border border-[#EAEDF2] bg-white rounded py-[14px] px-3 flex items-center self-stretch focus:outline-none"
           />
         </div>
-        <div className="w-[576px] flex flex-col items-start justify-center  gap-3 text-sm font-medium text-[#17212F]">
+        <div className="w-[576px] flex flex-col items-start justify-center gap-4 font-medium">
           <label htmlFor="confirm password" className="self-stretch">
             Confirm new password
           </label>
@@ -91,18 +91,17 @@ const ChangePasswordModal = ({ open, onClose, userId }: Props) => {
             id="confirm password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="border border-[#EAEDF2] bg-white rounded py-[14px] px-3 flex items-center self-stretch"
+            className="border border-[#EAEDF2] bg-white rounded py-[14px] px-3 flex items-center self-stretch focus:outline-none"
           />
         </div>
         <div className="flex flex-col gap-[10px] w-[576px] text-lg">
           <button
             onClick={() => {
               handleSubmit();
-              onClose();
             }}
             className={`rounded border border-[#EAEDF2] px-6 py-2 bg-primary text-white h-[56px] flex items-center justify-center gap-[10px] flex-shrink-0 ${
               (isLoading ||
-                !oldPassword ||
+                // !oldPassword ||
                 !newPassword ||
                 !confirmPassword ||
                 newPassword !== confirmPassword) &&
@@ -112,10 +111,10 @@ const ChangePasswordModal = ({ open, onClose, userId }: Props) => {
             Save password
           </button>
         </div>
-        <div className="flex w-[576px] items-start flex-[1_0_0] gap-2 text-sm">
+        {/* <div className="flex w-[576px] items-start flex-[1_0_0] gap-2 text-sm">
           Need help in resetting your password? Get in touch at
           <span className="text-primary underline">support@raptoriq.com</span>
-        </div>
+        </div> */}
       </div>
     </section>
   );

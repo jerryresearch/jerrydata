@@ -22,6 +22,7 @@ import Loading from "../Loading";
 import PloarAreaChart from "./PolarAreaChart";
 import HorizontalBarChart from "./HorizontalBarChart";
 import styles from "@/app/user/styles.module.css";
+import Link from "next/link";
 
 const chartTypes = [
   "Bar",
@@ -34,9 +35,10 @@ const chartTypes = [
 
 type Props = {
   datasets: Dataset[];
+  report: Reports;
 };
 
-const CreateChart = ({ datasets }: Props) => {
+const CreateChart = ({ datasets, report }: Props) => {
   const { data: session } = useSession();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -147,41 +149,186 @@ const CreateChart = ({ datasets }: Props) => {
 
   // Render loading state
   return (
-    <section className="bg-[#F6F8FA] h-screen flex flex-col">
-      <div className="flex items-center py-3 px-7 bg-[#DEE8FA] h-[49px]">
-        <h1 className="text-lg font-semibold text-[#17212F]">Reports</h1>
-      </div>
-      <div className="flex justify-between items-center py-5 px-7 border border-[#EAEDF2] text-[#17212F]">
-        <div className="flex gap-[6px] items-center">
-          <p className="text-sm font-medium">Dataset</p>
-          <div
-            onClick={() => setOpen(true)}
-            className="flex h-10 py-2 px-3 items-center gap-[10px] cursor-pointer rounded border border-[#EAEDF2] bg-white"
-          >
-            <p className="text-sm flex-[1_0_0]">
-              {selectedDataset ? selectedDataset?.name : "Select dataset"}
-            </p>
-            <Image
-              src="/assets/chevron-down.svg"
-              alt="more icon"
-              width={16}
-              height={16}
+    <section className="flex flex-col text-[#080D19] h-[calc(100vh-56px)] flex-shrink-0">
+      <div className="flex flex-col gap-5 md:gap-0 md:flex-row md:justify-between md:items-center py-5 px-5 md:px-[60px] border-b border-[#EEEEFF]">
+        <div className="flex flex-col gap-4">
+          <p>
+            <Link href="/home/dashboards" className="text-[#61656C]">
+              Dashboards /
+            </Link>
+            <Link
+              href={`/home/dashboards/${report.name}?id=${reportId}`}
+              className="text-primary"
+            >
+              {" "}
+              {report.name}
+            </Link>
+          </p>
+          <div className="flex gap-4 items-center">
+            <p className="font-medium w-24">Dataset</p>
+            <div
+              onClick={() => setOpen(true)}
+              className="flex w-[280px] h-[42px] py-2 px-3 items-center gap-[10px] cursor-pointer rounded-[6px] border border-[#EEEEFF] bg-white"
+            >
+              <p className="flex-1 truncate">
+                {selectedDataset ? selectedDataset?.name : "Select dataset"}
+              </p>
+              <Image
+                src="/assets/chevron-down.svg"
+                alt="more icon"
+                width={20}
+                height={20}
+              />
+            </div>
+          </div>
+          <div className="md:hidden flex gap-4 items-center">
+            <p className="font-medium w-24">Chart Type</p>
+            <Popover>
+              <PopoverTrigger className="flex w-[280px] truncate 2xl:w-[200px] h-10 px-3 items-center gap-[10px] cursor-pointer rounded-[6px] border border-[#EEEEFF] bg-white">
+                <p className="flex-[1_0_0] text-start capitalize">{type}</p>
+                <Image
+                  src="/assets/chevron-down.svg"
+                  alt="more icon"
+                  width={16}
+                  height={16}
+                />
+              </PopoverTrigger>
+              <PopoverContent className="w-[150px] 2xl:w-[200px] bg-white">
+                <ul className="">
+                  {chartTypes.map((chartType: string, index: number) => (
+                    <li
+                      key={index}
+                      onClick={() => {
+                        setType(chartType);
+                        setTypePopUpOpen(false);
+                      }}
+                      className="flex gap-2 items-center truncate p-1 cursor-pointer hover:bg-[#F8FAFC] rounded-[6px]"
+                    >
+                      {chartType}
+                    </li>
+                  ))}
+                </ul>
+              </PopoverContent>
+            </Popover>
+          </div>
+          <div className="md:hidden inline-flex items-center gap-[10px]">
+            <p className="font-medium w-24">X Axis</p>
+            <Popover>
+              <PopoverTrigger className="flex h-10 items-center truncate w-[150px] 2xl:w-[200px] px-3 gap-[10px] flex-[1_0_0] rounded-[6px] border border-[#EEEEFF] bg-white">
+                <span
+                  className={`flex-[1_0_0] text-start ${
+                    !xAxis && "text-[#ADB3BB]"
+                  }`}
+                >
+                  {xAxis ? xAxis : "+ Category"}
+                </span>
+                <Image
+                  src="/assets/chevron-down.svg"
+                  alt="chevron down icon"
+                  width={16}
+                  height={16}
+                />
+              </PopoverTrigger>
+              <PopoverContent
+                className={`w-[150px] 2xl:w-[200px] bg-white max-h-96 overflow-y-auto 2xl:max-h-none ${styles.scrollbar}`}
+              >
+                <ul className="">
+                  {selectedDataset?.headers?.map(
+                    (header: any, index: string) => {
+                      if (header.columnType === "Attribute") {
+                        return (
+                          <li
+                            key={index}
+                            onClick={() => {
+                              setXAxis(header.name);
+                              setXPopUpOpen(false);
+                            }}
+                            className="flex gap-2 items-center truncate p-2 cursor-pointer hover:bg-[#F8FAFC] rounded-[6px]"
+                          >
+                            {header.name}
+                          </li>
+                        );
+                      }
+                      return null; // Return null for non-"Measure" columnType
+                    }
+                  )}
+                </ul>
+              </PopoverContent>
+            </Popover>
+          </div>
+          <div className="md:hidden inline-flex items-center gap-[10px]">
+            <p className="font-medium w-24">Y Axis</p>
+            <Popover>
+              <PopoverTrigger className="flex h-10 items-center truncate w-[150px] 2xl:w-[200px] px-3 gap-[10px] flex-[1_0_0] rounded-[6px] border border-[#EEEEFF] bg-white">
+                <span
+                  className={`flex-[1_0_0] text-start ${
+                    !yAxis && "text-[#ADB3BB]"
+                  }`}
+                >
+                  {yAxis ? yAxis : "+ Aggregate"}
+                </span>
+                <Image
+                  src="/assets/chevron-down.svg"
+                  alt="chevron down icon"
+                  width={16}
+                  height={16}
+                />
+              </PopoverTrigger>
+              <PopoverContent
+                className={`w-[150px] 2xl:w-[200px] bg-white max-h-96 overflow-y-auto 2xl:max-h-none`}
+              >
+                <ul className="">
+                  {selectedDataset?.headers?.map(
+                    (header: any, index: string) => {
+                      if (header.columnType === "Measure") {
+                        return (
+                          <li
+                            key={index}
+                            onClick={() => {
+                              setYAxis(header.name);
+                              setYPopUpOpen(false);
+                            }}
+                            className="flex gap-2 items-center truncate p-2 cursor-pointer hover:bg-[#F8FAFC] rounded-[6px]"
+                          >
+                            {header.name}
+                          </li>
+                        );
+                      }
+                      return null; // Return null for non-"Measure" columnType
+                    }
+                  )}
+                </ul>
+              </PopoverContent>
+            </Popover>
+          </div>
+          <div className="md:hidden inline-flex items-center gap-[10px]">
+            <p className="font-medium w-24">Series</p>
+            <input
+              type="text"
+              placeholder="+ Aggregate"
+              className="flex h-10 py-[14px] w-[150px] 2xl:w-[200px] px-3 gap-[10px] flex-[1_0_0] rounded-[6px] border border-[#EEEEFF] bg-white"
             />
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="grid grid-cols-2 md:flex h-[42px] gap-4">
           <button
             onClick={handleDelete}
-            className="px-4 py-2 rounded border border-[#DEE8FA] bg-white text-sm font-medium"
+            className="px-5 py-1 rounded-[6px] bg-[#F1F1F1] text-[#61656C] font-medium"
           >
             Cancel
           </button>
           <button
             disabled={!selectedDataset || !xAxis || !yAxis}
             onClick={handleSubmit}
-            className={`px-4 py-2 rounded text-white bg-black text-sm font-medium disabled:opacity-50 disabled:pointer-events-none`}
+            className={`flex gap-[6px] items-center px-5 py-1 rounded-[6px] bg-[#F1F1F1] text-[#61656C] font-medium disabled:pointer-events-none`}
           >
-            Generate
+            <Image
+              src="/assets/generate-chart.svg"
+              alt="more icon"
+              width={20}
+              height={20}
+            />
+            <span>Generate</span>
           </button>
           <button
             disabled={!chart}
@@ -190,44 +337,34 @@ const CreateChart = ({ datasets }: Props) => {
                 pathname.replace("/new", "") + `?id=${reportId}`
               );
             }}
-            className={`px-4 py-2 rounded text-white bg-primary text-sm font-medium disabled:opacity-50 disabled:pointer-events-none`}
+            className={`px-5 py-1 rounded-[6px] col-span-2 text-white bg-primary font-medium disabled:opacity-50 disabled:pointer-events-none`}
           >
             Save & Close
           </button>
         </div>
       </div>
-      <div className="flex flex-[1_0_0] items-start gap-5 flex-shrink-0 px-7 py-5 text-[#17212F]">
-        <div className="w-[240px] flex p-[14px] flex-col gap-[14px] flex-shrink-0 self-stretch rounded border border-[#EAEDF2] bg-white">
-          <h1 className="flex h-8 py-[6px] items-center gap-2 self-stretch bg-white">
-            Fields
-          </h1>
-          <div className="h-10 self-stretch px-2 flex flex-col items-start gap-[10px] rounded border border-[#EAEDF2] bg-white">
-            <div className="flex gap-2 h-full px-2 items-center">
-              <Image
-                src="/assets/search-icon.svg"
-                alt="search icon"
-                width={16}
-                height={16}
-              />
-              <input
-                type="text"
-                placeholder="Search"
-                className="focus:outline-none w-full"
-              />
-            </div>
+      <div className="flex flex-[1_0_0] pt-10 md:pt-0">
+        <div className="hidden w-[240px] md:flex p-6 flex-col gap-[14px] flex-shrink-0 self-stretch rounded border-r border-[#EEEEFF]">
+          <h1 className="font-medium">Fields</h1>
+          <div className="h-[42px] px-2 flex gap-[10px] rounded-[6px] border border-[#EEEEFF]">
+            <Image
+              src="/assets/search-icon.svg"
+              alt="search icon"
+              width={16}
+              height={16}
+            />
+            <input
+              type="text"
+              placeholder="Search"
+              className="focus:outline-none w-full"
+            />
           </div>
           <div className="overflow-auto flex-[1_0_0] gap-[6px] flex flex-col">
             {selectedDataset?.headers?.map((header: any, index: string) => (
               <div
                 key={index}
-                className="flex h-8 py-[6px] items-center gap-2 self-stretch bg-white cursor-pointer"
+                className="flex h-[42px] py-[6px] items-center gap-2 self-stretch bg-white cursor-pointer"
               >
-                <Image
-                  src="/assets/grip-icon.svg"
-                  alt="grip icon"
-                  width={20}
-                  height={20}
-                />
                 <Image
                   src="/assets/globe.svg"
                   alt="globe icon"
@@ -239,13 +376,13 @@ const CreateChart = ({ datasets }: Props) => {
             ))}
           </div>
         </div>
-        <section className="flex flex-col gap-5 flex-[1_0_0] self-stretch items-start">
-          <div className="flex justify-between items-start self-stretch">
+        <section className="flex flex-col flex-[1_0_0] self-stretch items-start">
+          <div className="hidden md:flex justify-between items-start self-stretch py-4 px-6 border-b border-[#EEEEFF]">
             <div className="flex gap-[10px] items-center">
-              <p className="text-sm font-medium">Chart Type</p>
+              <p className="font-medium">Chart Type</p>
               <Popover open={typePopUpOpen} onOpenChange={setTypePopUpOpen}>
-                <PopoverTrigger className="flex w-[150px] h-10 py-2 px-3 items-center gap-[10px] cursor-pointer rounded border border-[#EAEDF2] bg-white">
-                  <p className="text-sm flex-[1_0_0] text-start">{type}</p>
+                <PopoverTrigger className="flex w-[150px] truncate 2xl:w-[200px] h-10 px-3 items-center gap-[10px] cursor-pointer rounded-[6px] border border-[#EEEEFF] bg-white">
+                  <p className="flex-[1_0_0] text-start capitalize">{type}</p>
                   <Image
                     src="/assets/chevron-down.svg"
                     alt="more icon"
@@ -253,7 +390,7 @@ const CreateChart = ({ datasets }: Props) => {
                     height={16}
                   />
                 </PopoverTrigger>
-                <PopoverContent className="w-[150px] text-sm bg-white">
+                <PopoverContent className="w-[150px] 2xl:w-[200px] bg-white">
                   <ul className="">
                     {chartTypes.map((chartType: string, index: number) => (
                       <li
@@ -262,7 +399,7 @@ const CreateChart = ({ datasets }: Props) => {
                           setType(chartType);
                           setTypePopUpOpen(false);
                         }}
-                        className="flex gap-2 items-center p-1 cursor-pointer hover:bg-[#F8FAFC] rounded"
+                        className="flex gap-2 items-center truncate p-1 cursor-pointer hover:bg-[#F8FAFC] rounded-[6px]"
                       >
                         {chartType}
                       </li>
@@ -273,9 +410,9 @@ const CreateChart = ({ datasets }: Props) => {
             </div>
             <div className="h-10 flex gap-[18px]">
               <div className="inline-flex items-center gap-[10px]">
-                <p className="text-sm font-medium">X Axis</p>
+                <p className="font-medium">X Axis</p>
                 <Popover open={xPopUpOpen} onOpenChange={setXPopUpOpen}>
-                  <PopoverTrigger className="flex h-10 py-[10px] w-[150px] text-sm px-3 gap-[10px] flex-[1_0_0] rounded border border-[#EAEDF2] bg-white">
+                  <PopoverTrigger className="flex h-10 items-center truncate w-[150px] 2xl:w-[200px] px-3 gap-[10px] flex-[1_0_0] rounded-[6px] border border-[#EEEEFF] bg-white">
                     <span
                       className={`flex-[1_0_0] text-start ${
                         !xAxis && "text-[#ADB3BB]"
@@ -291,7 +428,7 @@ const CreateChart = ({ datasets }: Props) => {
                     />
                   </PopoverTrigger>
                   <PopoverContent
-                    className={`max-w-max text-sm bg-white max-h-96 overflow-y-auto 2xl:max-h-none ${styles.scrollbar}`}
+                    className={`w-[150px] 2xl:w-[200px] bg-white max-h-96 overflow-y-auto 2xl:max-h-none ${styles.scrollbar}`}
                   >
                     <ul className="">
                       {selectedDataset?.headers?.map(
@@ -304,7 +441,7 @@ const CreateChart = ({ datasets }: Props) => {
                                   setXAxis(header.name);
                                   setXPopUpOpen(false);
                                 }}
-                                className="flex gap-2 items-center p-2 cursor-pointer hover:bg-[#F8FAFC] rounded"
+                                className="flex gap-2 items-center truncate p-2 cursor-pointer hover:bg-[#F8FAFC] rounded-[6px]"
                               >
                                 {header.name}
                               </li>
@@ -318,9 +455,9 @@ const CreateChart = ({ datasets }: Props) => {
                 </Popover>
               </div>
               <div className="inline-flex items-center gap-[10px]">
-                <p className="text-sm font-medium">Y Axis</p>
+                <p className="font-medium">Y Axis</p>
                 <Popover open={yPopUpOpen} onOpenChange={setYPopUpOpen}>
-                  <PopoverTrigger className="flex h-10 py-[10px] w-[150px] text-sm px-3 gap-[10px] flex-[1_0_0] rounded border border-[#EAEDF2] bg-white">
+                  <PopoverTrigger className="flex h-10 items-center truncate w-[150px] 2xl:w-[200px] px-3 gap-[10px] flex-[1_0_0] rounded-[6px] border border-[#EEEEFF] bg-white">
                     <span
                       className={`flex-[1_0_0] text-start ${
                         !yAxis && "text-[#ADB3BB]"
@@ -336,7 +473,7 @@ const CreateChart = ({ datasets }: Props) => {
                     />
                   </PopoverTrigger>
                   <PopoverContent
-                    className={`max-w-max text-sm bg-white max-h-96 overflow-y-auto 2xl:max-h-none ${styles.scrollbar}`}
+                    className={`w-[150px] 2xl:w-[200px] bg-white max-h-96 overflow-y-auto 2xl:max-h-none`}
                   >
                     <ul className="">
                       {selectedDataset?.headers?.map(
@@ -349,7 +486,7 @@ const CreateChart = ({ datasets }: Props) => {
                                   setYAxis(header.name);
                                   setYPopUpOpen(false);
                                 }}
-                                className="flex gap-2 items-center p-2 cursor-pointer hover:bg-[#F8FAFC] rounded"
+                                className="flex gap-2 items-center truncate p-2 cursor-pointer hover:bg-[#F8FAFC] rounded-[6px]"
                               >
                                 {header.name}
                               </li>
@@ -363,25 +500,25 @@ const CreateChart = ({ datasets }: Props) => {
                 </Popover>
               </div>
               <div className="inline-flex items-center gap-[10px]">
-                <p className="text-sm font-medium">Series</p>
+                <p className="font-medium">Series</p>
                 <input
                   type="text"
                   placeholder="+ Aggregate"
-                  className="flex h-10 py-[14px] w-[150px] text-sm px-3 gap-[10px] flex-[1_0_0] rounded border border-[#EAEDF2] bg-white"
+                  className="flex h-10 py-[14px] w-[150px] 2xl:w-[200px] px-3 gap-[10px] flex-[1_0_0] rounded-[6px] border border-[#EEEEFF] bg-white"
                 />
               </div>
             </div>
           </div>
           {showChart && chart ? (
-            <div className="flex p-[14px] gap-6 flex-col items-center overflow-auto flex-[1_0_0] 2xl:justify-center self-stretch rounded border border-[#EAEDF2] bg-white">
-              <header className="text-base h-5 2xl:h-10 text-center">
+            <div className="flex p-[14px] gap-6 flex-col items-center overflow-auto flex-[1_0_0] 2xl:justify-center self-stretch rounded bg-white">
+              <header className="text-sm text-center">
                 {isEditing ? (
                   <span className="flex justify-center gap-[10px]">
                     <input
                       type="text"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      className="w-[240px] border border-[#EAEDF2] py-1 2xl:py-2 px-3 rounded focus:outline-none font-normal"
+                      className="w-[240px] border border-[#EEEEFF] text-sm py-1 2xl:py-2 px-3 rounded-[6px] focus:outline-none font-normal"
                     />
                     <span
                       onClick={handleSubmit}
@@ -390,8 +527,8 @@ const CreateChart = ({ datasets }: Props) => {
                       <Image
                         src="/assets/check-icon.svg"
                         alt="confirm icon"
-                        width={16}
-                        height={16}
+                        width={20}
+                        height={20}
                       />
                     </span>
                     <span
@@ -407,12 +544,12 @@ const CreateChart = ({ datasets }: Props) => {
                     </span>
                   </span>
                 ) : (
-                  <span
-                    className="cursor-pointer font-semibold"
+                  <p
+                    className="cursor-pointer font-medium text-sm h-[30px] 2xl:h-10 flex items-center"
                     onClick={() => setIsEditing(true)}
                   >
                     {chart.title}
-                  </span>
+                  </p>
                 )}
               </header>
               {chart.chartType == "bar" ? (
@@ -430,15 +567,15 @@ const CreateChart = ({ datasets }: Props) => {
               )}
             </div>
           ) : (
-            <div className="flex p-[14px] flex-col gap-[14px] items-center justify-center flex-[1_0_0] self-stretch rounded border border-[#EAEDF2] bg-white">
+            <div className="flex p-[14px] flex-col gap-[14px] 2xl:gap-6 items-center justify-center flex-[1_0_0] self-stretch rounded bg-white">
               <Image
-                src="/assets/bar-chart.svg"
+                src="/assets/no-dashboards.svg"
                 alt="chart icon"
-                width={24}
-                height={24}
+                width={90}
+                height={60}
               />
-              <p className="text-[#ADB3BB] text-sm">
-                Select the parameters to preview a chart
+              <p className="text-[#A9AAAE] font-medium">
+                Choose parameters and click generate to preview a chart.
               </p>
             </div>
           )}

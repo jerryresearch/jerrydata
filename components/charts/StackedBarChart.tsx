@@ -42,19 +42,19 @@ const StackedBarChart = ({ data }: Props) => {
       {
         label: "Retail",
         data: retailData,
-        backgroundColor: "#16CC62",
+        backgroundColor: "#6366F1",
         barThickness: 45,
       },
       {
         label: "Wholesale",
         data: wholesaleData,
-        backgroundColor: "#2272E3",
+        backgroundColor: "#EEEEFF",
         barThickness: 45,
       },
       {
         label: "Distribution",
         data: distributionData,
-        backgroundColor: "#FFD111",
+        backgroundColor: "#D2D2FF",
         barThickness: 45,
       },
     ],
@@ -85,7 +85,7 @@ const StackedBarChart = ({ data }: Props) => {
   };
 
   return (
-    <div className="w-4/5 mx-auto">
+    <div className="w-full h-full mx-auto">
       <Bar data={chartData} options={chartOptions} />
     </div>
   );

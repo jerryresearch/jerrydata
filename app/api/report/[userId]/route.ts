@@ -16,7 +16,7 @@ export async function GET(req: Request, { params: { userId } }: Props) {
       return NextResponse.json({ message: "Invalid session" }, { status: 403 });
     }
     // @ts-ignore
-    const reports = await Report.find({ createdBy: userId });
+    const reports = await Report.find({ createdBy: userId }).sort("-createdAt");
     return NextResponse.json(reports, { status: 200 });
   } catch (error) {
     console.log(error);
@@ -31,11 +31,8 @@ export async function POST(req: Request, { params: { userId } }: Props) {
       return NextResponse.json({ message: "Invalid session" }, { status: 403 });
     }
     const { name, description } = await req.json();
-    if (!name || !description) {
-      return NextResponse.json(
-        { message: "Fill all details" },
-        { status: 400 }
-      );
+    if (!name) {
+      return NextResponse.json({ message: "Fill name" }, { status: 400 });
     }
     // @ts-ignore
     const report = await Report.create({

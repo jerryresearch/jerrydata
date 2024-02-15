@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    background-color: #f6f8fa;
+    background-color: white;
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -14,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: #2770ef;
+    /* --primary: #6366f1; */
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -74,4 +74,18 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+::-webkit-scrollbar {
+  width: 3px; /* Width of the scrollbar */
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: white; /* Track color */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #6366f1; /* Thumb color */
+  border-radius: 6px;
 }

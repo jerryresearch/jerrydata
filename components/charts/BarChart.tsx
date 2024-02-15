@@ -35,8 +35,8 @@ const BarChart = ({ data }: Props) => {
     datasets: [
       {
         label: yAxis,
-        // backgroundColor: ["#16CC62", "#2272E3", "#FFD111"],
-        backgroundColor: "#16CC62",
+        // backgroundColor: ["#6366F1", "#D2D2FF", "#EEEEFF"],
+        backgroundColor: "#6366F1",
         borderWidth: 1,
         data: yData,
       },

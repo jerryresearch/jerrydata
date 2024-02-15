@@ -7,11 +7,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import Header from "./Header";
-import Footer from "./Footer";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import updateDataset from "@/lib/datasets/updateDataset";
+import Header from "./data/Header";
 
 const fields = {
   "Column Type": ["Attribute", "Measure"],
@@ -63,6 +62,7 @@ type Props = {
       isHidden: boolean;
     }
   ];
+  type: string;
 };
 
 type SelectedAttributes = {
@@ -73,31 +73,27 @@ type SelectedAttributes = {
   [key: string]: string;
 };
 
-const EditFields = ({ id, userId, headers }: Props) => {
+const EditFields = ({ id, userId, headers, type }: Props) => {
   const [searchInput, setSearchInput] = useState("");
   const [newupdatedheaders, setNewUpdatedHeaders] = useState(
     headers.map((header) => ({
       ...header,
-      columnType: "Attribute",
-      defaultAggregate: "No Aggregate",
-      dateFieldType: "None",
-      geoFieldType: "None",
     }))
   );
 
   const [filteredHeaders, setFilteredHeaders] = useState(
-    headers.filter((row) =>
+    newupdatedheaders.filter((row) =>
       row.name.toLowerCase().includes(searchInput.toLowerCase())
     )
   );
 
   useEffect(() => {
     setFilteredHeaders(
-      headers.filter((row) =>
+      newupdatedheaders.filter((row) =>
         row.name.toLowerCase().includes(searchInput.toLowerCase())
       )
     );
-  }, [searchInput, headers]);
+  }, [searchInput, newupdatedheaders]);
 
   const [selectedAttributes, setSelectedAttributes] = useState<
     Array<SelectedAttributes>
@@ -111,7 +107,6 @@ const EditFields = ({ id, userId, headers }: Props) => {
   );
 
   const disabled = false;
-  const currentStep = 4;
   let count = 1;
 
   const router = useRouter();
@@ -125,14 +120,10 @@ const EditFields = ({ id, userId, headers }: Props) => {
       const res = await updateDataset(userId, id, {
         headers: newupdatedheaders,
       });
-      if (!res?.ok) {
-        alert("error updating");
-        return;
-      }
-      router.push(`add-dataset-info?id=${id}`);
+      router.push(`add-dataset-info?id=${id}&type=${type}`);
     } catch (error) {
-      console.error(error);
-      alert("An error occured! Try Again.");
+      console.log("error in updating dataset");
+      alert("error updating");
     }
   };
 
@@ -141,7 +132,7 @@ const EditFields = ({ id, userId, headers }: Props) => {
       const updatedFilteredHeaders = [...prevFilteredHeaders];
       updatedFilteredHeaders[index] = {
         ...updatedFilteredHeaders[index],
-        isDisabled: !updatedFilteredHeaders[index].isDisabled,
+        isHidden: !updatedFilteredHeaders[index].isHidden,
       };
       return updatedFilteredHeaders;
     });
@@ -248,99 +239,100 @@ const EditFields = ({ id, userId, headers }: Props) => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#F6F8FA]">
-      <Header currentStep={currentStep} />
-      <div className="flex-1">
-        <section className="flex flex-col items-start gap-7 py-4 px-7">
-          {/* search */}
-          <div className="w-[380px] h-[40px]">
-            <div className="flex flex-col items-start gap-[10px] w-full pr-[100px] pl-2 rounded border border-[#EAEDF2] bg-white">
-              <div className="flex items-center self-stretch gap-2 py-[10px] px-2">
-                <Image
-                  src="/assets/search-icon.svg"
-                  alt="search icon"
-                  width={16}
-                  height={16}
-                />
-                <input
-                  type="text"
-                  placeholder="Search Data"
-                  className="text-sm focus:outline-0"
-                  onChange={(e) => setSearchInput(e.target.value)}
-                />
-              </div>
-            </div>
+    <section>
+      <Header
+        step={4}
+        nextDisabled={false}
+        handleBack={handleBack}
+        handleNext={handleNext}
+      />
+      <section className="px-[60px] py-6 flex flex-col gap-6 text-[#080D19]">
+        <h1 className="font-medium text-2xl">Edit Fields</h1>
+        {/* search */}
+        <div className="px-2 w-[380px] h-[42px] rounded-[6px] border border-[#EEEEFF]">
+          <div className="flex py-[10px] px-2 items-center gap-2 self-stretch">
+            <Image
+              src="/assets/search-icon.svg"
+              alt="search icon"
+              width={16}
+              height={16}
+            />
+            <input
+              type="text"
+              placeholder="Search Data"
+              className="text-sm focus:outline-0 w-full"
+              onChange={(e) => setSearchInput(e.target.value)}
+            />
           </div>
-          {/* table */}
-          <div className="w-full p-5 rounded border border-[#EAEDF2] bg-white">
-            <table className="w-full table-auto min-w-max text-left bg-white rounded text-sm text-[#17212F]">
-              {/* row */}
-              <thead>
-                <tr className="rounded bg-[#F8FAFC]">
-                  <th className="p-5 font-medium text-sm text-[#17212F]">NP</th>
-                  <th className="p-5 font-medium text-sm text-[#17212F]">
-                    Name
-                  </th>
-                  <th className="p-5 font-medium text-sm text-[#17212F]">
-                    <div className="flex items-center justify-between">
-                      <span>Column Type</span>
-                      <Image
-                        src="/assets/info-icon.svg"
-                        alt="info"
-                        width={20}
-                        height={20}
-                      />
-                    </div>
-                  </th>
-                  <th className="p-5 font-medium text-sm text-[#17212F]">
-                    <div className="flex items-center justify-between">
-                      <span>Default Aggregate</span>
-                      <Image
-                        src="/assets/info-icon.svg"
-                        alt="info"
-                        width={20}
-                        height={20}
-                      />
-                    </div>
-                  </th>
-                  <th className="p-5 font-medium text-sm text-[#17212F]">
-                    <div className="flex items-center justify-between">
-                      <span>Date Field Type</span>
-                      <Image
-                        src="/assets/info-icon.svg"
-                        alt="info"
-                        width={20}
-                        height={20}
-                      />
-                    </div>
-                  </th>
-                  <th className="p-5 font-medium text-sm text-[#17212F]">
-                    <div className="flex items-center justify-between">
-                      <span>Default Geo Type</span>
-                      <Image
-                        src="/assets/info-icon.svg"
-                        alt="info"
-                        width={20}
-                        height={20}
-                      />
-                    </div>
-                  </th>
-                  <th className="p-5 font-medium text-sm text-[#17212F]">
-                    Hidden
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredHeaders?.map((row, index) => {
+        </div>
+        {/* table */}
+        <div className="w-full rounded-[6px] border border-[#EEEEFF] bg-white">
+          <table className="w-full table-auto min-w-max text-left bg-white rounded">
+            {/* row */}
+            <thead>
+              <tr className="rounded-[6px] bg-[#FAFAFA] border-b border-[#EEEEFF] text-[#080D19]">
+                <th className="p-5 font-normal">NP</th>
+                <th className="p-5 font-normal">Name</th>
+                <th className="p-5 font-normal">
+                  <div className="flex items-center justify-between">
+                    <span>Column Type</span>
+                    <Image
+                      src="/assets/info.svg"
+                      alt="info"
+                      width={20}
+                      height={20}
+                    />
+                  </div>
+                </th>
+                <th className="p-5 font-normal">
+                  <div className="flex items-center justify-between">
+                    <span>Default Aggregate</span>
+                    <Image
+                      src="/assets/info.svg"
+                      alt="info"
+                      width={20}
+                      height={20}
+                    />
+                  </div>
+                </th>
+                <th className="p-5 font-normal">
+                  <div className="flex items-center justify-between">
+                    <span>Date Field Type</span>
+                    <Image
+                      src="/assets/info-icon.svg"
+                      alt="info"
+                      width={20}
+                      height={20}
+                    />
+                  </div>
+                </th>
+                <th className="p-5 font-normal">
+                  <div className="flex items-center justify-between">
+                    <span>Default Geo Type</span>
+                    <Image
+                      src="/assets/info.svg"
+                      alt="info"
+                      width={20}
+                      height={20}
+                    />
+                  </div>
+                </th>
+                <th className="p-5 font-normal">Hidden</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredHeaders
+                ?.filter((row) => !row.isDisabled)
+                .map((row, index) => {
                   // if (!row.isDisabled)
                   return (
                     <tr
                       key={index}
-                      className={`text-sm ${
-                        row.isDisabled ? "text-[#ADB3BB]" : "text-[#17212F]"
-                      } font-medium border-b border-b-[#EAEDF2]`}
+                      className={`bg-white ${
+                        row.isHidden ? "text-[#A9AAAE]" : "text-[#080D19]"
+                      } border-b border-b-[#EEEEFF]`}
                     >
-                      <td className="p-5 font-medium">{count++}</td>
+                      <td className="p-5">{count++}</td>
                       <td className="p-5">
                         {/* <Image
                     src={row.image}
@@ -355,7 +347,7 @@ const EditFields = ({ id, userId, headers }: Props) => {
                           <Popover modal={true}>
                             <div className="flex items-center justify-between p-5">
                               <span
-                                className={`${disabled && "text-[#ADB3BB]"} ${
+                                className={`${disabled && "text-[#A9AAAE]"} ${
                                   !(
                                     (field === "Default Aggregate" &&
                                       selectedAttributes[index].columnType ===
@@ -372,9 +364,9 @@ const EditFields = ({ id, userId, headers }: Props) => {
                                     (field === "Geo Field Type" &&
                                       selectedAttributes[index]
                                         .dateFieldType !== "None")
-                                  ) && !row.isDisabled
-                                    ? "text-[#17212F]"
-                                    : "text-[#ADB3BB]"
+                                  ) && !row.isHidden
+                                    ? "text-[#080D19]"
+                                    : "text-[#A9AAAE]"
                                 }`}
                               >
                                 {(() => {
@@ -419,7 +411,7 @@ const EditFields = ({ id, userId, headers }: Props) => {
                                 selectedAttributes[index].dateFieldType !==
                                   "None"
                               ) &&
-                              !row.isDisabled ? (
+                              !row.isHidden ? (
                                 <PopoverTrigger>
                                   <Image
                                     src="/assets/chevron-down.svg"
@@ -459,17 +451,17 @@ const EditFields = ({ id, userId, headers }: Props) => {
                       <td className="p-5">
                         <Switch
                           onClick={() => handleOnClickSwitch(index)}
-                          checked={row.isDisabled}
+                          checked={row.isHidden}
                         />
                       </td>
                     </tr>
                   );
                 })}
-              </tbody>
-            </table>
-          </div>
-        </section>
-        {/* <section className="px-7 pb-2">
+            </tbody>
+          </table>
+        </div>
+      </section>
+      {/* <section className="px-7 pb-2">
           <div className="w-full flex justify-between items-center pl-1 py-2">
             <div className="text-[#ADB3BB]">Showing 1-2 of 2</div>
             <div className="p-[10px] flex justify-center items-center gap-[5px] rounded border border-[#EAEDF2] bg-white">
@@ -486,14 +478,7 @@ const EditFields = ({ id, userId, headers }: Props) => {
             </div>
           </div>
         </section> */}
-      </div>
-      <Footer
-        step={currentStep}
-        nextDisabled={false}
-        handleBack={handleBack}
-        handleNext={handleNext}
-      />
-    </div>
+    </section>
   );
 };
 

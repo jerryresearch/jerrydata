@@ -11,9 +11,11 @@ import ShareChartModal from "../ShareChartModal";
 type Props = {
   name: string;
   chartsCount: number;
+  onDownloadPNG?: () => void;
+  onDownloadPDF?: () => void;
 };
 
-const Header = ({ name, chartsCount }: Props) => {
+const Header = ({ name, chartsCount, onDownloadPNG, onDownloadPDF }: Props) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { data: session } = useSession();
@@ -29,43 +31,54 @@ const Header = ({ name, chartsCount }: Props) => {
   };
 
   return (
-    <div className="flex h-[80px] py-5 px-7 justify-between items-center border-b border-b-[#EAEDF2]">
-      <Link href="/dashboard/reports">
-        <p className="flex items-center gap-2">
+    <div className="flex flex-col md:flex-row py-5 px-5 gap-5 md:gap-0 md:px-[60px] md:justify-between md:items-center border-b border-b-[#EEEEFF] text-[#080D19]">
+      <Link href="/home/dashboards" className="flex items-center gap-4">
+        <Image src="/assets/back.svg" alt="back icon" width={20} height={20} />
+        <span className="font-medium text-xl">{name}</span>
+      </Link>
+      <div className="h-[42px] flex gap-4">
+        {chartsCount > 0 && (
+          <button
+            className={`hidden md:block h-full py-1 px-5 rounded-[6px] border border-[#EEEEFF] bg-white text-[#61656C] font-medium`}
+            onClick={() => {
+              onDownloadPNG && onDownloadPNG();
+            }}
+          >
+            Download as PNG
+          </button>
+        )}
+        {chartsCount > 0 && (
+          <button
+            className={`hidden md:block h-full py-1 px-5 rounded-[6px] border border-[#EEEEFF] bg-white text-[#61656C] font-medium`}
+            onClick={() => {
+              onDownloadPDF && onDownloadPDF();
+            }}
+          >
+            Download as PDF
+          </button>
+        )}
+        <button
+          className={`w-1/2 md:w-auto justify-center flex h-full py-1 px-5 items-center gap-[6px] rounded-[6px] bg-[#F1F1F1] text-[#61656C] font-medium`}
+        >
           <Image
-            src="/assets/chevron-left.svg"
+            src="/assets/refresh.svg"
             alt="back icon"
             width={20}
             height={20}
           />
-          <span>{name}</span>
-        </p>
-      </Link>
-      <div className="w-[323px] h-10 text-sm flex gap-2">
-        <button
-          className={`inline-flex h-full py-2 px-4 justify-center items-center gap-[10px] flex-shrink-0 rounded border border-[#DEE8FA] bg-white ${
-            chartsCount == 0 && "opacity-50"
-          }`}
-        >
-          Refresh
-        </button>
-        <button
-          className={`inline-flex h-full py-2 px-4 justify-center items-center gap-[10px] flex-shrink-0 rounded border border-[#DEE8FA] bg-white ${
-            chartsCount == 0 && "opacity-50"
-          }`}
-          onClick={() => {
-            if (chartsCount > 0) {
-              setOpen(true);
-            }
-          }}
-        >
-          Share Report
+          <span>Refresh</span>
         </button>
         <Link
           href={`${pathname}/new?id=${reportId}`}
-          className="inline-flex h-full py-2 px-4 justify-center items-center gap-[10px] flex-shrink-0 rounded bg-primary text-white"
+          className="w-1/2 md:w-auto justify-center flex h-full py-1 px-5 items-center gap-[6px] rounded-[6px] bg-primary text-white font-medium"
         >
-          Add Chart
+          <Image
+            src="/assets/plus-icon.svg"
+            alt="back icon"
+            width={20}
+            height={20}
+          />
+          <span>Add Chart</span>
         </Link>
         <ShareChartModal open={open} onClose={handleCloseModal} />
       </div>
