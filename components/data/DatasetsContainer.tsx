@@ -12,19 +12,18 @@ type Props = {
 
 const DatasetsContainer = ({ datasets, userId }: Props) => {
   const [page, setPage] = useState(1);
-  const [filteredDatasets, setFilteredDatasets] = useState(datasets);
+  const [query, setQuery] = useState("");
 
-  const handleSearch = (query: string) => {
-    if (query == "") {
-      setFilteredDatasets(datasets);
-    } else {
-      setFilteredDatasets(
-        datasets.filter((dataset) =>
-          dataset.name.toLowerCase().includes(query.toLowerCase())
-        )
-      );
-    }
-  };
+  const startIndex = (page - 1) * 10;
+  const endIndex = startIndex + 10;
+
+  const totalPages = Math.ceil(datasets.length / 10);
+
+  const filteredDatasets = datasets
+    .slice(startIndex, endIndex)
+    .filter((dataset) =>
+      dataset.name.toLowerCase().includes(query.toLowerCase())
+    );
 
   return (
     <section className="text-sm py-6 px-[60px] text-[#080D19]">
@@ -41,7 +40,7 @@ const DatasetsContainer = ({ datasets, userId }: Props) => {
             <input
               type="text"
               placeholder="Search Data"
-              onChange={(e) => handleSearch(e.target.value)}
+              onChange={(e) => setQuery(e.target.value)}
               className="focus:outline-none flex-1"
             />
           </div>
@@ -54,7 +53,7 @@ const DatasetsContainer = ({ datasets, userId }: Props) => {
                 height={20}
                 className="cursor-pointer"
               />
-              <span className="text-[#61656C]">Refresh</span>
+              <span className="text-[#61656C] font-medium">Refresh</span>
             </button>
             <Link
               href={"connectors/new/connection-type"}
@@ -67,7 +66,7 @@ const DatasetsContainer = ({ datasets, userId }: Props) => {
                 height={20}
                 className="cursor-pointer"
               />
-              <span>New Connection</span>
+              <span className="font-medium">New Connection</span>
             </Link>
           </div>
         </div>
@@ -75,21 +74,65 @@ const DatasetsContainer = ({ datasets, userId }: Props) => {
       <Datasets datasets={filteredDatasets} userId={userId} />
       {datasets.length > 1 && (
         <div className="flex justify-between items-center py-6">
-          <div className="text-[#A9AAAE]">Showing 1-2 of 2</div>
+          <div className="text-[#A9AAAE]">
+            Showing {startIndex + 1}-{endIndex} of {datasets.length}
+          </div>
           <div className="py-[10px] px-2 flex gap-[5px] rounded-[6px]">
+            {page > 2 && (
+              <div
+                onClick={() => setPage(1)}
+                className="py-[2px] px-3 cursor-pointer"
+              >
+                1
+              </div>
+            )}
+            {page > 3 && (
+              <div className="py-[2px] cursor-pointer">
+                <Image
+                  src="/assets/ellipsis.svg"
+                  alt="more"
+                  width={24}
+                  height={20}
+                />
+              </div>
+            )}
+            {page != 1 && (
+              <div
+                onClick={() => setPage(page - 1)}
+                className="py-[2px] px-3 cursor-pointer"
+              >
+                {page - 1}
+              </div>
+            )}
             <div className="py-[2px] px-3 bg-[#EEEEFF] rounded -[6px] font-medium cursor-pointer">
-              1
+              {page}
             </div>
-            <div className="py-[2px] px-3 cursor-pointer">2</div>
-            <div className="py-[2px] cursor-pointer">
-              <Image
-                src="/assets/ellipsis.svg"
-                alt="more"
-                width={24}
-                height={20}
-              />
-            </div>
-            <div className="py-[2px] px-3 cursor-pointer">23</div>
+            {page != totalPages && (
+              <div
+                onClick={() => setPage(page + 1)}
+                className="py-[2px] px-3 cursor-pointer"
+              >
+                {page + 1}
+              </div>
+            )}
+            {page + 1 < totalPages - 1 && (
+              <div className="py-[2px] cursor-pointer">
+                <Image
+                  src="/assets/ellipsis.svg"
+                  alt="more"
+                  width={24}
+                  height={20}
+                />
+              </div>
+            )}
+            {page < totalPages - 1 && (
+              <div
+                onClick={() => setPage(totalPages)}
+                className="py-[2px] px-3 cursor-pointer"
+              >
+                {totalPages}
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -16,6 +16,7 @@ const initialState = {
 const Register = () => {
   const [data, setData] = useState(initialState);
   const [isLoading, setIsLoading] = useState(false);
+  const [terms, setTerms] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, [e.target.name]: e.target.value });
@@ -23,6 +24,10 @@ const Register = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!terms) {
+      alert("Check the terms");
+      return;
+    }
     setIsLoading(true);
     // setData(initialState);
 
@@ -75,7 +80,7 @@ const Register = () => {
         </div>
         <button
           onClick={() => signIn("google", { callbackUrl: "/dashboard/home" })}
-          className="lg:w-[420px] h-[48px] bg-white rounded-md border border-[#EEEEFF] py-2 text-slate-700 font-normal flex items-center justify-center gap-2"
+          className="lg:w-[420px] h-[42px] bg-white rounded-[6px] border border-[#EEEEFF] py-2 text-[#080D19] font-medium flex items-center justify-center gap-2"
         >
           <span>
             <Image
@@ -104,7 +109,7 @@ const Register = () => {
             <div className="font-medium w-full">Full Name</div>
             <input
               type="text"
-              className="bg-white rounded border w-full border-[#EEEEFF] font-normal h-[48px] px-3 py-[14px]"
+              className="bg-white rounded-[6px] border w-full border-[#EEEEFF] font-normal h-[42px] px-3 py-[14px] focus:outline-none"
               value={data.name}
               name="name"
               required
@@ -115,7 +120,7 @@ const Register = () => {
             <div className="font-medium w-full">Email Address</div>
             <input
               type="email"
-              className="bg-white rounded border w-full border-[#EEEEFF] font-normal h-[48px] px-3 py-[14px]"
+              className="bg-white rounded-[6px] border w-full border-[#EEEEFF] font-normal h-[42px] px-3 py-[14px] focus:outline-none"
               value={data.email}
               name="email"
               required
@@ -126,8 +131,8 @@ const Register = () => {
             <div className="font-medium w-full">Password</div>
             <input
               type="password"
-              className="bg-white rounded border w-full border-[#EEEEFF] font-normal h-[48px] px-3 py-[14px]"
-              placeholder="Must be atleast 8 characters"
+              className="bg-white rounded-[6px] border w-full border-[#EEEEFF] font-normal h-[42px] px-3 py-[14px] focus:outline-none"
+              placeholder="Must be atleast 6 characters"
               value={data.password}
               name="password"
               required
@@ -135,15 +140,21 @@ const Register = () => {
             />
           </div>
           <div className="lg:w-[420px] h-5 text-sm flex gap-[10px]">
-            <input type="checkbox" name="terms" id="terms" />
+            <input
+              type="checkbox"
+              name="terms"
+              id="terms"
+              checked={terms}
+              onChange={() => setTerms(!terms)}
+            />
             <div className="font-medium">
-              <span className="text-slate-700">
+              <span className="text-[#080D19]">
                 By signing up, I agree to the
               </span>{" "}
               <span className="text-primary underline">Terms & conditions</span>
             </div>
           </div>
-          <div className="lg:w-[420px] h-14">
+          <div className="lg:w-[420px] h-12">
             <Button isLoading={isLoading}>Sign Up</Button>
           </div>
         </form>
@@ -154,14 +165,15 @@ const Register = () => {
           </Link>
         </div>
       </div>
-      <div className="hidden lg:block flex-1 h-screen">
-        <Image
+      {/* <div className="hidden lg:block flex-1 h-screen"> */}
+      <div className="hidden lg:block flex-1 h-screen bg-[#EEEEFF]">
+        {/* <Image
           src={"/assets/square.svg"}
           alt="sqaure"
           width={900}
           height={900}
           className="w-full object-cover object-center h-full"
-        />
+        /> */}
       </div>
     </main>
   );

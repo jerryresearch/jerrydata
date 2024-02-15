@@ -214,216 +214,223 @@ const EditDatasetFields = ({ dataset, userId, userName }: Props) => {
         userName={userName}
         type="field"
       />
-      <div className="flex gap-[10px] px-2 py-[10px] rounded-[6px] border border-[#EEEEFF] h-[42px] w-[380px]">
-        <Image
-          src="/assets/search-icon.svg"
-          alt="search icon"
-          width={16}
-          height={16}
-        />
-        <input
-          type="text"
-          placeholder="Search Fields"
-          onChange={(e) => setSearchInput(e.target.value)}
-          className="focus:outline-none flex-1"
-        />
-      </div>
-      <section className="py-4">
-        <div className="w-full rounded-[6px] border border-[#EEEEFF] bg-white">
-          <table className="w-full table-auto min-w-max text-left bg-white rounded">
-            {/* row */}
-            <thead>
-              <tr className="rounded-[6px] bg-[#FAFAFA] border-b border-[#EEEEFF] text-[#080D19]">
-                <th className="p-5 font-normal">NP</th>
-                <th className="p-5 font-normal">Name</th>
-                <th className="p-5 font-normal">
-                  <div className="flex items-center justify-between">
-                    <span>Column Type</span>
-                    <Image
-                      src="/assets/info.svg"
-                      alt="info"
-                      width={20}
-                      height={20}
-                    />
-                  </div>
-                </th>
-                <th className="p-5 font-normal">
-                  <div className="flex items-center justify-between">
-                    <span>Default Aggregate</span>
-                    <Image
-                      src="/assets/info.svg"
-                      alt="info"
-                      width={20}
-                      height={20}
-                    />
-                  </div>
-                </th>
-                <th className="p-5 font-normal">
-                  <div className="flex items-center justify-between">
-                    <span>Date Field Type</span>
-                    <Image
-                      src="/assets/info.svg"
-                      alt="info"
-                      width={20}
-                      height={20}
-                    />
-                  </div>
-                </th>
-                <th className="p-5 font-normal">
-                  <div className="flex items-center justify-between">
-                    <span>Default Geo Type</span>
-                    <Image
-                      src="/assets/info.svg"
-                      alt="info"
-                      width={20}
-                      height={20}
-                    />
-                  </div>
-                </th>
-                <th className="p-5 font-normal">Hidden</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredHeaders
-                ?.filter((row) => !row.isDisabled)
-                .map((row, index) => {
-                  // if (!row.isDisabled)
-                  return (
-                    <tr
-                      key={index}
-                      className={`bg-white ${
-                        row.isHidden ? "text-[#A9AAAE]" : "text-[#080D19] "
-                      } border-b border-b-[#EEEEFF]`}
-                    >
-                      <td className="p-5">{count++}</td>
-                      <td className="p-5">
-                        {/* <Image
+      <div className="md:pt-60">
+        <div className="flex gap-[10px] px-2 py-[10px] rounded-[6px] border border-[#EEEEFF] h-[42px] w-[380px]">
+          <Image
+            src="/assets/search-icon.svg"
+            alt="search icon"
+            width={16}
+            height={16}
+          />
+          <input
+            type="text"
+            placeholder="Search Fields"
+            onChange={(e) => setSearchInput(e.target.value)}
+            className="focus:outline-none flex-1"
+          />
+        </div>
+        <section className="py-4">
+          <div className="w-full rounded-[6px] border border-[#EEEEFF] bg-white">
+            <table className="w-full table-auto min-w-max text-left bg-white rounded">
+              {/* row */}
+              <thead>
+                <tr className="rounded-[6px] bg-[#FAFAFA] border-b border-[#EEEEFF] text-[#080D19]">
+                  <th className="p-5 font-normal">NP</th>
+                  <th className="p-5 font-normal">Name</th>
+                  <th className="p-5 font-normal">
+                    <div className="flex items-center justify-between">
+                      <span>Column Type</span>
+                      <Image
+                        src="/assets/info.svg"
+                        alt="info"
+                        width={20}
+                        height={20}
+                      />
+                    </div>
+                  </th>
+                  <th className="p-5 font-normal">
+                    <div className="flex items-center justify-between">
+                      <span>Default Aggregate</span>
+                      <Image
+                        src="/assets/info.svg"
+                        alt="info"
+                        width={20}
+                        height={20}
+                      />
+                    </div>
+                  </th>
+                  <th className="p-5 font-normal">
+                    <div className="flex items-center justify-between">
+                      <span>Date Field Type</span>
+                      <Image
+                        src="/assets/info.svg"
+                        alt="info"
+                        width={20}
+                        height={20}
+                      />
+                    </div>
+                  </th>
+                  <th className="p-5 font-normal">
+                    <div className="flex items-center justify-between">
+                      <span>Default Geo Type</span>
+                      <Image
+                        src="/assets/info.svg"
+                        alt="info"
+                        width={20}
+                        height={20}
+                      />
+                    </div>
+                  </th>
+                  <th className="p-5 font-normal">Hidden</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredHeaders
+                  ?.filter((row) => !row.isDisabled)
+                  .map((row, index) => {
+                    // if (!row.isDisabled)
+                    return (
+                      <tr
+                        key={index}
+                        className={`bg-white ${
+                          row.isHidden ? "text-[#A9AAAE]" : "text-[#080D19] "
+                        } border-b border-b-[#EEEEFF]`}
+                      >
+                        <td className="p-5">{count++}</td>
+                        <td className="p-5">
+                          {/* <Image
                     src={row.image}
                     width={20}
                     height={20}
                     alt={row.name}
                   /> */}
-                        {row.name}
-                      </td>
-                      {Object.keys(fields).map((field, ind) => (
-                        <td key={ind}>
-                          <Popover modal={true}>
-                            <div className="flex items-center justify-between p-5">
-                              <span
-                                className={`${disabled && "text-[#A9AAAE]"} ${
-                                  !(
-                                    (field === "Default Aggregate" &&
-                                      selectedAttributes[index].columnType ===
-                                        "Attribute") ||
-                                    (field === "Date Field Type" &&
-                                      selectedAttributes[index].columnType ===
-                                        "Measure") ||
-                                    (field === "Geo Field Type" &&
-                                      selectedAttributes[index].columnType ===
-                                        "Measure") ||
-                                    (field === "Date Field Type" &&
-                                      selectedAttributes[index].geoFieldType !==
-                                        "None") ||
-                                    (field === "Geo Field Type" &&
-                                      selectedAttributes[index]
-                                        .dateFieldType !== "None")
-                                  ) && !row.isHidden
-                                    ? "text-[#080D19]"
-                                    : "text-[#A9AAAE]"
-                                }`}
-                              >
-                                {(() => {
-                                  if (field === "Column Type") {
-                                    return selectedAttributes[index].columnType;
-                                  } else if (field === "Default Aggregate") {
-                                    return selectedAttributes[index]
-                                      .defaultAggregate;
-                                  } else if (field === "Date Field Type") {
-                                    return selectedAttributes[index]
-                                      .dateFieldType;
-                                  } else if (field === "Geo Field Type") {
-                                    return selectedAttributes[index]
-                                      .geoFieldType;
-                                  } else {
-                                    return "";
-                                  }
-                                })()}
-                              </span>
-                              {!(
-                                field === "Default Aggregate" &&
-                                selectedAttributes[index].columnType ===
-                                  "Attribute"
-                              ) &&
-                              !(
-                                field === "Date Field Type" &&
-                                selectedAttributes[index].columnType ===
-                                  "Measure"
-                              ) &&
-                              !(
-                                field === "Geo Field Type" &&
-                                selectedAttributes[index].columnType ===
-                                  "Measure"
-                              ) &&
-                              !(
-                                field === "Date Field Type" &&
-                                selectedAttributes[index].geoFieldType !==
-                                  "None"
-                              ) &&
-                              !(
-                                field === "Geo Field Type" &&
-                                selectedAttributes[index].dateFieldType !==
-                                  "None"
-                              ) &&
-                              !row.isHidden ? (
-                                <PopoverTrigger>
+                          {row.name}
+                        </td>
+                        {Object.keys(fields).map((field, ind) => (
+                          <td key={ind}>
+                            <Popover modal={true}>
+                              <div className="flex items-center justify-between p-5">
+                                <span
+                                  className={`${disabled && "text-[#A9AAAE]"} ${
+                                    !(
+                                      (field === "Default Aggregate" &&
+                                        selectedAttributes[index].columnType ===
+                                          "Attribute") ||
+                                      (field === "Date Field Type" &&
+                                        selectedAttributes[index].columnType ===
+                                          "Measure") ||
+                                      (field === "Geo Field Type" &&
+                                        selectedAttributes[index].columnType ===
+                                          "Measure") ||
+                                      (field === "Date Field Type" &&
+                                        selectedAttributes[index]
+                                          .geoFieldType !== "None") ||
+                                      (field === "Geo Field Type" &&
+                                        selectedAttributes[index]
+                                          .dateFieldType !== "None")
+                                    ) && !row.isHidden
+                                      ? "text-[#080D19]"
+                                      : "text-[#A9AAAE]"
+                                  }`}
+                                >
+                                  {(() => {
+                                    if (field === "Column Type") {
+                                      return selectedAttributes[index]
+                                        .columnType;
+                                    } else if (field === "Default Aggregate") {
+                                      return selectedAttributes[index]
+                                        .defaultAggregate;
+                                    } else if (field === "Date Field Type") {
+                                      return selectedAttributes[index]
+                                        .dateFieldType;
+                                    } else if (field === "Geo Field Type") {
+                                      return selectedAttributes[index]
+                                        .geoFieldType;
+                                    } else {
+                                      return "";
+                                    }
+                                  })()}
+                                </span>
+                                {!(
+                                  field === "Default Aggregate" &&
+                                  selectedAttributes[index].columnType ===
+                                    "Attribute"
+                                ) &&
+                                !(
+                                  field === "Date Field Type" &&
+                                  selectedAttributes[index].columnType ===
+                                    "Measure"
+                                ) &&
+                                !(
+                                  field === "Geo Field Type" &&
+                                  selectedAttributes[index].columnType ===
+                                    "Measure"
+                                ) &&
+                                !(
+                                  field === "Date Field Type" &&
+                                  selectedAttributes[index].geoFieldType !==
+                                    "None"
+                                ) &&
+                                !(
+                                  field === "Geo Field Type" &&
+                                  selectedAttributes[index].dateFieldType !==
+                                    "None"
+                                ) &&
+                                !row.isHidden ? (
+                                  <PopoverTrigger>
+                                    <Image
+                                      src="/assets/chevron-down.svg"
+                                      alt="chevron down icon"
+                                      width={16}
+                                      height={16}
+                                    />
+                                  </PopoverTrigger>
+                                ) : (
                                   <Image
-                                    src="/assets/chevron-down.svg"
+                                    src="/assets/chevron-down-disabled.svg"
                                     alt="chevron down icon"
                                     width={16}
                                     height={16}
                                   />
-                                </PopoverTrigger>
-                              ) : (
-                                <Image
-                                  src="/assets/chevron-down-disabled.svg"
-                                  alt="chevron down icon"
-                                  width={16}
-                                  height={16}
-                                />
-                              )}
-                            </div>
-                            <PopoverContent className="w-fit min-w-[122px] p-0 shadow-custom bg-white rounded">
-                              <ul className="text-sm font-normal p-2 flex flex-col items-start">
-                                {/* @ts-ignore */}
-                                {fields[field].map((val, fieldIndex) => (
-                                  <li
-                                    key={fieldIndex}
-                                    className="flex gap-2 items-center w-full px-3 py-[6px] cursor-pointer hover:bg-[#F8FAFC] rounded"
-                                    onClick={() => {
-                                      handleClickOnDropdown(field, val, index);
-                                    }}
-                                  >
-                                    {val}
-                                  </li>
-                                ))}
-                              </ul>
-                            </PopoverContent>
-                          </Popover>
+                                )}
+                              </div>
+                              <PopoverContent className="w-fit min-w-[122px] p-0 shadow-custom bg-white rounded">
+                                <ul className="text-sm font-normal p-2 flex flex-col items-start">
+                                  {/* @ts-ignore */}
+                                  {fields[field].map((val, fieldIndex) => (
+                                    <li
+                                      key={fieldIndex}
+                                      className="flex gap-2 items-center w-full px-3 py-[6px] cursor-pointer hover:bg-[#F8FAFC] rounded"
+                                      onClick={() => {
+                                        handleClickOnDropdown(
+                                          field,
+                                          val,
+                                          index
+                                        );
+                                      }}
+                                    >
+                                      {val}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </PopoverContent>
+                            </Popover>
+                          </td>
+                        ))}
+                        <td className="p-5">
+                          <Switch
+                            onClick={() => handleOnClickSwitch(index)}
+                            checked={row.isHidden}
+                          />
                         </td>
-                      ))}
-                      <td className="p-5">
-                        <Switch
-                          onClick={() => handleOnClickSwitch(index)}
-                          checked={row.isHidden}
-                        />
-                      </td>
-                    </tr>
-                  );
-                })}
-            </tbody>
-          </table>
-        </div>
-      </section>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
     </div>
   );
 };

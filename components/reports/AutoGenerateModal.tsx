@@ -40,7 +40,7 @@ const AutoGenerateModal = ({
     <section
       className={`${
         open
-          ? "fixed inset-0 h-screen w-screen flex items-center justify-center bg-[#1A1B5826]"
+          ? "fixed inset-0 z-50 h-screen w-screen flex items-center justify-center bg-[#1A1B5826]"
           : "hidden"
       }`}
     >

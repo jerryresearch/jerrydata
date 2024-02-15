@@ -58,8 +58,10 @@ const ConnectionType = ({ id, type }: Props) => {
         nextDisabled={selectedType == ""}
         handleBack={handleBack}
         handleNext={handleNext}
+        type={type}
+        id={id}
       />
-      <section className="md:px-[60px] py-8 px-5 md:py-6 flex flex-col gap-6 text-[#080D19]">
+      <section className="md:px-[60px] md:pt-32 py-8 px-5 md:pb-6 flex flex-col gap-6 text-[#080D19]">
         <p className="md:hidden">
           <Link href="/home/connectors" className="text-[#61656C]">
             Connectors /

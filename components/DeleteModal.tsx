@@ -25,12 +25,12 @@ const DeleteModal = ({ open, onClose, id, userId, name }: Props) => {
     <section
       className={`${
         open
-          ? "fixed inset-0 h-screen w-screen flex items-center justify-center bg-[#1A1B5826]"
+          ? "fixed inset-0 z-50 h-screen w-screen flex items-center justify-center bg-[#1A1B5826]"
           : "hidden"
       }`}
     >
-      <div className="bg-white flex w-[640px] min-h-[340px] rounded-[6px] flex-col gap-6 flex-shrink-0 items-center text-xl text-[#080D19] pb-6">
-        <div className="h-[90px] w-full py-4 px-8 flex items-center rounded-[6px] justify-between flex-shrink-0 border-b border-[#EEEEFF] bg-[#F8FAFC]">
+      <div className="bg-white flex w-[640px] min-h-[340px] rounded-[6px] flex-col gap-6 flex-shrink-0 items-center text-[#080D19] pb-6">
+        <div className="h-[90px] w-full py-4 px-8 flex items-center rounded-[6px] justify-between flex-shrink-0 border-b border-[#EEEEFF] bg-[#FAFAFA]">
           <div className="flex flex-col gap-1">
             <p className="text-xl font-semibold">Are you sure?</p>
             <span className="text-base">

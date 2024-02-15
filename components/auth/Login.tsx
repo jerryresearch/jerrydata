@@ -61,12 +61,11 @@ const Login = () => {
           Welcome back to Jerrydata
         </div>
         <div className="lg:w-[420px] text-[#A9AAAE] font-normal text-base md:text-lg leading-[25.2px]">
-          Let&apos;s get started! Fill in the form below to create your free
-          Jerrydata account.
+          Sign in to your account below.
         </div>
         <button
           onClick={() => signIn("google", { callbackUrl: "/dashboard/home" })}
-          className="lg:w-[420px] h-[48px] bg-white rounded-md border border-[#EEEEFF] py-2 text-slate-700 font-normal flex items-center justify-center gap-2"
+          className="lg:w-[420px] h-[42px] bg-white rounded-[6px] border border-[#EEEEFF] py-2 text-[#080D19] font-medium flex items-center justify-center gap-2"
         >
           <span>
             <Image
@@ -80,7 +79,7 @@ const Login = () => {
         </button>
         <div className="lg:w-[420px] h-[20px] justify-center items-center gap-[13.93px] inline-flex">
           <div className="w-[186px] h-px bg-slate-200" />
-          <div className="text-center w-[20px] h-[20px] text-[#ADB3BB] text-sm font-normal leading-snug">
+          <div className="text-center w-[20px] h-[20px] text-[#A9AAAE] text-sm font-normal leading-snug">
             OR
           </div>
           <div className="w-[186px] h-px bg-slate-200" />
@@ -93,7 +92,7 @@ const Login = () => {
             <div className="font-medium w-full">Email Address</div>
             <input
               type="email"
-              className="bg-white rounded border w-full border-[#EEEEFF] font-normal h-[48px] px-3 py-[14px]"
+              className="bg-white rounded-[6px] border w-full border-[#EEEEFF] font-normal h-[42px] px-3 py-[14px] focus:outline-none"
               value={data.email}
               name="email"
               required
@@ -104,8 +103,8 @@ const Login = () => {
             <div className="font-medium w-full">Password</div>
             <input
               type="password"
-              className="bg-white rounded border w-full border-[#EEEEFF] font-normal h-[48px] px-3 py-[14px]"
-              placeholder="Must be atleast 8 characters"
+              className="bg-white rounded-[6px] border w-full border-[#EEEEFF] font-normal h-[42px] px-3 py-[14px] focus:outline-none"
+              placeholder="Must be atleast 6 characters"
               value={data.password}
               name="password"
               required
@@ -119,7 +118,7 @@ const Login = () => {
               </Link>
             </div>
           </div>
-          <div className="lg:w-[420px] h-14">
+          <div className="lg:w-[420px] h-12">
             <Button isLoading={isLoading}>Sign In</Button>
           </div>
         </form>
@@ -130,14 +129,15 @@ const Login = () => {
           </Link>
         </div>
       </div>
-      <div className="hidden lg:block flex-1 h-screen">
-        <Image
+      {/* <div className="hidden lg:block flex-1 h-screen"> */}
+      <div className="hidden lg:block flex-1 h-screen bg-[#EEEEFF]">
+        {/* <Image
           src={"/assets/square.svg"}
           alt="sqaure"
           width={900}
           height={900}
           className="w-full object-cover object-center h-full"
-        />
+        /> */}
       </div>
     </main>
   );

@@ -246,7 +246,7 @@ const EditFields = ({ id, userId, headers, type }: Props) => {
         handleBack={handleBack}
         handleNext={handleNext}
       />
-      <section className="px-[60px] py-6 flex flex-col gap-6 text-[#080D19]">
+      <section className="md:px-[60px] md:pt-32 py-8 px-5 md:pb-6 flex flex-col gap-6 text-[#080D19]">
         <h1 className="font-medium text-2xl">Edit Fields</h1>
         {/* search */}
         <div className="px-2 w-[380px] h-[42px] rounded-[6px] border border-[#EEEEFF]">

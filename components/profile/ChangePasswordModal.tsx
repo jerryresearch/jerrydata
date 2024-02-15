@@ -39,12 +39,12 @@ const ChangePasswordModal = ({ open, onClose, userId }: Props) => {
     <section
       className={`${
         open
-          ? "fixed inset-0 h-screen w-screen flex items-center justify-center bg-[#1A1B5826]"
+          ? "fixed inset-0 z-50 h-screen w-screen flex items-center justify-center bg-[#1A1B5826]"
           : "hidden"
       }`}
     >
-      <div className="text-[#080D19] flex w-[640px] min-h-[420px] flex-col gap-6 flex-shrink-0 items-center pb-[34px] shadow-custom rounded-[8px] bg-white text-xl">
-        <div className="h-[92px] p-8 flex items-center justify-center gap-[377px] flex-shrink-0 border-b border-[#EAEDF2] bg-[#F8FAFC] rounded-[8px]">
+      <div className="bg-white flex w-[640px] min-h-[340px] rounded-[6px] flex-col gap-6 flex-shrink-0 items-center text-[#080D19] pb-6">
+        <div className="h-20 w-full rounded-[6px] py-6 px-8 flex items-center justify-between flex-shrink-0 border-b border-[#EEEEFF] bg-[#FAFAFA]">
           <p className="text-xl font-medium">Change Password</p>
           <Image
             src="/assets/dismiss.svg"

@@ -60,7 +60,7 @@ const AddDatasetInfo = ({ id, userId, dataset, type }: Props) => {
         handleBack={handleBack}
         handleNext={handleNext}
       />
-      <section className="px-[60px] py-6 flex flex-col gap-6 text-[#080D19]">
+      <section className="md:px-[60px] md:pt-32 py-8 px-5 md:pb-6 flex flex-col gap-6 text-[#080D19]">
         <h1 className="font-medium text-2xl">Add Info</h1>
         <div className="flex flex-col gap-6 items-start w-[420px] flex-shrink-0">
           <div className="flex flex-col gap-4 self-stretch">

@@ -63,7 +63,7 @@ const AddSQLConnection = ({ dataset, id, userId, type }: Props) => {
         handleBack={handleBack}
         handleNext={handleNext}
       />
-      <section className="px-[60px] py-6 flex flex-col gap-6 text-[#080D19]">
+      <section className="md:px-[60px] md:pt-32 py-8 px-5 md:pb-6 flex flex-col gap-6 text-[#080D19]">
         <h1 className="font-medium text-2xl">Make Connection</h1>
         <div className="w-[864px] flex flex-col gap-8">
           <div className="flex flex-col gap-4">

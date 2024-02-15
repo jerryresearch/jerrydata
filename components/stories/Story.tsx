@@ -45,8 +45,8 @@ function formatDateTime(dateTimeString: string) {
 
 const Story = () => {
   return (
-    <div className="w-full md:h-[344px] flex flex-col md:flex-row gap-4 md:gap-10 border border-[#EEEEFF] rounded-[6px] px-8 py-6 text-[#080D19]">
-      <div className="md:w-[450px] flex flex-col gap-5 justify-center">
+    <div className="w-full md:h-[344px] flex flex-col md:flex-row gap-4 md:gap-10 border border-[#EEEEFF] rounded-[6px] px-8 text-[#080D19]">
+      <div className="md:w-[450px] flex flex-col gap-5 justify-center py-6">
         <span className="text-[#A9AAAE] text-sm">
           {formatDateTime("2024-02-12T15:23:51.849+00:00")}
         </span>
@@ -75,11 +75,11 @@ const Story = () => {
         </div>
       </div>
       <div className="hidden md:block w-px bg-[#EEEEFF]"></div>
-      <div className="md:w-[372px] py-8">
-        <div className="">Chart</div>
-        {/* <div className="w-full h-full">
+      <div className="md:w-[372px] py-6">
+        {/* <div className="">Chart</div> */}
+        <div className="w-full h-full">
           <StackedBarChart data={data} />
-        </div> */}
+        </div>
         {/* <div className="self-start">
           <input type="checkbox" name="" id="" />
         </div> */}
