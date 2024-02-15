@@ -29,7 +29,7 @@ const UploadFile = ({ id, type, dataset, handleDelete }: Props) => {
   const [progessValue, setProgressValue] = useState(0);
 
   const handleNext = () => {
-    router.push(`select-table?id=${id}`);
+    router.push(`select-table?id=${id}&type=${type}`);
   };
 
   const handleBack = () => {

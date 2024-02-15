@@ -3,25 +3,43 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import Footer from "@/components/Footer";
 import setTable from "@/lib/datasets/postgresql/setTable";
 import Header from "../Header";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 type Props = {
-  tables: string[];
+  tables: any;
   id: string;
   userId: string;
+  type: string;
 };
 
-const TableSelection = ({ userId, id, tables }: Props) => {
+const TableSelection = ({ userId, id, tables, type }: Props) => {
   const [searchInput, setSearchInput] = useState("");
   const [selectedTable, setSelectedTable] = useState("");
+  const [selectedHeaders, setSelectedHeaders] = useState([]);
 
-  const filteredTables = tables.filter((table) =>
+  const filteredTables = Object.keys(tables).filter((table) =>
     table.toLowerCase().includes(searchInput.toLowerCase())
   );
 
-  const currentStep = 3;
+  const handleHeaderChange = (name: string) => {
+    // @ts-ignore
+    if (!selectedHeaders.includes(name)) {
+      // @ts-ignore
+      setSelectedHeaders([...selectedHeaders, name]);
+      return;
+    }
+    const len = selectedHeaders.length;
+    if (len <= 1) return;
+    const h = selectedHeaders.filter((header) => header != name);
+    setSelectedHeaders(h);
+  };
 
   const router = useRouter();
 
@@ -31,8 +49,19 @@ const TableSelection = ({ userId, id, tables }: Props) => {
 
   const handleNext = async () => {
     try {
-      const res = await setTable(userId, id, { table: selectedTable });
-      router.push(`edit-fields?id=${id}`);
+      const headers = tables[selectedTable].map((header: string) => {
+        // @ts-ignore
+        if (selectedHeaders.includes(header)) {
+          return { name: header, isDisabled: false };
+        } else {
+          return { name: header, isDisabled: true };
+        }
+      });
+      const res = await setTable(userId, id, type, {
+        table: selectedTable,
+        headers,
+      });
+      router.push(`edit-fields?id=${id}&type=${type}`);
     } catch (error) {
       console.log("error in updating dataset");
       alert("error updating");
@@ -63,44 +92,70 @@ const TableSelection = ({ userId, id, tables }: Props) => {
                 <input
                   type="text"
                   placeholder="Search by name"
-                  className="text-sm focus:outline-none"
+                  className="focus:outline-none w-full"
                   onChange={(e) => setSearchInput(e.target.value)}
                 />
               </div>
             </div>
           </div>
-          <div className="flex px-[10px] py-[14px] w-full max-h-80 overflow-y-auto justify-between items-start self-stretch rounded border border-[#EAEDF2] bg-white">
-            <div className="flex flex-col items-start w-[382px]">
+          <div className="flex px-[10px] py-[14px] w-full max-h-80 overflow-y-auto justify-between items-start self-stretch rounded-[6px] border border-[#EEEEFF] bg-white">
+            <Accordion
+              type="single"
+              collapsible
+              className="flex flex-col items-start w-full"
+            >
               {filteredTables.map((table, index) => (
-                <div
+                <AccordionItem
                   key={index}
-                  className="flex flex-col items-start w-[382px] gap-[14px]"
+                  value={`item-${index}`}
+                  className="w-full"
                 >
-                  <div className="flex px-2 flex-col items-start">
-                    <div className="py-2 flex justify-center items-center gap-[10px] self-stretch">
-                      <div className="flex items-center justify-center gap-[10px]">
+                  <div className="px-2 flex items-center gap-[10px] text-base">
+                    <AccordionTrigger></AccordionTrigger>
+                    <input
+                      type="checkbox"
+                      onChange={() => {
+                        if (selectedTable == table) {
+                          setSelectedTable("");
+                          setSelectedHeaders([]);
+                        } else {
+                          setSelectedTable(table);
+                          setSelectedHeaders(tables[table]);
+                        }
+                      }}
+                      name={table}
+                      id={table}
+                      className="accent-primary"
+                    />
+                    <label htmlFor={table}>{table}</label>
+                  </div>
+                  <AccordionContent className="flex flex-col gap-[10px] text-base px-[54px]">
+                    {/* @ts-ignore */}
+                    {tables[table].map((header, index) => (
+                      <p key={index} className="flex w-full gap-[10px] py-2">
                         <input
                           type="checkbox"
                           onChange={() => {
                             if (selectedTable == table) {
-                              setSelectedTable("");
-                            } else {
-                              setSelectedTable(table);
+                              handleHeaderChange(header);
                             }
                           }}
-                          name="name"
-                          id="name"
+                          checked={
+                            selectedTable == table &&
+                            // @ts-ignore
+                            selectedHeaders.includes(header)
+                          }
+                          name={header}
+                          id={header}
                           className="accent-primary"
                         />
-                        <label htmlFor="name" className="text-sm">
-                          {table}
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                        <label htmlFor={header}>{header}</label>
+                      </p>
+                    ))}
+                  </AccordionContent>
+                </AccordionItem>
               ))}
-            </div>
+            </Accordion>
           </div>
         </div>
       </section>

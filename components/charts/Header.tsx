@@ -31,7 +31,7 @@ const Header = ({ name, chartsCount, onDownloadPNG, onDownloadPDF }: Props) => {
   };
 
   return (
-    <div className="flex py-5 px-[60px] justify-between items-center border-b border-b-[#EEEEFF] text-[#080D19]">
+    <div className="flex flex-col md:flex-row py-5 px-5 gap-5 md:gap-0 md:px-[60px] md:justify-between md:items-center border-b border-b-[#EEEEFF] text-[#080D19]">
       <Link href="/home/dashboards" className="flex items-center gap-4">
         <Image src="/assets/back.svg" alt="back icon" width={20} height={20} />
         <span className="font-medium text-xl">{name}</span>
@@ -39,7 +39,7 @@ const Header = ({ name, chartsCount, onDownloadPNG, onDownloadPDF }: Props) => {
       <div className="h-[42px] flex gap-4">
         {chartsCount > 0 && (
           <button
-            className={`h-full py-1 px-5 rounded-[6px] border border-[#EEEEFF] bg-white text-[#61656C] font-medium`}
+            className={`hidden md:block h-full py-1 px-5 rounded-[6px] border border-[#EEEEFF] bg-white text-[#61656C] font-medium`}
             onClick={() => {
               onDownloadPNG && onDownloadPNG();
             }}
@@ -49,7 +49,7 @@ const Header = ({ name, chartsCount, onDownloadPNG, onDownloadPDF }: Props) => {
         )}
         {chartsCount > 0 && (
           <button
-            className={`h-full py-1 px-5 rounded-[6px] border border-[#EEEEFF] bg-white text-[#61656C] font-medium`}
+            className={`hidden md:block h-full py-1 px-5 rounded-[6px] border border-[#EEEEFF] bg-white text-[#61656C] font-medium`}
             onClick={() => {
               onDownloadPDF && onDownloadPDF();
             }}
@@ -58,7 +58,7 @@ const Header = ({ name, chartsCount, onDownloadPNG, onDownloadPDF }: Props) => {
           </button>
         )}
         <button
-          className={`flex h-full py-1 px-5 items-center gap-[6px] rounded-[6px] bg-[#F1F1F1] text-[#61656C] font-medium`}
+          className={`w-1/2 md:w-auto justify-center flex h-full py-1 px-5 items-center gap-[6px] rounded-[6px] bg-[#F1F1F1] text-[#61656C] font-medium`}
         >
           <Image
             src="/assets/refresh.svg"
@@ -70,7 +70,7 @@ const Header = ({ name, chartsCount, onDownloadPNG, onDownloadPDF }: Props) => {
         </button>
         <Link
           href={`${pathname}/new?id=${reportId}`}
-          className="flex h-full py-1 px-5 items-center gap-[6px] rounded-[6px] bg-primary text-white font-medium"
+          className="w-1/2 md:w-auto justify-center flex h-full py-1 px-5 items-center gap-[6px] rounded-[6px] bg-primary text-white font-medium"
         >
           <Image
             src="/assets/plus-icon.svg"

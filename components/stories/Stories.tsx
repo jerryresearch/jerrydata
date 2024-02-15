@@ -72,7 +72,7 @@ const Stories = ({ datasets }: Props) => {
             />
           </div>
         </div>
-        <div className="flex justify-between">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <KPIStory type="increase" />
           <KPIStory type="decrease" />
           <KPIStory type="increase" />
@@ -80,10 +80,10 @@ const Stories = ({ datasets }: Props) => {
         </div>
       </section>
       <div className="bg-[#EEEEFF] h-px"></div>
-      <section className="flex justify-between items-center">
+      <section className="flex flex-col gap-6 md:flex-row md:justify-between md:items-center">
         <Popover>
-          <PopoverTrigger className="flex w-[298px] h-[42px] py-2 px-3 justify-between items-center rounded border border-[#EEEEFF] bg-white">
-            <span className="text-sm truncate ">
+          <PopoverTrigger className="flex w-full md:w-[298px] h-[42px] py-2 px-3 justify-between items-center rounded border border-[#EEEEFF] bg-white">
+            <span className="text-sm truncate max-w-[138px]">
               {selectedDatasets.length > 0
                 ? selectedDatasets.map((dataset) => dataset.name).join(", ")
                 : "Select Dataset"}
@@ -130,7 +130,9 @@ const Stories = ({ datasets }: Props) => {
               height={20}
               className="cursor-pointer"
             />
-            <span className="text-[#61656C]">Refresh</span>
+            <span className="text-[#61656C] font-medium text-sm md:text-base">
+              Refresh
+            </span>
           </button>
           <button className="flex bg-primary text-white rounded items-center px-4 py-2 h-[42px] gap-2">
             <Image
@@ -140,7 +142,7 @@ const Stories = ({ datasets }: Props) => {
               height={20}
               className="cursor-pointer"
             />
-            <span>Download Storybook</span>
+            <span className="text-sm md:text-base">Download Storybook</span>
           </button>
         </div>
       </section>

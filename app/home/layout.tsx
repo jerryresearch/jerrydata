@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/authOptions";
+import MobileNav from "@/components/MobileNav";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -20,7 +21,8 @@ export default async function RootLayout({
   return (
     <section className={`bg-white`}>
       <Navbar name={name} />
-      <main className="pt-14">{children}</main>
+      <main className="pb-14 md:pb-0 pt-14">{children}</main>
+      <MobileNav />
     </section>
   );
 }

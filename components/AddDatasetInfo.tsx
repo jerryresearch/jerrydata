@@ -10,9 +10,10 @@ type Props = {
   dataset: Dataset;
   id: string;
   userId: string;
+  type?: string;
 };
 
-const AddDatasetInfo = ({ id, userId, dataset }: Props) => {
+const AddDatasetInfo = ({ id, userId, dataset, type }: Props) => {
   const [name, setName] = useState(dataset.name);
   const [description, setDescription] = useState(dataset.description);
   const [isUpdated, setIsUpdated] = useState(false);

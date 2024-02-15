@@ -14,6 +14,7 @@ const Page = async ({
 
   const session: any = await getServerSession(authOptions);
   const userId = session?.user?._id || session?.user?.id;
+  const type = searchParams?.type;
 
   const datasetData: Promise<Dataset> = getDataset(userId, id);
   const dataset = await datasetData;
@@ -22,7 +23,7 @@ const Page = async ({
     <TableSelection
       userId={userId}
       id={id}
-      datatype={dataset.datatype}
+      type={type}
       name={dataset.name}
       headers={dataset.headers}
     />

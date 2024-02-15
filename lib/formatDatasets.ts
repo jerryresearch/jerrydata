@@ -40,7 +40,7 @@ export function formatSize(value: string) {
   } else if (sizeInKB >= 1) {
     return sizeInKB.toFixed(1) + " kb";
   } else {
-    return size + " bytes";
+    return size + " b";
   }
 }
 

@@ -47,7 +47,7 @@ const ChartsContainer = ({ charts, report }: Props) => {
         name={report.name}
         chartsCount={charts.length}
       />
-      <section className="my-6 px-[60px] flex flex-col gap-6">
+      <section className="my-6 px-5 md:px-[60px] flex flex-col gap-6">
         {/* <div className="grid grid-cols-4 gap-6">
           <AnalyticCard name="Key Analytic 1" value="324" />
           <AnalyticCard name="Key Analytic 2" value="40 Hours" />

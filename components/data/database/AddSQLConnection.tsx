@@ -27,9 +27,9 @@ const AddSQLConnection = ({ dataset, id, userId, type }: Props) => {
 
   const handleBack = () => {
     if (id) {
-      router.push(`connection-type?id=${id}`);
+      router.push(`connection-type?id=${id}&type=${type}`);
     } else {
-      router.push(`connection-type`);
+      router.push(`connection-type?type=${type}`);
     }
   };
 
@@ -46,7 +46,7 @@ const AddSQLConnection = ({ dataset, id, userId, type }: Props) => {
       });
       console.log(res);
       console.log(res.message);
-      router.push(`select-table?id=${res.dataset._id}`);
+      router.push(`select-table?id=${res.dataset._id}&type=${type}`);
     } catch (error) {
       console.log("error in updating dataset");
       alert("error updating");

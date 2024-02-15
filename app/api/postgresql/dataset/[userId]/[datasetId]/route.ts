@@ -5,7 +5,6 @@ import Dataset from "@/models/Dataset";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { Client } from "pg";
 import crypto from "crypto";
-import { Readable } from "stream";
 import fs from "fs";
 import { OpenAI } from "openai";
 
@@ -34,6 +33,7 @@ export async function GET(
 ) {
   try {
     await connectToDB();
+    console.log("postgresql");
     if (!userId || !mongoose.isValidObjectId(userId)) {
       return NextResponse.json({ message: "Invalid session" }, { status: 403 });
     }
@@ -70,10 +70,20 @@ export async function GET(
     const result = await client.query(
       "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';"
     );
-    const tableNames = result.rows.map((row) => row.table_name);
+    const tableNames: string[] = result.rows.map((row) => row.table_name);
+    let tables: any = {};
+
+    for (let i = 0; i < tableNames.length; i++) {
+      const result = await client.query(
+        "SELECT column_name FROM information_schema.columns WHERE table_name = $1;",
+        [tableNames[i]]
+      );
+      const headers = result.rows.map((header: any) => header.column_name);
+      tables[tableNames[i]] = headers;
+    }
     await client.end();
 
-    return NextResponse.json({ dataset, tableNames }, { status: 200 });
+    return NextResponse.json({ dataset, tables }, { status: 200 });
   } catch (error) {
     console.log(error);
     return NextResponse.json({ message: error }, { status: 500 });
@@ -86,6 +96,7 @@ export async function POST(
 ) {
   try {
     await connectToDB();
+    console.log("postgresql");
     if (!userId || !mongoose.isValidObjectId(userId)) {
       return NextResponse.json({ message: "Invalid session" }, { status: 403 });
     }
@@ -104,8 +115,8 @@ export async function POST(
       );
     }
 
-    const { table } = await req.json();
-    if (!table) {
+    const { table, headers } = await req.json();
+    if (!table || !headers) {
       return NextResponse.json({ message: "Error" }, { status: 400 });
     }
 
@@ -128,14 +139,6 @@ export async function POST(
 
     await client.connect();
 
-    const result = await client.query(
-      "SELECT column_name FROM information_schema.columns WHERE table_name = $1;",
-      [table]
-    );
-    const headers = result.rows.map((header: any) => {
-      return { name: header.column_name };
-    });
-
     const rows = await client.query(
       `SELECT COUNT(*) AS row_count FROM ${table};`
     );
@@ -146,10 +149,9 @@ export async function POST(
     );
     const dataSizeBytes = parseInt(size.rows[0].data_size);
 
-    console.log("first");
     const rw = await client.query(`SELECT * FROM ${table}`);
 
-    let csvStream = headers.map((header) => header.name).join(",") + "\n";
+    let csvStream = headers.map((header: any) => header.name).join(",") + "\n";
     csvStream += rw.rows.map((row) => Object.values(row).join(",")).join("\n");
 
     fs.writeFileSync(`${table}.csv`, csvStream, "utf8");

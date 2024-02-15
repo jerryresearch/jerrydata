@@ -4,7 +4,7 @@ import Link from "next/link";
 const EmptyPage = () => {
   return (
     <div className="flex flex-col items-center gap-6 p-8 rounded-[6px] bg-white border border-[#EEEEFF]">
-      <div className="w-[519px] flex flex-col text-center text-[#080D19] gap-2">
+      <div className="md:w-[519px] flex flex-col text-center text-[#080D19] gap-2">
         <p className="font-medium text-2xl">Fetching your data...</p>
         <p className="text-[#61656C]">
           We&apos;re analyzing your data from the source you&apos;ve just

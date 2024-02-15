@@ -4,33 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const navLinks = [
-  {
-    name: "Stories",
-    href: "/home",
-    active: "/assets/stories-active.svg",
-    image: "/assets/stories.svg",
-  },
-  {
-    name: "Connectors",
-    href: "/home/connectors",
-    active: "/assets/connectors-active.svg",
-    image: "/assets/connectors.svg",
-  },
-  {
-    name: "Dashboards",
-    href: "/home/dashboards",
-    active: "/assets/dashboards-active.svg",
-    image: "/assets/dashboards.svg",
-  },
-  {
-    name: "Ask Jerry",
-    href: "/home/ask-jerry",
-    active: "/assets/jerry-active.svg",
-    image: "/assets/jerry.svg",
-  },
-];
-
 type Props = {
   name: string;
 };
@@ -39,14 +12,14 @@ const Navbar = ({ name }: Props) => {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed w-full z-0 items-center px-[30px] h-14 flex bg-[#FAFAFA] border-b border-[#EEEEFF]">
+    <nav className="fixed w-full z-0 items-center justify-between px-[30px] h-14 flex bg-[#FAFAFA] border-b border-[#EEEEFF]">
       <Image
         src="/assets/logo.svg"
         alt="RaptorIQ logo"
         width={133}
         height={24}
       />
-      <ul className="flex gap-[20px] h-full flex-1 justify-center">
+      <ul className="hidden md:flex gap-[20px] h-full flex-1 justify-center">
         <li>
           <Link
             href={"/home"}
@@ -142,7 +115,7 @@ const Navbar = ({ name }: Props) => {
       {/* pop over */}
       <div className="flex items-center gap-2 h-full">
         <Image src="/assets/avatar.svg" alt="avatar" width={34} height={34} />
-        <p>{name}</p>
+        <p className="hidden md:block">{name}</p>
         <Image
           src="/assets/chevron-down.svg"
           alt="options"

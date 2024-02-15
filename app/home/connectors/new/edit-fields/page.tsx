@@ -17,8 +17,11 @@ const Page = async ({
 
   const datasetData: Promise<Dataset> = getDataset(userId, id);
   const dataset = await datasetData;
+  const type = searchParams?.type || "";
 
-  return <EditFields id={id} userId={userId} headers={dataset.headers} />;
+  return (
+    <EditFields type={type} id={id} userId={userId} headers={dataset.headers} />
+  );
 };
 
 export default Page;

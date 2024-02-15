@@ -13,11 +13,17 @@ const Page = async ({
   const session: any = await getServerSession(authOptions);
   const userId = session?.user?._id || session?.user?.id;
   const datasetId = searchParams?.id;
+  const type = searchParams?.type;
 
-  const { dataset } = await getDataset(userId, datasetId);
+  const { dataset } = await getDataset(userId, datasetId, type);
 
   return (
-    <EditFields id={dataset._id} userId={userId} headers={dataset.headers} />
+    <EditFields
+      id={dataset._id}
+      userId={userId}
+      headers={dataset.headers}
+      type={type}
+    />
   );
 };
 

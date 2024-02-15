@@ -7,7 +7,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import Footer from "./Footer";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import updateDataset from "@/lib/datasets/updateDataset";
@@ -63,6 +62,7 @@ type Props = {
       isHidden: boolean;
     }
   ];
+  type: string;
 };
 
 type SelectedAttributes = {
@@ -73,7 +73,7 @@ type SelectedAttributes = {
   [key: string]: string;
 };
 
-const EditFields = ({ id, userId, headers }: Props) => {
+const EditFields = ({ id, userId, headers, type }: Props) => {
   const [searchInput, setSearchInput] = useState("");
   const [newupdatedheaders, setNewUpdatedHeaders] = useState(
     headers.map((header) => ({
@@ -107,7 +107,6 @@ const EditFields = ({ id, userId, headers }: Props) => {
   );
 
   const disabled = false;
-  const currentStep = 4;
   let count = 1;
 
   const router = useRouter();
@@ -121,7 +120,7 @@ const EditFields = ({ id, userId, headers }: Props) => {
       const res = await updateDataset(userId, id, {
         headers: newupdatedheaders,
       });
-      router.push(`add-dataset-info?id=${id}`);
+      router.push(`add-dataset-info?id=${id}&type=${type}`);
     } catch (error) {
       console.log("error in updating dataset");
       alert("error updating");
@@ -242,7 +241,7 @@ const EditFields = ({ id, userId, headers }: Props) => {
   return (
     <section>
       <Header
-        step={currentStep}
+        step={4}
         nextDisabled={false}
         handleBack={handleBack}
         handleNext={handleNext}
@@ -479,12 +478,6 @@ const EditFields = ({ id, userId, headers }: Props) => {
             </div>
           </div>
         </section> */}
-      {/* <Footer
-        step={currentStep}
-        nextDisabled={false}
-        handleBack={handleBack}
-        handleNext={handleNext}
-      /> */}
     </section>
   );
 };

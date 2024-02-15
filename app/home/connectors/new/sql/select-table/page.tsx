@@ -13,10 +13,18 @@ const Page = async ({
   const session: any = await getServerSession(authOptions);
   const userId = session?.user?._id || session?.user?.id;
   const datasetId = searchParams?.id;
+  const type = searchParams?.type;
 
-  const { tableNames } = await getDataset(userId, datasetId);
+  const { tables } = await getDataset(userId, datasetId, type);
 
-  return <TableSelection tables={tableNames} id={datasetId} userId={userId} />;
+  return (
+    <TableSelection
+      tables={tables}
+      id={datasetId}
+      userId={userId}
+      type={type}
+    />
+  );
 };
 
 export default Page;

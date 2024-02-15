@@ -9,7 +9,7 @@ type Props = {
 const ImageCard = ({ image, selected }: Props) => {
   return (
     <div
-      className={`w-[120px] h-[120px] cursor-pointer rounded-[6px] border relative flex items-center justify-center ${
+      className={`w-full md:w-[120px] h-[120px] cursor-pointer rounded-[6px] border flex items-center justify-center ${
         selected ? "border-primary shadow-custom" : "border-[#EEEEFF]"
       }`}
     >

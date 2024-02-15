@@ -16,7 +16,7 @@ const Page = async ({
   const type = searchParams?.type;
 
   if (datasetId) {
-    const { dataset } = await getDataset(userId, datasetId);
+    const { dataset } = await getDataset(userId, datasetId, type);
     console.log(dataset);
   }
 

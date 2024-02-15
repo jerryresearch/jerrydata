@@ -13,7 +13,7 @@ type Props = {
 const Header = ({ step, nextDisabled, handleBack, handleNext }: Props) => {
   return (
     <section>
-      <div className="w-full flex justify-between items-center border-b border-[#EEEEFF] py-6 px-[60px]">
+      <div className="hidden w-full md:flex justify-between items-center border-b border-[#EEEEFF] py-6 px-[60px]">
         <div className="flex flex-col gap-3">
           <p>
             <Link href="/home/connectors" className="text-[#61656C]">

@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import React, { useState } from "react";
-import Footer from "./Footer";
 import { useRouter } from "next/navigation";
 import updateDataset from "@/lib/datasets/updateDataset";
 import Header from "./data/Header";
@@ -16,12 +15,13 @@ type Props = {
       isDisabled: boolean;
     }
   ];
-  datatype: string;
+  type: string;
   id: string;
   userId: string;
 };
 
-const TableSelection = ({ userId, id, datatype, name, headers }: Props) => {
+const TableSelection = ({ userId, id, type, name, headers }: Props) => {
+  console.log(type);
   const [searchInput, setSearchInput] = useState("");
 
   const router = useRouter();
@@ -52,14 +52,14 @@ const TableSelection = ({ userId, id, datatype, name, headers }: Props) => {
   };
 
   const handleBack = () => {
-    router.push(`upload-file?id=${id}&type=${datatype}`);
+    router.push(`upload-file?id=${id}&type=${type}`);
   };
 
   const handleNext = async () => {
     if (isUpdated) {
       try {
         const res = await updateDataset(userId, id, { headers: myHeaders });
-        router.push(`edit-fields?id=${id}`);
+        router.push(`edit-fields?id=${id}&type=${type}`);
       } catch (error) {
         console.log("error in updating dataset");
         alert("error updating");
