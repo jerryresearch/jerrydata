@@ -37,7 +37,10 @@ export async function GET(
       return NextResponse.json({ message: "Invalid session" }, { status: 403 });
     }
     // @ts-ignore
-    const charts = await Chart.find({ createdBy: userId, report: reportId });
+    const charts = await Chart.find({
+      createdBy: userId,
+      report: reportId,
+    }).sort("-createdAt");
     return NextResponse.json(charts, { status: 200 });
   } catch (error) {
     console.log(error);

@@ -37,7 +37,7 @@ const EditHeader = ({ dataset, userName, type, updates, userId }: Props) => {
     }
   };
   return (
-    <section>
+    <section className="fixed inset-x-0 px-[60px] bg-white z-50">
       <div className="w-full flex justify-between items-center border-b border-[#EEEEFF] py-6">
         <div className="flex flex-col gap-3">
           <p>

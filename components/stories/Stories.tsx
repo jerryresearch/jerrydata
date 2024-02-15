@@ -9,6 +9,13 @@ import {
 import Image from "next/image";
 import Story from "./Story";
 import KPIStory from "./KPIStory";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 type Props = {
   datasets: Dataset[];
@@ -50,35 +57,41 @@ const Stories = ({ datasets }: Props) => {
     }
   };
 
+  const kpis = [
+    "increase",
+    "decrease",
+    "increase",
+    "increase",
+    "decrease",
+    "increase",
+    "decrease",
+  ];
+
   return (
     <section className="text-[#080D19] flex flex-col gap-6">
-      <section className="flex flex-col gap-6">
+      <Carousel
+        className="flex flex-col gap-6"
+        opts={{
+          align(viewSize, snapSize, index) {
+            return 1;
+          },
+        }}
+      >
         <div className="flex justify-between">
           <h1 className="font-medium text-xl">KPI Stories</h1>
           <div className="flex gap-[20px]">
-            <Image
-              src="/assets/left-arrow.svg"
-              alt="chevron down icon"
-              width={20}
-              height={20}
-              className="cursor-pointer"
-            />
-            <Image
-              src="/assets/right-arrow.svg"
-              alt="chevron down icon"
-              width={20}
-              height={20}
-              className="cursor-pointer"
-            />
+            <CarouselPrevious variant="ghost" />
+            <CarouselNext variant="ghost" />
           </div>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <KPIStory type="increase" />
-          <KPIStory type="decrease" />
-          <KPIStory type="increase" />
-          <KPIStory type="increase" />
-        </div>
-      </section>
+        <CarouselContent>
+          {kpis.map((kpi, index) => (
+            <CarouselItem key={index} className="lg:basis-1/4">
+              <KPIStory type={kpi} />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
       <div className="bg-[#EEEEFF] h-px"></div>
       <section className="flex flex-col gap-6 md:flex-row md:justify-between md:items-center">
         <Popover>

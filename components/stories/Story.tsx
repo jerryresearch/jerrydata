@@ -75,11 +75,11 @@ const Story = () => {
         </div>
       </div>
       <div className="hidden md:block w-px bg-[#EEEEFF]"></div>
-      <div className="md:w-[372px] py-8">
-        <div className="">Chart</div>
-        {/* <div className="w-full h-full">
+      <div className="md:w-[372px]">
+        {/* <div className="">Chart</div> */}
+        <div className="w-full h-full">
           <StackedBarChart data={data} />
-        </div> */}
+        </div>
         {/* <div className="self-start">
           <input type="checkbox" name="" id="" />
         </div> */}

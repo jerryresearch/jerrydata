@@ -24,43 +24,60 @@ const Pagination = ({
       <div className="text-[#ADB3BB]">
         Showing {`${start} - ${end}`} of {totalRecords}
       </div>
-      <div className="p-[10px] flex justify-center items-center gap-[5px] rounded border border-[#EAEDF2] bg-white">
+      <div className="py-[10px] px-2 flex gap-[5px] rounded-[6px]">
+        {currentPage > 2 && (
+          <Link
+            href={`${href}&page=${1}`}
+            className="py-[2px] px-3 cursor-pointer"
+          >
+            1
+          </Link>
+        )}
+        {currentPage > 3 && (
+          <div className="py-[2px] cursor-pointer">
+            <Image
+              src="/assets/ellipsis.svg"
+              alt="more"
+              width={24}
+              height={20}
+            />
+          </div>
+        )}
         {currentPage != 1 && (
           <Link
             href={`${href}&page=${currentPage - 1}`}
-            className="py-[6px] px-3 cursor-pointer"
+            className="py-[2px] px-3 cursor-pointer"
           >
-            <Image
-              src="/assets/chevron-left.svg"
-              alt="more"
-              width={24}
-              height={24}
-            />
+            {currentPage - 1}
           </Link>
         )}
-        <Link
-          href={`${href}&page=${currentPage}`}
-          className="py-[6px] px-3 bg-[#DEE8FA] cursor-pointer"
-        >
+        <div className="py-[2px] px-3 bg-[#EEEEFF] rounded -[6px] font-medium cursor-pointer">
           {currentPage}
-        </Link>
-        <Link
-          href={`${href}&page=${currentPage + 1}`}
-          className="py-[6px] px-3 cursor-pointer"
-        >
-          {currentPage + 1}
-        </Link>
+        </div>
         {currentPage != totalPages && (
           <Link
             href={`${href}&page=${currentPage + 1}`}
-            className="py-[6px] px-3 cursor-pointer"
+            className="py-[2px] px-3 cursor-pointer"
           >
+            {currentPage + 1}
+          </Link>
+        )}
+        {currentPage + 1 < totalPages - 1 && (
+          <div className="py-[2px] cursor-pointer">
             <Image
-              src="/assets/chevron-right.svg"
+              src="/assets/ellipsis.svg"
               alt="more"
               width={24}
-              height={24}
+              height={20}
             />
+          </div>
+        )}
+        {currentPage < totalPages - 1 && (
+          <Link
+            href={`${href}&page=${totalPages}`}
+            className="py-[2px] px-3 cursor-pointer"
+          >
+            {totalPages}
           </Link>
         )}
       </div>

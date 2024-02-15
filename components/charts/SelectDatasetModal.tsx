@@ -27,7 +27,7 @@ const SelectDatasetModal = ({
     <section
       className={`${
         open
-          ? "fixed inset-0 h-screen w-screen flex items-center justify-center bg-[#1A1B5826]"
+          ? "fixed inset-0 z-50 h-screen w-screen flex items-center justify-center bg-[#1A1B5826]"
           : "hidden"
       }`}
     >
@@ -44,39 +44,41 @@ const SelectDatasetModal = ({
           />
         </div>
         <div className="flex py-[14px] px-2 flex-1 overflow-y-auto justify-between items-start mx-auto self-stretch rounded border border-[#EEEEFF] bg-white w-[576px]">
-          <Accordion
+          {/* <Accordion
             type="single"
             collapsible
             className="flex flex-col w-[382px] items-start gap-[4px]"
+          > */}
+          <Accordion
+            type="single"
+            collapsible
+            className="flex flex-col items-start w-full"
           >
             {datasets.map((dataset, index) => (
               <AccordionItem
                 key={dataset._id}
                 value={`item-${index}`}
-                className="px-2 w-full"
+                className="w-full"
               >
-                <div className="flex gap-[10px]">
+                <div className="px-2 flex items-center gap-[10px] text-base">
                   <AccordionTrigger></AccordionTrigger>
-                  <div className="flex items-center w-full justify-start gap-[10px]">
-                    <input
-                      type="checkbox"
-                      name={"dataset"}
-                      checked={selectedDataset == dataset._id}
-                      onChange={() => setSelectedDataset(dataset._id)}
-                      id={dataset._id}
-                      className="cursor-pointer mt-0.5 accent-primary"
-                    />
-                    <label
-                      htmlFor={dataset._id}
-                      className="text-sm cursor-pointer"
-                    >
-                      {dataset.name}
-                    </label>
-                  </div>
+                  <input
+                    type="checkbox"
+                    name={"dataset"}
+                    checked={selectedDataset == dataset._id}
+                    onChange={() => setSelectedDataset(dataset._id)}
+                    id={dataset._id}
+                    className="cursor-pointer accent-primary"
+                  />
+                  <label htmlFor={dataset._id} className="cursor-pointer">
+                    {dataset.name}
+                  </label>
                 </div>
-                <AccordionContent className="flex flex-col gap-[10px] pl-12">
+                <AccordionContent className="flex flex-col gap-[10px] text-base px-[54px]">
                   {dataset.headers.map((header, index) => (
-                    <p key={index}>{header.name}</p>
+                    <p key={index} className="py-2">
+                      {header.name}
+                    </p>
                   ))}
                 </AccordionContent>
               </AccordionItem>

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Footer from "./Footer";
 import { useRouter } from "next/navigation";
 import autogenerateQuestions from "@/lib/datasets/autogenerateQuestions";
 import Loading from "./Loading";
@@ -60,7 +59,7 @@ const AutoGenerate = ({ id, userId, dataset }: Props) => {
         handleBack={handleBack}
         handleNext={handleNext}
       />
-      <section className="px-[60px] py-6 flex flex-col gap-6 text-[#080D19]">
+      <section className="md:px-[60px] md:pt-32 py-8 px-5 md:pb-6 flex flex-col gap-6 text-[#080D19]">
         <h1 className="font-medium text-2xl">Make Connection</h1>
         <div className="flex gap-6 items-center">
           <div className="flex gap-[10px] border border-[#EEEEFF] items-center py-4 px-5 rounded-[6px]">

@@ -3,16 +3,29 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { useState } from "react";
+import { signOut } from "next-auth/react";
 
 type Props = {
   name: string;
+  image?: string;
 };
 
-const Navbar = ({ name }: Props) => {
+const Navbar = ({ name, image }: Props) => {
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleChange = () => {
+    setIsOpen(!isOpen);
+  };
 
   return (
-    <nav className="fixed w-full z-0 items-center justify-between px-[30px] h-14 flex bg-[#FAFAFA] border-b border-[#EEEEFF]">
+    <nav className="fixed w-full z-40 items-center justify-between px-[30px] h-14 flex bg-[#FAFAFA] border-b border-[#EEEEFF]">
       <Image
         src="/assets/logo.svg"
         alt="RaptorIQ logo"
@@ -113,16 +126,41 @@ const Navbar = ({ name }: Props) => {
         </li>
       </ul>
       {/* pop over */}
-      <div className="flex items-center gap-2 h-full">
-        <Image src="/assets/avatar.svg" alt="avatar" width={34} height={34} />
-        <p className="hidden md:block">{name}</p>
-        <Image
-          src="/assets/chevron-down.svg"
-          alt="options"
-          width={20}
-          height={20}
-        />
-      </div>
+      <Popover open={isOpen} onOpenChange={handleChange}>
+        <PopoverTrigger asChild className="cursor-pointer">
+          <div className="flex items-center gap-2 h-full">
+            <div className="w-[34px] h-[34px] relative rounded-full object-cover flex items-center justify-center">
+              <Image
+                src={`${image || "/assets/avatar.svg"}`}
+                alt="avatar"
+                fill={true}
+                className="rounded-full object-cover"
+              />
+            </div>
+            <p className="hidden md:block">{name}</p>
+            <Image
+              src="/assets/chevron-down.svg"
+              alt="options"
+              width={20}
+              height={20}
+            />
+          </div>
+        </PopoverTrigger>
+        <PopoverContent className="w-52 flex flex-col gap-[10px] bg-white">
+          <Link href="/home/profile" onClick={() => setIsOpen(false)}>
+            Profile
+          </Link>
+          <div
+            className="cursor-pointer"
+            onClick={() => {
+              setIsOpen(false);
+              signOut();
+            }}
+          >
+            Sign out
+          </div>
+        </PopoverContent>
+      </Popover>
     </nav>
   );
 };

@@ -61,8 +61,7 @@ const Login = () => {
           Welcome back to Jerrydata
         </div>
         <div className="lg:w-[420px] text-[#A9AAAE] font-normal text-base md:text-lg leading-[25.2px]">
-          Let&apos;s get started! Fill in the form below to create your free
-          Jerrydata account.
+          Sign in to your account below.
         </div>
         <button
           onClick={() => signIn("google", { callbackUrl: "/dashboard/home" })}

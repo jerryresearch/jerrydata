@@ -103,7 +103,7 @@ const UploadFile = ({ id, type, dataset, handleDelete }: Props) => {
         handleNext={handleNext}
         nextDisabled={id == ""}
       />
-      <form className="px-[60px] py-6 flex flex-col gap-6 text-[#080D19]">
+      <form className="md:px-[60px] md:pt-32 py-8 px-5 md:pb-6 flex flex-col gap-6 text-[#080D19]">
         <h1 className="font-medium text-2xl">Make Connection</h1>
         <div className="flex flex-col w-[384px] gap-4">
           <div className="flex gap-[10px]">
@@ -156,11 +156,17 @@ const UploadFile = ({ id, type, dataset, handleDelete }: Props) => {
               ></div>
             </div>
           )}
+          <p
+            className={`${
+              uploadMessage.isError ? "text-[#D30A0A]" : "text-[#1CB87E]"
+            } text-sm font-medium`}
+          >
+            {uploadMessage.message}
+          </p>
           {dataset._id != "string" && (
-            <div className="flex p-2 bg-gray-300 w-fit gap-2">
-              <p>{dataset.name}</p>
+            <div className="flex p-2 bg-[#F1F1F1] rounded-[6px] text-[#61656C] font-medium w-fit gap-2">
               <Image
-                src="/assets/trash.svg"
+                src="/assets/delete.svg"
                 alt="delete file"
                 width={16}
                 height={16}
@@ -172,15 +178,9 @@ const UploadFile = ({ id, type, dataset, handleDelete }: Props) => {
                   setUploadMessage({ message: "", isError: false });
                 }}
               />
+              <p>{dataset.name}</p>
             </div>
           )}
-          <p
-            className={`${
-              uploadMessage.isError ? "text-[#D30A0A]" : "text-[#1CB87E]"
-            } text-sm font-medium`}
-          >
-            {uploadMessage.message}
-          </p>
         </div>
       </form>
     </section>

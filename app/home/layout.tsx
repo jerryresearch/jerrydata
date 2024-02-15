@@ -17,10 +17,11 @@ export default async function RootLayout({
   const session: any = await getServerSession(authOptions);
   const userId = session?.user?._id || session?.user?.id;
   const name = session?.user?.name;
+  const image = session?.user?.image;
 
   return (
     <section className={`bg-white`}>
-      <Navbar name={name} />
+      <Navbar name={name} image={image} />
       <main className="pb-14 md:pb-0 pt-14">{children}</main>
       <MobileNav />
     </section>

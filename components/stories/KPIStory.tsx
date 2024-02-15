@@ -7,7 +7,7 @@ type Props = {
 
 const KPIStory = ({ type }: Props) => {
   return (
-    <div className="w-full rounded-[6px] border border-[#EEEEFF] bg-[#FAFAFA] flex flex-col gap-[2px] px-6 py-4">
+    <div className="w-full cursor-pointer rounded-[6px] border border-[#EEEEFF] bg-[#FAFAFA] flex flex-col gap-[2px] px-6 py-4">
       <p className="flex gap-[10px] font-medium text-2xl text-[#080D19]">
         <Image
           src={`/assets/${type}.svg`}
