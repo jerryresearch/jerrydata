@@ -90,7 +90,7 @@ const CreateNewPassword = () => {
           Reset your password
         </div>
         <div className="lg:w-[420px] text-[#A9AAAE] font-normal text-base md:text-lg leading-[25.2px]">
-          Please enter a new password below to reset your RaptorIQ account
+          Please enter a new password below to reset your Jerrydata account
           password.
         </div>
         <form
@@ -101,7 +101,7 @@ const CreateNewPassword = () => {
             <div className="font-medium w-full">New password</div>
             <input
               type="password"
-              className="bg-white rounded border w-full border-[#EEEEFF] font-normal h-[48px] px-3 py-[14px]"
+              className="bg-white rounded-[6px] border w-full border-[#EEEEFF] font-normal h-[42px] px-3 py-[14px] focus:outline-none"
               value={password}
               placeholder="Must be atleast 8 characters"
               name="password"
@@ -113,7 +113,7 @@ const CreateNewPassword = () => {
             <div className="font-medium w-full">Confirm new password</div>
             <input
               type="password"
-              className="bg-white rounded border w-full border-[#EEEEFF] font-normal h-[48px] px-3 py-[14px]"
+              className="bg-white rounded-[6px] border w-full border-[#EEEEFF] font-normal h-[42px] px-3 py-[14px] focus:outline-none"
               placeholder="Must be atleast 8 characters"
               value={confirmPassword}
               name="confirmPassword"
@@ -122,7 +122,7 @@ const CreateNewPassword = () => {
             />
           </div>
           <div
-            className={`lg:w-[420px] h-14 ${
+            className={`lg:w-[420px] h-12 ${
               password !== confirmPassword && "opacity-50 pointer-events-none"
             }`}
           >
@@ -136,14 +136,15 @@ const CreateNewPassword = () => {
           <span className="text-primary underline">support@jerrydata.com</span>
         </div>
       </div>
-      <div className="hidden lg:block flex-1 h-screen">
-        <Image
+      {/* <div className="hidden lg:block flex-1 h-screen"> */}
+      <div className="hidden lg:block flex-1 h-screen bg-[#EEEEFF]">
+        {/* <Image
           src={"/assets/square.svg"}
           alt="sqaure"
           width={900}
           height={900}
           className="w-full object-cover object-center h-full"
-        />
+        /> */}
       </div>
     </main>
   );

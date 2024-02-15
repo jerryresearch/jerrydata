@@ -41,7 +41,7 @@ const ResetPassword = () => {
         </div>
         {!isLinkSent && (
           <div className="lg:w-[420px] h-[50px] text-[#A9AAAE] font-normal md:text-lg leading-[25.2px]">
-            Please enter your email address below to reset your RaptorIQ
+            Please enter your email address below to reset your Jerrydata
             password.
           </div>
         )}
@@ -59,14 +59,14 @@ const ResetPassword = () => {
               <div className="font-medium">Email Address</div>
               <input
                 type="email"
-                className="bg-white rounded border w-full border-[#EEEEFF] font-normal h-[48px] px-3 py-[14px]"
+                className="bg-white rounded-[6px] border w-full border-[#EEEEFF] font-normal h-[42px] px-3 py-[14px] focus:outline-none"
                 value={email}
                 name="email"
                 required
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div className="lg:w-[420px] h-14">
+            <div className="lg:w-[420px] h-12">
               <Button isLoading={isLoading}>Reset password</Button>
             </div>
           </form>
@@ -78,14 +78,15 @@ const ResetPassword = () => {
           <span className="text-primary underline">support@jerrydata.com</span>
         </div>
       </div>
-      <div className="hidden lg:block flex-1 h-screen">
-        <Image
+      {/* <div className="hidden lg:block flex-1 h-screen"> */}
+      <div className="hidden lg:block flex-1 h-screen bg-[#EEEEFF]">
+        {/* <Image
           src={"/assets/square.svg"}
           alt="sqaure"
           width={900}
           height={900}
           className="w-full object-cover object-center h-full"
-        />
+        /> */}
       </div>
     </main>
   );
