@@ -4,9 +4,11 @@ import { getServerSession } from "next-auth";
 
 const Page = async () => {
   const session: any = await getServerSession(authOptions);
-  const { id: userId, name, email } = session?.user;
+  const { id: userId, name, email, image } = session?.user;
 
-  return <EditProfile name={name} email={email} userId={userId} />;
+  return (
+    <EditProfile name={name} email={email} userId={userId} image={image} />
+  );
 };
 
 export default Page;

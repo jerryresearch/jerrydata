@@ -16,15 +16,10 @@ const UserSchema = new mongoose.Schema(
       // required: [true, "password is required"],
       minLength: 6,
     },
-    // emailVerified: {
-    //   type: Boolean,
-    //   required: true,
-    //   default: false,
-    // },
-    // token: {
-    //   type: String,
-    //   required: true,
-    // },
+    image: {
+      type: String,
+      required: false,
+    },
     resetPasswordToken: {
       type: String,
       required: false,

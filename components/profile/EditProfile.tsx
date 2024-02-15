@@ -1,20 +1,23 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import ChangePasswordModal from "./ChangePasswordModal";
 import updateProfile from "@/lib/profile/updateProfile";
 import Image from "next/image";
+import uploadImage from "@/lib/profile/uploadImage";
 
 type Props = {
   name: string;
   email: string;
   userId: string;
+  image: string;
 };
 
-const EditProfile = ({ name, email, userId }: Props) => {
+const EditProfile = ({ name, email, userId, image }: Props) => {
   const [isUpdated, setIsUpdated] = useState(false);
   const [firstName, setFirstName] = useState(name.split(" ")[0]);
   const [lastName, setLastName] = useState(name.split(" ")[1] || "");
+
   const [updatedEmail, setEmail] = useState(email);
 
   const [open, setOpen] = useState(false);
@@ -23,10 +26,42 @@ const EditProfile = ({ name, email, userId }: Props) => {
     setOpen(false);
   };
 
+  const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    const fileInput = event.target;
+    const file = fileInput.files?.[0];
+
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
+      try {
+        const res = await uploadImage(userId, formData);
+        location.reload();
+      } catch (error) {
+        alert(error);
+      }
+    }
+  };
+
+  const handleRemoveImage = async () => {
+    const data = {
+      name: `${firstName} ${lastName}`,
+      email: email,
+      image: "",
+    };
+    try {
+      const res = await updateProfile(userId, data);
+      location.reload();
+    } catch (error) {
+      console.log("error updating profile");
+      alert(error);
+    }
+  };
+
   const handleSubmit = async () => {
     const data = {
       name: `${firstName} ${lastName}`,
       email: email,
+      image: image,
     };
     try {
       const res = await updateProfile(userId, data);
@@ -52,16 +87,38 @@ const EditProfile = ({ name, email, userId }: Props) => {
       </div>
       <div className="px-[60px] py-6 flex flex-col items-start gap-[24px]">
         <div className="flex gap-4 items-center">
-          <Image
-            src="/assets/avatar.svg"
-            alt="no reports"
-            width={143}
-            height={143}
-          />
-          <button className="h-[42px] rounded-[6px] px-[14px] bg-[#F1F1F1] text-[#61656C] font-medium">
-            Upload Photo
-          </button>
-          <button className="text-[#D30A0A] underline font-medium">
+          <div className="w-[143px] h-[143px] relative rounded-full object-cover flex items-center justify-center">
+            <Image
+              src={`${image || "/assets/avatar.svg"}`}
+              alt="no reports"
+              fill={true}
+              className="rounded-full object-cover"
+            />
+          </div>
+          <div className="h-[42px] cursor-pointer rounded-[6px]  bg-[#F1F1F1] text-[#61656C] font-medium">
+            <input
+              type="file"
+              name="profile"
+              id="profile"
+              accept="image/*"
+              onChange={(event) => {
+                handleFileUpload(event);
+                // @ts-ignore
+                event.target.value = null; // This line resets the input field
+              }}
+              className="hidden"
+            />
+            <label
+              htmlFor="profile"
+              className="cursor-pointer h-full flex items-center px-[14px]"
+            >
+              Upload Photo
+            </label>
+          </div>
+          <button
+            onClick={handleRemoveImage}
+            className="text-[#D30A0A] underline font-medium"
+          >
             Remove Photo
           </button>
         </div>
