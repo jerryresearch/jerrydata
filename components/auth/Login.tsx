@@ -38,7 +38,7 @@ const Login = () => {
         setIsLoading(false);
         return;
       }
-      router.replace(searchParams.get("callbackUrl") || "/dashboard/home");
+      router.replace(searchParams.get("callbackUrl") || "/home");
     } catch (error) {
       alert("Error!!!");
       console.log(error);
@@ -47,7 +47,7 @@ const Login = () => {
   };
 
   return (
-    <main className="lg:flex bg-[#F6F8FA]">
+    <main className="lg:flex">
       <div
         className={`w-full lg:w-[540px] h-screen px-8 lg:px-[60px] py-10 relative flex flex-col 2xl:justify-center gap-3 md:gap-6 overflow-y-auto ${styles.scrollbar}`}
       >

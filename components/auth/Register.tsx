@@ -42,11 +42,11 @@ const Register = () => {
         return;
       }
 
-      // signIn(undefined, { callbackUrl: "/dashboard/home" });
+      // signIn(undefined, { callbackUrl: "/home" });
       await signIn("credentials", {
         email: data.email,
         password: data.password,
-        callbackUrl: "/dashboard/home",
+        callbackUrl: "/home",
       });
     } catch (error: any) {
       setIsLoading(false);
@@ -56,7 +56,7 @@ const Register = () => {
   };
 
   return (
-    <main className="lg:flex bg-[#F6F8FA]">
+    <main className="lg:flex">
       <div
         className={`lg:w-[540px] lg:h-screen px-8 py-10 lg:p-[60px] relative flex flex-col gap-3 md:gap-6 overflow-y-auto ${styles.scrollbar}`}
       >

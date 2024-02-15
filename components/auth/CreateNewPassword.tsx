@@ -59,7 +59,7 @@ const CreateNewPassword = () => {
 
   if (isError) {
     return (
-      <main className=" flex flex-col w-screen h-screen items-center justify-center bg-[#F6F8FA] text-lg">
+      <main className=" flex flex-col w-screen h-screen items-center justify-center text-lg">
         <div>Password reset token is invalid or has expired.</div>
         <div>
           Click{" "}

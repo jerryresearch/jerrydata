@@ -26,7 +26,7 @@ const ResetPassword = () => {
   };
 
   return (
-    <main className="lg:flex bg-[#F6F8FA]">
+    <main className="lg:flex">
       <div
         className={`lg:w-[540px] h-screen px-8 py-10 lg:p-[60px] relative flex flex-col md:justify-center gap-4 md:gap-6 overflow-y-auto ${styles.scrollbar}`}
       >
