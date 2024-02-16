@@ -30,7 +30,7 @@ const Header = ({
       <div className="hidden w-full md:flex justify-between items-center border-b border-[#EEEEFF] py-6 px-[60px]">
         <div className="flex flex-col gap-3">
           <p>
-            <Link href="/home/connectors" className="text-[#61656C]">
+            <Link href="/connectors" className="text-[#61656C]">
               Connectors /
             </Link>
             <Link href="#" className="text-primary">
@@ -154,7 +154,7 @@ const Header = ({
         </div>
         <div className="flex gap-4 h-[42px]">
           <Link
-            href="/home/connectors"
+            href="/connectors"
             className="py-1 px-[14px] w-20 flex items-center bg-[#F1F1F1] rounded-[6px] text-[#61656C] font-medium"
           >
             Cancel

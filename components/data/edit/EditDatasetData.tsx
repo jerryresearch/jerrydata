@@ -30,7 +30,7 @@ const EditDatasetData = async ({
         userName={userName}
       />
       <Pagination
-        href={`/home/connectors/${dataset.name}/edit?type=data&id=${dataset._id}`}
+        href={`/connectors/${dataset.name}/edit?type=data&id=${dataset._id}`}
         length={records.length}
         totalRecords={dataset.rows}
         currentPage={currentPage}

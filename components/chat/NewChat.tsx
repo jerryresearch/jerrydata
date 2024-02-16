@@ -1,65 +1,44 @@
 "use client";
 
 import Image from "next/image";
-import React, { FormEvent, useEffect, useRef, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import Message from "./Message";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Loading from "../Loading";
-import sendMessage from "@/lib/chats/sendMessage";
-import updateChat from "@/lib/chats/updateChat";
-import DeleteChatModal from "./DeleteChatModal";
+import createChat from "@/lib/chats/createChat";
 
 type Props = {
   datasets: Dataset[];
-  chat: Chat;
-  messages: Message[];
   userId: string;
 };
 
-const Chat = ({ datasets, chat, messages, userId }: Props) => {
-  const router = useRouter();
-
+const NewChat = ({ datasets, userId }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [title, setTitle] = useState(chat.title);
+  const [prevTitle, setPrevTitle] = useState("New Chat");
+  const [title, setTitle] = useState("New Chat");
   const [message, setMessage] = useState("");
-  const [selectedDataset, setSelectedDataset] = useState(chat.dataset);
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
-
-  const handleCloseDeleteModal = () => {
-    setOpenDeleteModal(false);
-  };
-
-  const chatContainerRef = useRef(null);
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  const scrollToBottom = () => {
-    if (chatContainerRef.current) {
-      const container = chatContainerRef.current;
-      // @ts-ignore
-      container.scrollTop = container.scrollHeight;
-    }
-  };
+  const [selectedDataset, setSelectedDataset] = useState("");
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    console.log("first");
     if (!selectedDataset) {
       alert("select a dataset");
       return;
     }
+    const data = {
+      title,
+      dataset: selectedDataset,
+      message,
+    };
     try {
       setIsLoading(true);
-      const res = await sendMessage(userId, chat._id, { message });
-      setMessage("");
-      router.refresh();
+      const res = await createChat(userId, data);
+      location.replace(`/ask-jerry/${res.chat.title}?id=${res.chat._id}`);
     } catch (error) {
       console.log(error);
       console.log("error sending message");
@@ -67,33 +46,28 @@ const Chat = ({ datasets, chat, messages, userId }: Props) => {
     setIsLoading(false);
   };
 
-  const handleUpdate = async () => {
-    try {
-      const data = { title };
-      const res = await updateChat(userId, chat._id, data);
-      location.reload();
-    } catch (error) {
-      console.log("error chart");
-    }
-  };
-
   if (isLoading) {
     return <Loading />;
   }
 
   return (
-    <section className="flex-[1_0_0] h-full flex flex-col self-stretch bg-white">
+    <section className="flex-[1_0_0] flex flex-col self-stretch bg-white">
       <div className="border-b border-[#EEEEFF] flex py-4 px-6 justify-between items-center bg-white">
         {isEditing ? (
           <span className="flex justify-center gap-[10px]">
             <input
               type="text"
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => {
+                setTitle(e.target.value);
+              }}
               className="w-[200px] border border-[#EAEDF2] py-1 2xl:py-2 px-3 rounded focus:outline-none font-normal"
             />
             <span
-              onClick={handleUpdate}
+              onClick={() => {
+                setPrevTitle(title);
+                setIsEditing(false);
+              }}
               className="bg-primary cursor-pointer w-7 flex items-center justify-center 2xl:w-10 2xl:h-10 rounded"
             >
               <Image
@@ -106,7 +80,7 @@ const Chat = ({ datasets, chat, messages, userId }: Props) => {
             <span
               onClick={() => {
                 setIsEditing(false);
-                setTitle(chat.title);
+                setTitle(prevTitle);
               }}
               className="w-7 cursor-pointer border border-[#DEE8FA] flex items-center justify-center 2xl:w-10 2xl:h-10 rounded"
             >
@@ -120,10 +94,13 @@ const Chat = ({ datasets, chat, messages, userId }: Props) => {
           </span>
         ) : (
           <div className="flex gap-[10px] items-center">
-            <span className="font-medium">{chat.title}</span>
+            <span className="font-medium">{title}</span>
             <Image
               className="cursor-pointer"
-              onClick={() => setIsEditing(true)}
+              onClick={() => {
+                setPrevTitle(title);
+                setIsEditing(true);
+              }}
               src="/assets/edit.svg"
               alt="edit icon"
               width={20}
@@ -154,6 +131,7 @@ const Chat = ({ datasets, chat, messages, userId }: Props) => {
                   {datasets.map((dataset, index) => (
                     <li
                       key={index}
+                      onClick={() => setSelectedDataset(dataset._id)}
                       className="flex w-full px-2 items-center justify-center gap-[10px]"
                     >
                       <input
@@ -165,7 +143,6 @@ const Chat = ({ datasets, chat, messages, userId }: Props) => {
                       />
                       <label
                         htmlFor={dataset._id}
-                        onClick={() => setSelectedDataset(dataset._id)}
                         className="flex gap-2 items-center w-full px-3 py-[6px] cursor-pointer hover:bg-[#F8FAFC] rounded"
                       >
                         {dataset.name}
@@ -191,9 +168,8 @@ const Chat = ({ datasets, chat, messages, userId }: Props) => {
               />
             </div>
           </div>
-          <div className="flex w-10 h-10 items-center justify-center gap-2 py-5  rounded-[6px] border border-[#EEEEFF] bg-white ">
+          <div className="flex w-10 h-10 items-center justify-center gap-2 py-5 rounded-[6px] border border-[#EEEEFF] bg-white opacity-50">
             <Image
-              onClick={() => setOpenDeleteModal(true)}
               src="/assets/delete.svg"
               alt="search icon"
               width={20}
@@ -204,16 +180,8 @@ const Chat = ({ datasets, chat, messages, userId }: Props) => {
         </div>
       </div>
       <div className="flex-[1_0_0] flex flex-col rounded-[6px] p-[30px]">
-        <section
-          ref={chatContainerRef}
-          className="flex-[1_0_0] flex flex-col gap-6 px-[30px] py-4 rounded-[8px] bg-[#FAFAFA] overflow-auto"
-        >
-          <div className="flex flex-col gap-6 flex-[1_0_0] justify-end">
-            {messages &&
-              messages.map((item, index) => (
-                <Message key={index} message={item} />
-              ))}
-          </div>
+        <section className="flex-[1_0_0] flex flex-col gap-6 px-[30px] py-4 rounded-[8px] bg-[#FAFAFA] overflow-auto">
+          <div className="flex flex-col gap-6 flex-[1_0_0] justify-end"></div>
           <form
             onSubmit={handleSubmit}
             className="flex sticky bottom-0 border border-[#EEEEFF] rounded-[124px] px-[10px] py-3 bg-white"
@@ -237,15 +205,8 @@ const Chat = ({ datasets, chat, messages, userId }: Props) => {
           </form>
         </section>
       </div>
-      <DeleteChatModal
-        open={openDeleteModal}
-        onClose={handleCloseDeleteModal}
-        id={chat._id}
-        userId={userId}
-        title={title}
-      />
     </section>
   );
 };
 
-export default Chat;
+export default NewChat;

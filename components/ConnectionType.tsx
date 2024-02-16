@@ -63,7 +63,7 @@ const ConnectionType = ({ id, type }: Props) => {
       />
       <section className="md:px-[60px] md:pt-32 py-8 px-5 md:pb-6 flex flex-col gap-6 text-[#080D19]">
         <p className="md:hidden">
-          <Link href="/home/connectors" className="text-[#61656C]">
+          <Link href="/connectors" className="text-[#61656C]">
             Connectors /
           </Link>
           <Link href="#" className="text-primary">
@@ -119,7 +119,7 @@ const ConnectionType = ({ id, type }: Props) => {
         </div>
         <div className="md:hidden grid grid-cols-2 gap-4 h-[42px]">
           <Link
-            href="/home/connectors"
+            href="/connectors"
             className="py-1 px-[14px] w-full flex items-center justify-center bg-[#F1F1F1] rounded-[6px] text-[#61656C] font-medium"
           >
             Cancel

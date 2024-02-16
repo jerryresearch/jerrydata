@@ -37,7 +37,7 @@ const AutoGenerate = ({ id, userId, dataset }: Props) => {
         console.log(response.stories);
         console.log(response.messages);
       }
-      router.push("/home/connectors");
+      router.push("/connectors");
       router.refresh();
     } catch (error) {
       console.log("error in updating dataset");

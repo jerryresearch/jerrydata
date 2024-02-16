@@ -18,7 +18,7 @@ const DeleteModal = ({ open, onClose, id, userId, name }: Props) => {
     await deleteDataset(userId, id);
     onClose();
     setIsLoading(false);
-    location.reload();
+    location.replace("/connectors");
   };
 
   return (
