@@ -32,7 +32,6 @@ const Header = ({
   const userId = session?.user?._id || session?.user?.id;
 
   const handleDelete = async () => {
-    console.log("first");
     if (id) {
       try {
         await deleteDataset(userId, id);
@@ -42,6 +41,8 @@ const Header = ({
         alert("error");
         console.log(error);
       }
+    } else {
+      location.replace("/connectors");
     }
   };
 
