@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 
 /*!
  * Webflow: Front-end site library

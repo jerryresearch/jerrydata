@@ -6,9 +6,7 @@ export default async function setTable(
 ) {
   if (!userId || !datasetId) return null;
   const res = await fetch(
-    `${
-      process.env.NEXT_PUBLIC_BASE_URL
-    }/api/${type.toLowerCase()}/dataset/${userId}/${datasetId}`,
+    `/api/${type.toLowerCase()}/dataset/${userId}/${datasetId}`,
     {
       method: "POST",
       body: JSON.stringify(body),

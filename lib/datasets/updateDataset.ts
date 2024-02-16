@@ -4,13 +4,10 @@ export default async function updateDataset(
   body: any
 ) {
   if (!userId || !datasetId) return null;
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/dataset/${userId}/${datasetId}`,
-    {
-      method: "PUT",
-      body: JSON.stringify(body),
-    }
-  );
+  const res = await fetch(`/api/dataset/${userId}/${datasetId}`, {
+    method: "PUT",
+    body: JSON.stringify(body),
+  });
   console.log("done");
   if (!res.ok) {
     console.log("error");

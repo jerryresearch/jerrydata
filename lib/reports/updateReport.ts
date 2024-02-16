@@ -4,13 +4,10 @@ export default async function updateReport(
   data: any
 ) {
   if (!userId || !reportId) return null;
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/report/${userId}/${reportId}`,
-    {
-      method: "PUT",
-      body: JSON.stringify(data),
-    }
-  );
+  const res = await fetch(`/api/report/${userId}/${reportId}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
   console.log("done");
   if (!res.ok) {
     console.log("error");
