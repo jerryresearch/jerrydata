@@ -38,7 +38,7 @@ const Login = () => {
         setIsLoading(false);
         return;
       }
-      router.replace(searchParams.get("callbackUrl") || "/home");
+      router.replace(searchParams.get("callbackUrl") || "/stories");
     } catch (error) {
       alert("Error!!!");
       console.log(error);
@@ -64,7 +64,7 @@ const Login = () => {
           Sign in to your account below.
         </div>
         <button
-          onClick={() => signIn("google", { callbackUrl: "/dashboard/home" })}
+          onClick={() => signIn("google", { callbackUrl: "/stories" })}
           className="lg:w-[420px] h-[42px] bg-white rounded-[6px] border border-[#EEEEFF] py-2 text-[#080D19] font-medium flex items-center justify-center gap-2"
         >
           <span>

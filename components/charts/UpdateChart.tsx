@@ -133,11 +133,11 @@ const UpdateChart = ({ datasets, report }: Props) => {
       <div className="flex justify-between items-center py-5 px-[60px] border-b border-[#EEEEFF]">
         <div className="flex flex-col gap-4">
           <p>
-            <Link href="/home/dashboards" className="text-[#61656C]">
+            <Link href="/dashboards" className="text-[#61656C]">
               Dashboards /
             </Link>
             <Link
-              href={`/home/dashboards/${report.name}?id=${reportId}`}
+              href={`/dashboards/${report.name}?id=${reportId}`}
               className="text-primary"
             >
               {" "}

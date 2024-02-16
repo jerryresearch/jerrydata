@@ -122,6 +122,7 @@ const Stories = ({ datasets }: Props) => {
                     id={dataset._id}
                     readOnly
                     checked={selectedDatasets.includes(dataset)}
+                    className="accent-primary"
                   />
                   <label
                     htmlFor={dataset._id}

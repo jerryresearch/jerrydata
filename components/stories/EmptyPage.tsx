@@ -13,7 +13,7 @@ const EmptyPage = () => {
       </div>
 
       <Link
-        href={"/home/connectors/new"}
+        href={"/connectors/new"}
         className="flex items-center gap-2 bg-primary px-4 py-2 rounded w-[203px] text-white"
       >
         <Image

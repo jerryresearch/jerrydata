@@ -10,16 +10,16 @@ const MobileNav = () => {
     <nav className="md:hidden fixed bottom-0 bg-[#FAFAFA] inset-x-0 grid grid-cols-4">
       <div>
         <Link
-          href={"/home"}
+          href={"/stories"}
           className={`px-[10px] py-2 flex flex-col h-full gap-[10px] items-center ${
-            pathname == "/home"
+            pathname.startsWith("/stories")
               ? "text-[#080D19] border-t-2 border-primary"
               : "text-[#61656C]"
           } `}
         >
           <Image
             src={`${
-              pathname == "/home"
+              pathname.startsWith("/stories")
                 ? "/assets/stories-active.svg"
                 : "/assets/stories.svg"
             }`}
@@ -32,16 +32,16 @@ const MobileNav = () => {
       </div>
       <div>
         <Link
-          href={"/home/connectors"}
+          href={"/connectors"}
           className={`px-[10px] py-2 flex flex-col h-full gap-[10px] items-center ${
-            pathname.startsWith("/home/connectors")
+            pathname.startsWith("/connectors")
               ? "text-[#080D19] border-t-2 border-primary"
               : "text-[#61656C]"
           } `}
         >
           <Image
             src={`${
-              pathname.startsWith("/home/connectors")
+              pathname.startsWith("/connectors")
                 ? "/assets/connectors-active.svg"
                 : "/assets/connectors.svg"
             }`}
@@ -54,16 +54,16 @@ const MobileNav = () => {
       </div>
       <div>
         <Link
-          href={"/home/dashboards"}
+          href={"/dashboards"}
           className={`px-[10px] py-2 flex flex-col h-full gap-[10px] items-center ${
-            pathname.startsWith("/home/dashboards")
+            pathname.startsWith("/dashboards")
               ? "text-[#080D19] border-t-2 border-primary"
               : "text-[#61656C]"
           } `}
         >
           <Image
             src={`${
-              pathname.startsWith("/home/dashboards")
+              pathname.startsWith("/dashboards")
                 ? "/assets/dashboards-active.svg"
                 : "/assets/dashboards.svg"
             }`}
@@ -76,16 +76,16 @@ const MobileNav = () => {
       </div>
       <div>
         <Link
-          href={"/home/ask-jerry"}
+          href={"/ask-jerry"}
           className={`px-[10px] py-2 flex flex-col h-full gap-[10px] items-center ${
-            pathname.startsWith("/home/ask-jerry")
+            pathname.startsWith("/ask-jerry")
               ? "text-[#080D19] border-t-2 border-primary"
               : "text-[#61656C]"
           } `}
         >
           <Image
             src={`${
-              pathname.startsWith("/home/ask-jerry")
+              pathname.startsWith("/ask-jerry")
                 ? "/assets/jerry-active.svg"
                 : "/assets/jerry.svg"
             }`}

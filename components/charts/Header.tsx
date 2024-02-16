@@ -32,7 +32,7 @@ const Header = ({ name, chartsCount, onDownloadPNG, onDownloadPDF }: Props) => {
 
   return (
     <div className="flex flex-col md:flex-row py-5 px-5 gap-5 md:gap-0 md:px-[60px] md:justify-between md:items-center border-b border-b-[#EEEEFF] text-[#080D19]">
-      <Link href="/home/dashboards" className="flex items-center gap-4">
+      <Link href="/dashboards" className="flex items-center gap-4">
         <Image src="/assets/back.svg" alt="back icon" width={20} height={20} />
         <span className="font-medium text-xl">{name}</span>
       </Link>
