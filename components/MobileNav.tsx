@@ -7,14 +7,14 @@ import { usePathname } from "next/navigation";
 const MobileNav = () => {
   const pathname = usePathname();
   return (
-    <nav className="md:hidden fixed bottom-0 bg-[#FAFAFA] inset-x-0 grid grid-cols-4">
+    <nav className="md:hidden fixed bottom-0 bg-[#FAFAFA] inset-x-0 grid grid-cols-4 text-xs items-center justify-center">
       <div>
         <Link
           href={"/stories"}
-          className={`px-[10px] py-2 flex flex-col h-full gap-[10px] items-center ${
+          className={`py-2 flex flex-col h-full gap-[6px] items-center justify-center border-t ${
             pathname.startsWith("/stories")
-              ? "text-[#080D19] border-t-2 border-primary"
-              : "text-[#61656C]"
+              ? "text-[#080D19] border-primary"
+              : "text-[#61656C] border-transparent"
           } `}
         >
           <Image
@@ -24,8 +24,8 @@ const MobileNav = () => {
                 : "/assets/stories.svg"
             }`}
             alt="nav-icon"
-            width={24}
-            height={24}
+            width={20}
+            height={20}
           />
           <p>Stories</p>
         </Link>
@@ -33,9 +33,9 @@ const MobileNav = () => {
       <div>
         <Link
           href={"/connectors"}
-          className={`px-[10px] py-2 flex flex-col h-full gap-[10px] items-center ${
+          className={`py-2 flex flex-col h-full gap-[6px] items-center justify-center border-t ${
             pathname.startsWith("/connectors")
-              ? "text-[#080D19] border-t-2 border-primary"
+              ? "text-[#080D19] border-primary"
               : "text-[#61656C]"
           } `}
         >
@@ -46,8 +46,8 @@ const MobileNav = () => {
                 : "/assets/connectors.svg"
             }`}
             alt="nav-icon"
-            width={24}
-            height={24}
+            width={20}
+            height={20}
           />
           <p>Connectors</p>
         </Link>
@@ -55,9 +55,9 @@ const MobileNav = () => {
       <div>
         <Link
           href={"/dashboards"}
-          className={`px-[10px] py-2 flex flex-col h-full gap-[10px] items-center ${
+          className={`py-2 flex flex-col h-full gap-[6px] items-center justify-center border-t ${
             pathname.startsWith("/dashboards")
-              ? "text-[#080D19] border-t-2 border-primary"
+              ? "text-[#080D19] border-primary"
               : "text-[#61656C]"
           } `}
         >
@@ -68,8 +68,8 @@ const MobileNav = () => {
                 : "/assets/dashboards.svg"
             }`}
             alt="nav-icon"
-            width={24}
-            height={24}
+            width={20}
+            height={20}
           />
           <p>Dashboards</p>
         </Link>
@@ -77,9 +77,9 @@ const MobileNav = () => {
       <div>
         <Link
           href={"/ask-jerry"}
-          className={`px-[10px] py-2 flex flex-col h-full gap-[10px] items-center ${
+          className={`py-2 flex flex-col h-full gap-[6px] items-center justify-center border-t ${
             pathname.startsWith("/ask-jerry")
-              ? "text-[#080D19] border-t-2 border-primary"
+              ? "text-[#080D19] border-primary"
               : "text-[#61656C]"
           } `}
         >
@@ -90,8 +90,8 @@ const MobileNav = () => {
                 : "/assets/jerry.svg"
             }`}
             alt="nav-icon"
-            width={24}
-            height={24}
+            width={20}
+            height={20}
           />
           <p>Ask Jerry</p>
         </Link>
