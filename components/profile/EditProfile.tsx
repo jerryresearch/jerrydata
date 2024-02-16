@@ -5,6 +5,7 @@ import ChangePasswordModal from "./ChangePasswordModal";
 import updateProfile from "@/lib/profile/updateProfile";
 import Image from "next/image";
 import uploadImage from "@/lib/profile/uploadImage";
+import removeImage from "@/lib/profile/removeImage";
 
 type Props = {
   name: string;
@@ -43,13 +44,8 @@ const EditProfile = ({ name, email, userId, image }: Props) => {
   };
 
   const handleRemoveImage = async () => {
-    const data = {
-      name: `${firstName} ${lastName}`,
-      email: email,
-      image: "",
-    };
     try {
-      const res = await updateProfile(userId, data);
+      const res = await removeImage(userId);
       location.reload();
     } catch (error) {
       console.log("error updating profile");
