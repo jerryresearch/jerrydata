@@ -1,7 +1,9 @@
 "use client";
 
+import deleteDataset from "@/lib/datasets/deleteDataset";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import React from "react";
 
 type Props = {
@@ -24,6 +26,24 @@ const Header = ({
   const pathname = usePathname();
   const ind = pathname.lastIndexOf("/");
   const path = pathname.substring(0, ind);
+  const { data: session } = useSession();
+
+  // @ts-ignore
+  const userId = session?.user?._id || session?.user?.id;
+
+  const handleDelete = async () => {
+    console.log("first");
+    if (id) {
+      try {
+        await deleteDataset(userId, id);
+        console.log("done");
+        location.replace("/connectors");
+      } catch (error) {
+        alert("error");
+        console.log(error);
+      }
+    }
+  };
 
   return (
     <section className="fixed inset-x-0 bg-white z-50">
@@ -153,12 +173,12 @@ const Header = ({
           </div>
         </div>
         <div className="flex gap-4 h-[42px]">
-          <Link
-            href="/connectors"
+          <button
+            onClick={() => handleDelete()}
             className="py-1 px-[14px] w-20 flex items-center bg-[#F1F1F1] rounded-[6px] text-[#61656C] font-medium"
           >
             Cancel
-          </Link>
+          </button>
           <button
             onClick={() => handleNext()}
             className={`py-1 px-[14px] w-20 bg-primary rounded-[6px] text-white font-medium ${

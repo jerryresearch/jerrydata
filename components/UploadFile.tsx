@@ -54,19 +54,15 @@ const UploadFile = ({ id, type, dataset, handleDelete }: Props) => {
         formData.append("file", file);
         formData.append("datatype", type);
         setShowProgress(true);
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/upload/${userId}`,
-          formData,
-          {
-            onUploadProgress: (progressEvent) => {
-              if (progressEvent && progressEvent.total) {
-                setProgressValue(
-                  Math.round((progressEvent.loaded / progressEvent.total) * 100)
-                );
-              }
-            },
-          }
-        );
+        const response = await axios.post(`/api/upload/${userId}`, formData, {
+          onUploadProgress: (progressEvent) => {
+            if (progressEvent && progressEvent.total) {
+              setProgressValue(
+                Math.round((progressEvent.loaded / progressEvent.total) * 100)
+              );
+            }
+          },
+        });
 
         if (response.status !== 200) {
           alert(response.data.message);
@@ -102,6 +98,7 @@ const UploadFile = ({ id, type, dataset, handleDelete }: Props) => {
         handleBack={handleBack}
         handleNext={handleNext}
         nextDisabled={id == ""}
+        id={id}
       />
       <form className="md:px-[60px] md:pt-32 py-8 px-5 md:pb-6 flex flex-col gap-6 text-[#080D19]">
         <h1 className="font-medium text-2xl">Make Connection</h1>

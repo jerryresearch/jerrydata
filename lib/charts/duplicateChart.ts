@@ -6,7 +6,7 @@ export default async function duplicateChart(
 ) {
   if (!userId || !reportId || !chartId) return null;
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/duplicate/chart/${userId}/${reportId}/${chartId}`,
+    `/api/duplicate/chart/${userId}/${reportId}/${chartId}`,
     {
       method: "POST",
       body: JSON.stringify(data),
