@@ -100,13 +100,13 @@ export async function PATCH(req: Request, { params: { userId } }: Props) {
       },
       { runValidators: true, new: true }
     );
-    return new NextResponse(JSON.stringify({ message: "User updated" }), {
-      headers: {
-        'Access-Control-Allow-Origin': "*",
-        'Content-Type': "application/json",
-      }
-    });
-    // return new NextResponse.json({ message: "User updated" }, { status: 201 });
+    // return new NextResponse(JSON.stringify({ message: "User updated" }), {
+    //   headers: {
+    //     'Access-Control-Allow-Origin': "*",
+    //     'Content-Type': "application/json",
+    //   }
+    // });
+    return NextResponse.json({ message: "User updated" }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 500 });
   }
