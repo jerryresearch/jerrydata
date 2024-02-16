@@ -154,7 +154,7 @@ const Navbar = ({ name, image }: Props) => {
             className="cursor-pointer"
             onClick={() => {
               setIsOpen(false);
-              signOut();
+              signOut({ redirect: true, callbackUrl: "/" });
             }}
           >
             Sign out

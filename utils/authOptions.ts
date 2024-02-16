@@ -114,7 +114,7 @@ export const authOptions: NextAuthOptions = {
           const newUser = await User.create({
             name: user.profile.given_name || user.profile.name,
             email: user.profile.email,
-            image: user.profile.image,
+            image: user.profile.picture,
           });
         } catch (err) {
           console.log("Error", err);
