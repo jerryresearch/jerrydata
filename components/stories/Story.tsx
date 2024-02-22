@@ -1,8 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
-import StackedBarChart from "../charts/StackedBarChart";
+import React, { useRef } from "react";
+import { toPng } from "html-to-image";
+import BarChart from "../charts/BarChart";
+import LineChart from "../charts/LineChart";
+import PieChart from "../charts/PieChart";
+import DoughnutChart from "../charts/DoughnutGraph";
+import PloarAreaChart from "../charts/PolarAreaChart";
+import HorizontalBarChart from "../charts/HorizontalBarChart";
 
 const data = {
   Asia: {
@@ -43,42 +49,94 @@ function formatDateTime(dateTimeString: string) {
   return `${time.toLowerCase()}, ${date}`;
 }
 
-const Story = () => {
+type Props = {
+  story: Story;
+};
+
+const Story = ({ story }: Props) => {
+  const elementRef = useRef(null);
+
+  const htmlToImageConvert = () => {
+    // @ts-ignore
+    toPng(elementRef?.current, { cacheBust: false })
+      .then((dataUrl) => {
+        const link = document.createElement("a");
+        link.download = `${story.title}.png`;
+        link.href = dataUrl;
+        link.click();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
-    <div className="w-full md:h-[344px] flex flex-col md:flex-row gap-4 md:gap-10 border border-[#EEEEFF] rounded-[6px] px-8 text-[#080D19]">
-      <div className="md:w-[450px] flex flex-col gap-5 justify-center py-6">
+    <div
+      ref={elementRef}
+      className="w-full flex flex-col md:flex-row gap-4 md:gap-10 border border-[#EEEEFF] rounded-[6px] px-8 text-[#080D19]"
+    >
+      <div className="md:w-1/2 flex flex-col gap-5 justify-center py-6">
         <span className="text-[#A9AAAE] text-sm">
-          {formatDateTime("2024-02-12T15:23:51.849+00:00")}
+          {formatDateTime(story.createdAt)}
         </span>
-        <p className="text-[#61656C]">
-          Electronics sales spiked in November and December across all regions,
-          likely driven by holiday shopping. The increase was particularly
-          notable in North America, with sales volume in December being 75%
-          higher than the monthly average for the year.
-        </p>
-        <div className="flex gap-2 items-center w-full md:w-fit rounded border border-[#EEEEFF] px-4 py-2">
-          <Image
-            src="/assets/positive.svg"
-            alt="chevron down icon"
-            width={20}
-            height={20}
-            className="cursor-pointer"
-          />
-          <p>
-            <span className="hidden md:inline">Positive Impact. </span>
-            <span>Keep up the good work.</span>
-          </p>
-        </div>
+        <p className="text-[#61656C]">{story.insight}</p>
+        {story.impact == "positive" ? (
+          <div className="flex gap-2 items-center w-full md:w-fit rounded border border-[#EEEEFF] px-4 py-2">
+            <Image
+              src="/assets/positive.svg"
+              alt="positive"
+              width={20}
+              height={20}
+              className="cursor-pointer"
+            />
+            <p>
+              <span className="hidden md:inline capitalize">
+                {`${story.impact}`} Impact.{" "}
+              </span>
+              <span>Keep up the good work.</span>
+            </p>
+          </div>
+        ) : (
+          <div className="flex gap-2 items-center w-full md:w-fit rounded border border-[#EEEEFF] px-4 py-2">
+            <Image
+              src="/assets/negative.svg"
+              alt="negative"
+              width={20}
+              height={20}
+              className="cursor-pointer"
+            />
+            <p>
+              <span className="hidden md:inline capitalize">
+                {`${story.impact}`} Impact.{" "}
+              </span>
+              <span>Time to grind.</span>
+            </p>
+          </div>
+        )}
         <div className="flex gap-4 text-primary underline">
-          <span>Download as PNG</span>
+          <span className="cursor-pointer" onClick={() => htmlToImageConvert()}>
+            Download as PNG
+          </span>
           <span>Share</span>
         </div>
       </div>
       <div className="hidden md:block w-px bg-[#EEEEFF]"></div>
-      <div className="md:w-[372px] py-6">
+      <div className="md:w-1/2 py-6">
         {/* <div className="">Chart</div> */}
-        <div className="w-full h-full">
-          <StackedBarChart data={data} />
+        <div className="w-full h-full flex items-center">
+          {story.chartType == "bar" ? (
+            <BarChart data={story} />
+          ) : story.chartType == "line" ? (
+            <LineChart data={story} />
+          ) : story.chartType == "pie" ? (
+            <PieChart data={story} />
+          ) : story.chartType == "doughnut" ? (
+            <DoughnutChart data={story} />
+          ) : story.chartType == "polar area" ? (
+            <PloarAreaChart data={story} />
+          ) : (
+            <HorizontalBarChart data={story} />
+          )}
         </div>
         {/* <div className="self-start">
           <input type="checkbox" name="" id="" />

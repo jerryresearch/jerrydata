@@ -78,3 +78,19 @@ type Message = {
   yData: any[];
   chat: string;
 };
+
+type Story = {
+  _id: string;
+  dataset: string;
+  insight: string;
+  impact: string;
+  read: boolean;
+  createdBy: string;
+  chartType: string;
+  title: string;
+  xAxis: string;
+  yAxis: string;
+  xData: any[];
+  yData: any[];
+  createdAt: string;
+};

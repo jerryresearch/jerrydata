@@ -70,7 +70,7 @@ const BarChart = ({ data }: Props) => {
   };
 
   return (
-    <div className="w-4/5 mx-auto">
+    <div className="w-full mx-auto">
       <Bar data={barChartData} options={chartOptions} />
     </div>
   );

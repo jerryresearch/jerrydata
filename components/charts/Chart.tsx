@@ -49,7 +49,6 @@ const Chart = ({ chart }: Props) => {
   };
 
   const htmlToImageConvert = () => {
-    console.log("start");
     // @ts-ignore
     toPng(elementRef?.current, { cacheBust: false })
       .then((dataUrl) => {
@@ -61,7 +60,6 @@ const Chart = ({ chart }: Props) => {
       .catch((err) => {
         console.log(err);
       });
-    console.log("done");
   };
 
   const htmlToPDF = () => {

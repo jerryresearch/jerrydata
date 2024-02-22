@@ -1,6 +1,7 @@
 import EmptyPage from "@/components/stories/EmptyPage";
 import Stories from "@/components/stories/Stories";
 import getDatasets from "@/lib/getDatasets";
+import getStories from "@/lib/stories/getStories";
 import { authOptions } from "@/utils/authOptions";
 import { getServerSession } from "next-auth";
 import Image from "next/image";
@@ -12,8 +13,10 @@ const Page = async () => {
   const name = session?.user?.name;
 
   const datasetsData: Promise<Dataset[]> = getDatasets(userId);
+  const storiesData: Promise<Story[]> = getStories(userId);
+
+  const stories = await storiesData;
   const datasets = await datasetsData;
-  const stories = ["Hello"];
 
   return (
     <section className="pb-8 md:pb-0 px-5 md:px-0 max-w-[968px] mx-auto mt-10">
@@ -36,7 +39,11 @@ const Page = async () => {
 
       {/* Stories */}
       <section className="mt-6">
-        {stories.length == 0 ? <EmptyPage /> : <Stories datasets={datasets} />}
+        {stories.length == 0 ? (
+          <EmptyPage />
+        ) : (
+          <Stories datasets={datasets} stories={stories} />
+        )}
       </section>
     </section>
   );

@@ -16,9 +16,11 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import generatePDF, { Margin } from "react-to-pdf";
 
 type Props = {
   datasets: Dataset[];
+  stories: Story[];
 };
 
 function formatDate(date: any) {
@@ -38,13 +40,28 @@ function formatDate(date: any) {
   }
 }
 
-const Stories = ({ datasets }: Props) => {
-  const stories = {
-    "2024-02-12T15:23:51.849+00:00": [1, 3],
-    "2023-11-28T15:23:51.849+00:00": [2],
-  };
+function groupObjectsByDate(objects: Story[]) {
+  const groupedObjects: { [key: string]: Story[] } = {};
 
+  objects.forEach((obj) => {
+    const createdAt = obj.createdAt.split("T")[0]; // Extracting date part only
+    if (!groupedObjects[createdAt]) {
+      groupedObjects[createdAt] = [obj];
+    } else {
+      groupedObjects[createdAt].push(obj);
+    }
+  });
+
+  return groupedObjects;
+}
+
+const Stories = ({ datasets, stories }: Props) => {
   const [selectedDatasets, setSelectedDatasets] = useState<Dataset[]>(datasets);
+  const datasetIds = selectedDatasets.map((dataset) => dataset._id);
+
+  const groupedStories = groupObjectsByDate(
+    stories.filter((story) => datasetIds.includes(story.dataset))
+  );
 
   const handleSelect = (dataset: Dataset) => {
     if (selectedDatasets.includes(dataset)) {
@@ -55,6 +72,18 @@ const Stories = ({ datasets }: Props) => {
     } else {
       setSelectedDatasets([...selectedDatasets, dataset]);
     }
+  };
+
+  const options = {
+    page: {
+      margin: Margin.LARGE,
+    },
+    filename: `stories.pdf`,
+  };
+
+  const htmlToPDF = () => {
+    const getTargetElement = () => document.getElementById("stories-container");
+    generatePDF(getTargetElement, options);
   };
 
   const kpis = [
@@ -148,7 +177,10 @@ const Stories = ({ datasets }: Props) => {
               Refresh
             </span>
           </button>
-          <button className="flex bg-primary text-white rounded items-center px-4 py-2 h-[42px] gap-2">
+          <button
+            onClick={() => htmlToPDF()}
+            className="flex bg-primary text-white rounded items-center px-4 py-2 h-[42px] gap-2"
+          >
             <Image
               src="/assets/story-book.svg"
               alt="chevron down icon"
@@ -160,19 +192,21 @@ const Stories = ({ datasets }: Props) => {
           </button>
         </div>
       </section>
-      {Object.keys(stories).map((date, index) => (
-        <div key={index}>
-          <span className="font-medium text-xl">{formatDate(date)}</span>
-          <div className="flex flex-col gap-6 my-6">
-            {/* @ts-ignore */}
-            {stories[date].map((story, ind) => (
-              <div key={ind}>
-                <Story />
-              </div>
-            ))}
+      <section id="stories-container">
+        {Object.keys(groupedStories).map((date, index) => (
+          <div key={index}>
+            <span className="font-medium text-xl">{formatDate(date)}</span>
+            <div className="flex flex-col gap-6 my-6">
+              {/* @ts-ignore */}
+              {groupedStories[date].map((story, ind) => (
+                <div key={ind}>
+                  <Story story={story} />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </section>
     </section>
   );
 };
