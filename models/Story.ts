@@ -12,12 +12,12 @@ const StorySchema = new mongoose.Schema(
     },
     impact: {
       type: String,
-      enum: ["positive", "negative"],
+      // enum: ["positive", "negative"],
     },
-    status: {
-      type: String,
-      enum: ["good", "bad"],
-    },
+    // status: {
+    //   type: String,
+    //   enum: ["good", "bad"],
+    // },
     read: {
       type: Boolean,
       default: false,

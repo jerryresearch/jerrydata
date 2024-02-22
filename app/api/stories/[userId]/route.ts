@@ -16,7 +16,7 @@ export async function GET(req: Request, { params: { userId } }: Props) {
       return NextResponse.json({ message: "Invalid session" }, { status: 403 });
     }
 
-    const stories = await Story.find({ createdBy: userId });
+    const stories = await Story.find({ createdBy: userId }).sort("-createdAt");
     return NextResponse.json(stories, { status: 200 });
   } catch (error) {
     console.log(error);

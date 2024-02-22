@@ -28,14 +28,18 @@ const AutoGenerate = ({ id, userId, dataset }: Props) => {
     try {
       setIsLoading(true);
       if (generateReport) {
-        const response = await autogenerateQuestions(userId, id);
-        console.log(response.message);
-        console.log(response.responseMessage);
+        autogenerateQuestions(userId, id);
+        // const response = await autogenerateQuestions(userId, id);
+        // console.log(response.message);
+        // console.log(response.responseMessage);
       }
       if (generateStory) {
-        const response = await generateStories(userId, id);
-        console.log(response.stories);
-        console.log(response.messages);
+        generateStories(userId, id);
+        // const response = await generateStories(userId, id);
+        // console.log(response.insights);
+        // console.log(response.stories);
+        // console.log(response.charts);
+        // console.log(response.messages);
       }
       router.push("/connectors");
       router.refresh();
