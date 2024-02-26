@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import Dataset from "@/models/Dataset";
 import { OpenAI } from "openai";
+import Chat from "@/models/Chat";
 
 type Props = {
   params: {
@@ -117,6 +118,33 @@ export async function DELETE(
     await s3.send(command);
 
     await openai.files.del(dataset.openAPIFile.id);
+
+    const chats = await Chat.find({ dataset: datasetId });
+    for (const chat of chats) {
+      await Chat.findByIdAndDelete(chat._id);
+    }
+
+    if (dataset.assistantId) {
+      const assistantDeleted = await openai.beta.assistants.del(
+        dataset.assistantId
+      );
+      if (!assistantDeleted.deleted) {
+        return NextResponse.json(
+          { message: "Assistant cannot be deleted, try again" },
+          { status: 500 }
+        );
+      }
+    }
+
+    if (dataset.threadId) {
+      const threadDeleted = await openai.beta.threads.del(dataset.threadId);
+      if (!threadDeleted.deleted) {
+        return NextResponse.json(
+          { message: "Thread cannot be deleted, try again" },
+          { status: 500 }
+        );
+      }
+    }
 
     await Dataset.findByIdAndDelete(datasetId);
     return NextResponse.json(

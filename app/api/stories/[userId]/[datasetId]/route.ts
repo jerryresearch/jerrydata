@@ -17,10 +17,10 @@ type Props = {
 // create a s3 client
 // @ts-ignore
 const s3 = new S3Client({
-  region: process.env.AWS_BUCKET_REGION,
+  region: process.env.NEXT_PUBLIC_AWS_BUCKET_REGION,
   credentials: {
-    accessKeyId: process.env.AWS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    accessKeyId: process.env.NEXT_PUBLIC_AWS_KEY,
+    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY,
   },
 });
 
@@ -47,8 +47,12 @@ export async function GET(
         { status: 404 }
       );
     }
+
+    dataset.stories = true;
+    await dataset.save();
+
     const getObjectParams = {
-      Bucket: process.env.AWS_FILES_BUCKET_NAME,
+      Bucket: process.env.NEXT_PUBLIC_AWS_FILES_BUCKET_NAME,
       Key: dataset.key,
     };
 
@@ -83,57 +87,6 @@ export async function GET(
           reject(error);
         });
     });
-
-    // const assistant = await openai.beta.assistants.create({
-    //   instructions: `
-    //     You are an advanced autonomous business intelligence assistant tasked with generating actionable insights from uploaded datasets. Your role is to automatically identify meaningful queries within the dataset, and assess the impact on business. Follow the guidelines below to ensure your outputs are insightful, precise, and cater to the user's analytical needs without direct queries from them.
-
-    //     Autonomous Query Generation:
-    //     Analyze the uploaded dataset to autonomously identify significant metrics, dimensions, and trends that warrant further exploration.
-    //     Generate queries that effectively utilize these findings to produce insightful analyses.
-
-    //     Ensure the output includes a mix of chart details, brief insights, and the predicted impact on the business, fostering a comprehensive understanding of the dataset.
-
-    //     Insight and Impact:
-    //     For each generated query and resulting response, provide a short insight summarizing the key findings and their implications.
-    //     Assess whether the insight has a 'positive' or 'negative' impact on the business, based on the data analysis.
-
-    //     Chart Parameters:
-    //     Chart Type: Automatically choose the most fitting chart type (Options: "bar", "doughnut", "pie", "line", "polar area", "horizontal bar") based on the analysis of data patterns and intended message.
-    //     X and Y Axes: Identify and specify the exact column names for the x-axis and y-axis from the dataset, ensuring they correspond directly with the generated queries.
-    //     Chart Title: Formulate a concise and descriptive title for each chart, reflecting the insights derived from the data analysis.
-
-    //     Generate Standardized JSON Output:
-    //     Your response should be a JSON object containing the details necessary, precisely formatted as follows:
-    //     {
-    //     "analysis": [
-    //         {
-    //         "chart_details": {
-    //             "chartType": "<Identified Chart Type>",
-    //             "xAxis": "<Exact Column Name for X-axis>",
-    //             "yAxis": "<Exact Column Name for Y-axis>",
-    //             "title": "<Generated Chart Title>"
-    //         },
-    //         "insight": "<Brief Insight About the Analysis>",
-    //         "impact": "<'positive' or 'negative'>"
-    //         },
-    //         // Additional analyses
-    //     ]
-    //     }
-
-    //     Clarity and Precision:
-    //     Deliver outputs that are not only precise and to the point but also tailored to intuitively address the analytical objectives embedded within the dataset.
-    //     Verbosity: max
-    //     Depth: verbatim
-
-    //     User-Centric and Insightful Approach:
-    //     Prioritize generating insights that align with potential business goals and user needs, ensuring that the analysis is both insightful and actionable.
-    //   `,
-    //   name: "AutoInsight Analyst",
-    //   tools: [{ type: "code_interpreter" }, { type: "retrieval" }],
-    //   model: "gpt-3.5-turbo-1106",
-    //   file_ids: [dataset.openAPIFile.id],
-    // });
 
     const jsonResp =
       "```json \n " +
@@ -192,6 +145,10 @@ export async function GET(
       message.content[0].type == "text" &&
       message.content[0].text.value.includes("```json")
     ) {
+      dataset.assistantId = assistantId;
+      dataset.threadId = thread.id;
+      await dataset.save();
+
       let res = message.content[0].text.value;
       res = res.split("```")[1].replace("json", "");
       const insight = JSON.parse(res);
@@ -208,7 +165,7 @@ export async function GET(
         });
 
         let runStatus = myRun.status;
-        // console.log("fetch resp in loop");
+        console.log("fetch resp in loop");
         while (runStatus === "queued" || runStatus === "in_progress") {
           await delay(1000); // 1 second delay
           myRun = await openai.beta.threads.runs.retrieve(thread.id, myRun.id);
@@ -262,7 +219,7 @@ export async function GET(
       });
 
       let runStatus = myRun.status;
-      // console.log("fetch resp in chart loop");
+      console.log("fetch resp in chart loop");
       while (runStatus === "queued" || runStatus === "in_progress") {
         await delay(1000); // 1 second delay
         myRun = await openai.beta.threads.runs.retrieve(thread.id, myRun.id);
@@ -330,13 +287,13 @@ export async function GET(
           xData,
           yData,
         });
-        // console.log("story created!!!");
+        console.log("story created!!!");
       } else {
         charts.push(message.content[0]);
       }
     }
 
-    // console.log("done");
+    console.log("done");
     // const stories = await Story.find({ dataset: datasetId });
 
     // return NextResponse.json(

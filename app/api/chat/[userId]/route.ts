@@ -18,10 +18,10 @@ type Props = {
 // create a s3 client
 // @ts-ignore
 const s3 = new S3Client({
-  region: process.env.AWS_BUCKET_REGION,
+  region: process.env.NEXT_PUBLIC_AWS_BUCKET_REGION,
   credentials: {
-    accessKeyId: process.env.AWS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    accessKeyId: process.env.NEXT_PUBLIC_AWS_KEY,
+    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY,
   },
 });
 
@@ -146,50 +146,20 @@ export async function POST(req: Request, { params: { userId } }: Props) {
     // Step 4: Retrieve the Messages added by the Assistant to the Thread
     const messages = await openai.beta.threads.messages.list(thread.id);
 
-    // if (Array.isArray(messages.data[0].content)) {
-    //   const content = messages.data[0].content;
-    //   for (let i = 0; i < content.length; i++) {
-    //     const item = content[i];
-    //     if (item.type == "image_file") {
-    //       const response = await openai.files.content(item.image_file.file_id);
-    //       const image_data = await response.arrayBuffer();
-    //       const image_data_buffer = Buffer.from(image_data).toString("base64");
-    //       images.push(image_data_buffer);
-    //     } else if (item.type == "text") {
-    //       messageContent += `
-    //       ${item.text.value}
-    //       `;
-    //     }
-    //   }
-    //   await Message.create({
-    //     role: "assistant",
-    //     content: messageContent,
-    //     imageIds: images,
-    //     chat: chat._id,
-    //   });
-    // } else {
-    //   messageContent = "Something went wrong";
-    //   await Message.create({
-    //     role: "assistant",
-    //     content: messageContent,
-    //     chat: chat._id,
-    //   });
-    // }
-
     const responseMessage =
       Array.isArray(messages.data[0].content) &&
       messages.data[0].content[0]?.type === "text"
         ? messages.data[0].content[0].text.value
         : "No text content found";
 
-    console.log(responseMessage);
+    // console.log(responseMessage);
     const resArray = responseMessage.split("```");
     if (resArray.length >= 3) {
       let obj = resArray[1].replace("json", "");
       let { chartType, xAxis, yAxis, title } = JSON.parse(obj);
 
       const getObjectParams = {
-        Bucket: process.env.AWS_FILES_BUCKET_NAME,
+        Bucket: process.env.NEXT_PUBLIC_AWS_FILES_BUCKET_NAME,
         Key: datasetObj.key,
       };
 

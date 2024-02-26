@@ -4,8 +4,12 @@ import Image from "next/image";
 import React, { useState, ChangeEvent } from "react";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
+import { S3Client } from "@aws-sdk/client-s3";
+import { Upload } from "@aws-sdk/lib-storage";
+import crypto from "crypto";
 import axios from "axios";
 import Header from "./data/Header";
+import createDataset from "@/lib/datasets/createDataset";
 
 type Props = {
   id: string;
@@ -46,43 +50,76 @@ const UploadFile = ({ id, type, dataset, handleDelete }: Props) => {
     // @ts-ignore
     const userId = session?.user?._id || session?.user?.id;
     setIsLoading(true);
-    console.log("hello");
     try {
       if (file) {
         setFile(file);
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("datatype", type);
-        setShowProgress(true);
-        const response = await axios.post(`/api/upload/${userId}`, formData, {
-          onUploadProgress: (progressEvent) => {
-            if (progressEvent && progressEvent.total) {
-              setProgressValue(
-                Math.round((progressEvent.loaded / progressEvent.total) * 100)
-              );
-            }
+
+        // create a s3 client
+        // @ts-ignore
+        const s3 = new S3Client({
+          region: process.env.NEXT_PUBLIC_AWS_BUCKET_REGION,
+          credentials: {
+            accessKeyId: process.env.NEXT_PUBLIC_AWS_KEY,
+            secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY,
           },
         });
 
-        if (response.status !== 200) {
-          alert(response.data.message);
-          setIsLoading(false);
-          return;
-        }
+        // generate random file name to avoid replacing old file with same name
+        const randomFileName = (bytes = 32) =>
+          crypto.randomBytes(bytes).toString("hex");
+        const key = randomFileName();
+
+        // get buffer from file
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+
+        const params = {
+          Bucket: process.env.NEXT_PUBLIC_AWS_FILES_BUCKET_NAME,
+          Key: key,
+          Body: buffer,
+        };
+
+        const upload = new Upload({
+          client: s3,
+          params: params,
+        });
+
+        setShowProgress(true);
+        const res = await new Promise((resolve, reject) => {
+          upload.on("httpUploadProgress", (progress) => {
+            if (progress.loaded && progress.total) {
+              setProgressValue(
+                Math.round((progress.loaded / progress.total) * 100)
+              );
+            }
+          });
+          upload
+            .done()
+            .then((data) => resolve(data))
+            .catch((error) => reject(error));
+        });
+
+        console.log(res);
+
+        // if (response.status !== 200) {
+        //   alert(response.data.message);
+        //   setIsLoading(false);
+        //   return;
+        // }
 
         setUploadMessage({
           message: "File upload successful!",
           isError: false,
         });
 
-        const { _id } = response.data;
-        router.replace(`${pathName}?type=${type}&id=${_id}`);
+        const data = { name: file.name, key, size: file.size, datatype: type };
+        const response = await createDataset(userId, data);
+        router.replace(`${pathName}?type=${type}&id=${response.dataset._id}`);
         setShowProgress(false);
         setProgressValue(0);
       } else {
         setUploadMessage({ message: "Error in file", isError: true });
       }
-
       setIsLoading(false);
     } catch (error) {
       console.error(error);

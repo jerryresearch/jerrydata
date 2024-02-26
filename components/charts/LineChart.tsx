@@ -34,7 +34,7 @@ const LineChart = ({ data }: Props) => {
     labels: xData,
     datasets: [
       {
-        label: yAxis,
+        label: title,
         backgroundColor: "#6366F1",
         // backgroundColor: ["#6366F1", "#D2D2FF", "#EEEEFF"],
         borderColor: "#000",

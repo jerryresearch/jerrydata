@@ -19,6 +19,7 @@ const PieChart = ({ data }: Props) => {
     labels: xData,
     datasets: [
       {
+        label: title,
         data: yData,
         backgroundColor: ["#6366F1", "#D2D2FF", "#EEEEFF"],
         // hoverBackgroundColor: [ Add more colors as needed ],

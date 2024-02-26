@@ -3,6 +3,7 @@ import { connectToDB } from "@/utils/mongoose";
 import { NextResponse } from "next/server";
 import Dataset from "@/models/Dataset";
 import { Client } from "pg";
+import { encrypt } from "@/utils/encryption";
 
 type Props = {
   params: {
@@ -39,9 +40,15 @@ export async function POST(req: Request, { params: { userId } }: Props) {
     }
     await client.connect();
 
+    const encrypted = encrypt(
+      password,
+      process.env.SQL_KEY as string,
+      process.env.SQL_IV as string
+    );
+
     const dataset = await Dataset.create({
       datatype: "PostgreSQL",
-      sql: { host, port, database, user, password, connString },
+      sql: { host, port, database, user, password: encrypted, connString },
       addedBy: userId,
     });
 

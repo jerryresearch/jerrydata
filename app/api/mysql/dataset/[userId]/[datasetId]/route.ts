@@ -7,6 +7,7 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import crypto from "crypto";
 import fs from "fs";
 import { OpenAI } from "openai";
+import { decrypt } from "@/utils/encryption";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -20,10 +21,10 @@ type Props = {
 // create a s3 client
 // @ts-ignore
 const s3 = new S3Client({
-  region: process.env.AWS_BUCKET_REGION,
+  region: process.env.NEXT_PUBLIC_AWS_BUCKET_REGION,
   credentials: {
-    accessKeyId: process.env.AWS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    accessKeyId: process.env.NEXT_PUBLIC_AWS_KEY,
+    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY,
   },
 });
 
@@ -49,12 +50,18 @@ export async function GET(
       );
     }
 
-    const { host, port, database, user, password, connString } = dataset.sql;
+    let { host, port, database, user, password, connString } = dataset.sql;
 
     let client;
     if (connString) {
       client = await mysql.createConnection(connString);
     } else {
+      password = decrypt(
+        password,
+        process.env.SQL_KEY as string,
+        process.env.SQL_IV as string
+      );
+
       client = await mysql.createConnection({
         host,
         port,
@@ -91,7 +98,6 @@ export async function POST(
 ) {
   try {
     await connectToDB();
-    console.log("mysql");
     if (!userId || !mongoose.isValidObjectId(userId)) {
       return NextResponse.json({ message: "Invalid session" }, { status: 403 });
     }
@@ -115,12 +121,19 @@ export async function POST(
       return NextResponse.json({ message: "Error" }, { status: 400 });
     }
 
-    const { host, port, database, user, password, connString } = dataset.sql;
+    const sql = dataset.sql;
+    let { host, port, database, user, password, connString } = sql;
 
     let client;
     if (connString) {
       client = await mysql.createConnection(connString);
     } else {
+      password = decrypt(
+        password,
+        process.env.SQL_KEY as string,
+        process.env.SQL_IV as string
+      );
+
       client = await mysql.createConnection({
         host,
         port,
@@ -153,7 +166,7 @@ export async function POST(
     const key = randomFileName();
 
     const params = {
-      Bucket: process.env.AWS_FILES_BUCKET_NAME,
+      Bucket: process.env.NEXT_PUBLIC_AWS_FILES_BUCKET_NAME,
       Key: key,
       Body: buffer,
     };
@@ -177,6 +190,7 @@ export async function POST(
         rows: rowCount,
         columns: headers.length,
         size: buffer.length,
+        sql: { ...sql, table },
       },
       { runValidators: true, new: true }
     );

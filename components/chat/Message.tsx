@@ -31,7 +31,7 @@ const Message = ({ message }: Props) => {
                 {message.content}
               </p>
             ) : (
-              <div className="flex flex-col items-center gap-4 w-4/5 rounded-[6px] border border-[#EEEEFF] bg-white">
+              <div className="flex flex-col items-center gap-4 w-4/5 px-10 rounded-[6px] border border-[#EEEEFF] bg-white">
                 {/* <p>{message.content}</p> */}
                 <p className="font-medium pt-4">{message.title}</p>
                 {message.chartType == "bar" ? (

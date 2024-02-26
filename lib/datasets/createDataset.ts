@@ -1,11 +1,8 @@
-export default async function createDataset(
-  userId: string,
-  formData: FormData
-) {
+export default async function createDataset(userId: string, data: any) {
   if (!userId) return null;
-  const res = await fetch(`/api/upload/${userId}`, {
+  const res = await fetch(`/api/dataset/${userId}`, {
     method: "POST",
-    body: formData,
+    body: data,
   });
   console.log("done");
   if (!res.ok) {

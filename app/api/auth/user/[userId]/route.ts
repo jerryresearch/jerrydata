@@ -18,10 +18,10 @@ type Props = {
 // create a s3 client
 // @ts-ignore
 const s3 = new S3Client({
-  region: process.env.AWS_BUCKET_REGION,
+  region: process.env.NEXT_PUBLIC_AWS_BUCKET_REGION,
   credentials: {
-    accessKeyId: process.env.AWS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    accessKeyId: process.env.NEXT_PUBLIC_AWS_KEY,
+    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY,
   },
 });
 
@@ -83,7 +83,7 @@ export async function PATCH(req: Request, { params: { userId } }: Props) {
     const buffer = Buffer.from(bytes);
 
     const params = {
-      Bucket: process.env.AWS_PUBLIC_IMAGES_BUCKET_NAME,
+      Bucket: process.env.NEXT_PUBLIC_AWS_PUBLIC_IMAGES_BUCKET_NAME,
       Key: key,
       Body: buffer,
       ContentType: file.type,
@@ -96,7 +96,7 @@ export async function PATCH(req: Request, { params: { userId } }: Props) {
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       {
-        image: `https://${process.env.AWS_PUBLIC_IMAGES_BUCKET_NAME}.s3.amazonaws.com/${key}`,
+        image: `https://${process.env.NEXT_PUBLIC_AWS_PUBLIC_IMAGES_BUCKET_NAME}.s3.amazonaws.com/${key}`,
       },
       { runValidators: true, new: true }
     );
@@ -126,11 +126,11 @@ export async function DELETE(req: Request, { params: { userId } }: Props) {
 
     if (user.image.includes("s3.amazonaws.com")) {
       const key: string = user.image.replace(
-        `https://${process.env.AWS_PUBLIC_IMAGES_BUCKET_NAME}.s3.amazonaws.com/`,
+        `https://${process.env.NEXT_PUBLIC_AWS_PUBLIC_IMAGES_BUCKET_NAME}.s3.amazonaws.com/`,
         ""
       );
       const params = {
-        Bucket: process.env.AWS_PUBLIC_IMAGES_BUCKET_NAME,
+        Bucket: process.env.NEXT_PUBLIC_AWS_PUBLIC_IMAGES_BUCKET_NAME,
         Key: key,
       };
 

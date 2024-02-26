@@ -5,6 +5,8 @@ import React, { useState } from "react";
 import { formatLastLoad, formatRows, formatSize } from "@/lib/formatDatasets";
 import Link from "next/link";
 import DeleteModal from "../DeleteModal";
+import { useToast } from "@/components/ui/use-toast";
+import refreshDataset from "@/lib/datasets/refreshDataset";
 
 type Props = {
   datasets: Dataset[];
@@ -12,11 +14,25 @@ type Props = {
 };
 
 const Datasets = ({ datasets, userId }: Props) => {
+  const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [dataset, setDataset] = useState<Dataset | undefined>();
 
   const handleCloseModal = () => {
     setOpen(false);
+  };
+
+  const handleRefresh = async (datasetId: string) => {
+    try {
+      toast({
+        title: "Your dataset is being refreshed",
+        description: "Check after a while!",
+      });
+      const res = await refreshDataset(userId, datasetId);
+      location.reload();
+    } catch (error) {
+      console.log("error in creating report");
+    }
   };
 
   return (
@@ -77,7 +93,12 @@ const Datasets = ({ datasets, userId }: Props) => {
                   alt="edit"
                   width={20}
                   height={20}
-                  className="cursor-pointer"
+                  className={`cursor-pointer ${
+                    row.datatype.includes("SQL")
+                      ? ""
+                      : "pointer-events-none opacity-50"
+                  }`}
+                  onClick={() => handleRefresh(row._id)}
                 />
                 <Image
                   onClick={() => {

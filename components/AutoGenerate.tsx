@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import autogenerateQuestions from "@/lib/datasets/autogenerateQuestions";
 import Loading from "./Loading";
 import generateStories from "@/lib/datasets/generateStories";
+import { useToast } from "@/components/ui/use-toast";
 import Header from "./data/Header";
 
 type Props = {
@@ -14,6 +15,8 @@ type Props = {
 };
 
 const AutoGenerate = ({ id, userId, dataset }: Props) => {
+  const { toast } = useToast();
+
   const [isLoading, setIsLoading] = useState(false);
   const [generateReport, setGenerateReport] = useState(false);
   const [generateStory, setGenerateStory] = useState(false);
@@ -27,22 +30,29 @@ const AutoGenerate = ({ id, userId, dataset }: Props) => {
   const handleNext = async () => {
     try {
       setIsLoading(true);
-      if (generateReport) {
-        autogenerateQuestions(userId, id);
-        // const response = await autogenerateQuestions(userId, id);
-        // console.log(response.message);
-        // console.log(response.responseMessage);
-      }
       if (generateStory) {
         generateStories(userId, id);
+        toast({
+          title: "Your stories are getting generated",
+          description: "Check after a while!",
+        });
+        router.push("/stories");
+        router.refresh();
         // const response = await generateStories(userId, id);
         // console.log(response.insights);
         // console.log(response.stories);
         // console.log(response.charts);
         // console.log(response.messages);
+      } else {
+        if (generateReport) {
+          autogenerateQuestions(userId, id);
+          // const response = await autogenerateQuestions(userId, id);
+          // console.log(response.message);
+          // console.log(response.responseMessage);
+        }
+        router.push("/connectors");
+        router.refresh();
       }
-      router.push("/connectors");
-      router.refresh();
     } catch (error) {
       console.log("error in updating dataset");
       alert("error updating");

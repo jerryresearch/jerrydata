@@ -34,7 +34,7 @@ const BarChart = ({ data }: Props) => {
     labels: xData,
     datasets: [
       {
-        label: yAxis,
+        label: title,
         // backgroundColor: ["#6366F1", "#D2D2FF", "#EEEEFF"],
         backgroundColor: "#6366F1",
         borderWidth: 1,
@@ -51,7 +51,7 @@ const BarChart = ({ data }: Props) => {
     },
     scales: {
       y: {
-        suggestedMax: 10000,
+        // suggestedMax: 10000,
         title: {
           display: true,
           text: yAxis,
