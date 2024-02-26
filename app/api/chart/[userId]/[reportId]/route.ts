@@ -17,10 +17,10 @@ type Props = {
 // create a s3 client
 // @ts-ignore
 const s3 = new S3Client({
-  region: process.env.AWS_BUCKET_REGION,
+  region: process.env.NEXT_PUBLIC_AWS_BUCKET_REGION,
   credentials: {
-    accessKeyId: process.env.AWS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    accessKeyId: process.env.NEXT_PUBLIC_AWS_KEY,
+    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY,
   },
 });
 
@@ -81,7 +81,7 @@ export async function POST(
     }
 
     const getObjectParams = {
-      Bucket: process.env.AWS_FILES_BUCKET_NAME,
+      Bucket: process.env.NEXT_PUBLIC_AWS_FILES_BUCKET_NAME,
       Key: datasetObj.key,
     };
 

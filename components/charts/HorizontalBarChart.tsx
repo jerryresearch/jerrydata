@@ -33,7 +33,7 @@ const HorizontalBarChart = ({ data }: Props) => {
     labels: xData,
     datasets: [
       {
-        label: yAxis,
+        label: title,
         // backgroundColor: ["#6366F1", "#D2D2FF", "#EEEEFF"],
         backgroundColor: "#6366F1",
         borderWidth: 1,
@@ -46,10 +46,10 @@ const HorizontalBarChart = ({ data }: Props) => {
     indexAxis: "y",
     scales: {
       y: {
-        suggestedMax: 1000,
+        // suggestedMax: 1000,
         title: {
           display: true,
-          text: "Unit cost",
+          text: yAxis,
         },
         ticks: {
           stepSize: 100,
@@ -58,14 +58,15 @@ const HorizontalBarChart = ({ data }: Props) => {
       x: {
         title: {
           display: true,
-          text: "Region",
+          text: xAxis,
         },
         beginAtZero: true,
-        suggestedMax: 1000,
+        // suggestedMax: 1000,
       },
     },
   };
 
+  console.log();
   return (
     <div className="w-4/5 mx-auto">
       {/* @ts-ignore */}

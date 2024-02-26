@@ -19,10 +19,10 @@ type Props = {
 // create a s3 client
 // @ts-ignore
 const s3 = new S3Client({
-  region: process.env.AWS_BUCKET_REGION,
+  region: process.env.NEXT_PUBLIC_AWS_BUCKET_REGION,
   credentials: {
-    accessKeyId: process.env.AWS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    accessKeyId: process.env.NEXT_PUBLIC_AWS_KEY,
+    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY,
   },
 });
 
@@ -35,7 +35,7 @@ const s3 = new S3Client({
 //     const { searchParams } = new URL(req.url);
 
 //     const getObjectParams = {
-//       Bucket: process.env.AWS_FILES_BUCKET_NAME,
+//       Bucket: process.env.NEXT_PUBLIC_AWS_FILES_BUCKET_NAME,
 //       Key: searchParams.get("key") || "",
 //     };
 //     const command = new GetObjectCommand(getObjectParams);
@@ -74,7 +74,7 @@ export const POST = async (req: Request, { params: { userId } }: Props) => {
     const buffer = Buffer.from(bytes);
 
     const params = {
-      Bucket: process.env.AWS_FILES_BUCKET_NAME,
+      Bucket: process.env.NEXT_PUBLIC_AWS_FILES_BUCKET_NAME,
       Key: key,
       Body: buffer,
     };

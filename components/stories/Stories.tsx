@@ -8,14 +8,14 @@ import {
 } from "@/components/ui/popover";
 import Image from "next/image";
 import Story from "./Story";
-import KPIStory from "./KPIStory";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+// import KPIStory from "./KPIStory";
+// import {
+//   Carousel,
+//   CarouselContent,
+//   CarouselItem,
+//   CarouselNext,
+//   CarouselPrevious,
+// } from "@/components/ui/carousel";
 import generatePDF, { Margin } from "react-to-pdf";
 
 type Props = {
@@ -98,7 +98,7 @@ const Stories = ({ datasets, stories }: Props) => {
 
   return (
     <section className="text-[#080D19] flex flex-col gap-6">
-      <Carousel
+      {/* <Carousel
         className="flex flex-col gap-6"
         opts={{
           align(viewSize, snapSize, index) {
@@ -120,7 +120,7 @@ const Stories = ({ datasets, stories }: Props) => {
             </CarouselItem>
           ))}
         </CarouselContent>
-      </Carousel>
+      </Carousel> */}
       <div className="bg-[#EEEEFF] h-px"></div>
       <section className="flex flex-col gap-6 md:flex-row md:justify-between md:items-center">
         <Popover>

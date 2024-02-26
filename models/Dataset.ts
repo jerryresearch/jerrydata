@@ -2,6 +2,12 @@ import mongoose, { models } from "mongoose";
 
 const DatasetSchema = new mongoose.Schema(
   {
+    assistantId: {
+      type: String,
+    },
+    threadId: {
+      type: String,
+    },
     fileUrl: {
       type: String,
     },
@@ -29,6 +35,7 @@ const DatasetSchema = new mongoose.Schema(
       user: String,
       password: String,
       connString: String,
+      table: String,
     },
     size: {
       type: String,
@@ -86,6 +93,10 @@ const DatasetSchema = new mongoose.Schema(
       required: true,
     },
     questions: [mongoose.Schema.Types.Mixed],
+    stories: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

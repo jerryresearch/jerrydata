@@ -2,7 +2,9 @@ import mongoose from "mongoose";
 import { connectToDB } from "@/utils/mongoose";
 import { NextResponse } from "next/server";
 import Dataset from "@/models/Dataset";
+import bcrypt from "bcrypt";
 import mysql from "mysql2/promise";
+import { encrypt } from "@/utils/encryption";
 
 type Props = {
   params: {
@@ -36,9 +38,15 @@ export async function POST(req: Request, { params: { userId } }: Props) {
       });
     }
 
+    const encrypted = encrypt(
+      password,
+      process.env.SQL_KEY as string,
+      process.env.SQL_IV as string
+    );
+
     const dataset = await Dataset.create({
       datatype: "MySQL",
-      sql: { host, port, database, user, password, connString },
+      sql: { host, port, database, user, password: encrypted, connString },
       addedBy: userId,
     });
 
