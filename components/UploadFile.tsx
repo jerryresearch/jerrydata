@@ -76,10 +76,6 @@ const UploadFile = ({ id, type, dataset, handleDelete }: Props) => {
         const path = url.split("?")[0].split("/");
         const key = path[path.length - 1];
 
-        // get buffer from file
-        // const bytes = await file.arrayBuffer();
-        // const buffer = Buffer.from(bytes);
-
         const data = { name: file.name, key, size: file.size, datatype: type };
         const res = await createDataset(userId, data);
         router.replace(`${pathName}?type=${type}&id=${res.dataset._id}`);

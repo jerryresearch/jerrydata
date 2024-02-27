@@ -90,7 +90,7 @@ export async function POST(req: Request, { params: { userId } }: Props) {
       `,
       name: "Analytics Assistant",
       tools: [{ type: "code_interpreter" }, { type: "retrieval" }],
-      model: "gpt-3.5-turbo-1106",
+      model: "gpt-4-turbo-preview",
       file_ids: [datasetObj.openAPIFile.id],
     });
 

@@ -3,6 +3,7 @@ import { connectToDB } from "@/utils/mongoose";
 import { NextResponse } from "next/server";
 import Dataset from "@/models/Dataset";
 import csv from "csv-parser";
+import fs from "fs";
 import { OpenAI } from "openai";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 
@@ -66,6 +67,8 @@ export async function POST(req: Request, { params: { userId } }: Props) {
     let headers: any[] = [];
     let rows: number = 0;
 
+    const writableStream = fs.createWriteStream(`${name}.csv`);
+
     await new Promise((resolve, reject) => {
       fileData
         .pipe(csv())
@@ -77,11 +80,14 @@ export async function POST(req: Request, { params: { userId } }: Props) {
               isDisabled: false,
             };
           });
+          writableStream.write(`${fileHeaders.join(",")}\n`);
         })
-        .on("data", () => {
+        .on("data", (data: any) => {
           rows += 1;
+          writableStream.write(`${Object.values(data).join(",")}\n`);
         })
         .on("end", () => {
+          writableStream.end();
           resolve(rows);
         })
         .on("error", (error: any) => {
@@ -89,18 +95,30 @@ export async function POST(req: Request, { params: { userId } }: Props) {
         });
     });
 
+    const openAPIFile = await openai.files.create({
+      file: fs.createReadStream(`${name}.csv`),
+      purpose: "assistants",
+    });
+
     // openai file upload todo
     const dataset = await Dataset.create({
       name,
       key,
       datatype,
-      // openAPIFile,
+      openAPIFile,
       size,
       rows,
       columns: headers.length,
       headers,
       addedBy: userId,
     });
+
+    fs.unlink(`${name}.csv`, (err) => {
+      if (err) {
+        console.error("Error deleting file:", err);
+      }
+    });
+
     return NextResponse.json(
       { dataset, message: "Dataset added" },
       { status: 201 }

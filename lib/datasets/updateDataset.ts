@@ -8,7 +8,6 @@ export default async function updateDataset(
     method: "PUT",
     body: JSON.stringify(body),
   });
-  console.log("done");
   if (!res.ok) {
     console.log("error");
     throw new Error();
