@@ -43,7 +43,6 @@ export const GET = async (req: Request, { params: { userId } }: Props) => {
     };
     const command = new PutObjectCommand(params);
     const url = await getSignedUrl(s3, command, { expiresIn: 60 * 60 });
-    console.log(url);
     return NextResponse.json({ url }, { status: 200 });
   } catch (error) {
     console.log(error);

@@ -21,7 +21,6 @@ type Props = {
 };
 
 const TableSelection = ({ userId, id, type, name, headers }: Props) => {
-  console.log(type);
   const [searchInput, setSearchInput] = useState("");
 
   const router = useRouter();

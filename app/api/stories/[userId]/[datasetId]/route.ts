@@ -106,7 +106,7 @@ export async function GET(
       `,
       name: "AutoInsight Analyst",
       tools: [{ type: "code_interpreter" }, { type: "retrieval" }],
-      model: "gpt-3.5-turbo-1106",
+      model: "gpt-4-turbo-preview",
       file_ids: [dataset.openAPIFile.id],
     });
 

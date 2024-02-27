@@ -41,6 +41,7 @@ export async function GET(
   { params: { userId, datasetId } }: Props
 ) {
   try {
+    console.log("ref");
     await connectToDB();
     if (!userId || !mongoose.isValidObjectId(userId)) {
       return NextResponse.json({ message: "Invalid session" }, { status: 403 });
@@ -166,7 +167,7 @@ export async function GET(
       `,
             name: "AutoInsight Analyst",
             tools: [{ type: "code_interpreter" }, { type: "retrieval" }],
-            model: "gpt-3.5-turbo-1106",
+            model: "gpt-4-turbo-preview",
             file_ids: [dataset.openAPIFile.id],
           }
         );
@@ -250,7 +251,7 @@ export async function GET(
       `,
         name: "AutoInsight Analyst",
         tools: [{ type: "code_interpreter" }, { type: "retrieval" }],
-        model: "gpt-3.5-turbo-1106",
+        model: "gpt-4-turbo-preview",
         file_ids: [dataset.openAPIFile.id],
       });
 
@@ -310,8 +311,10 @@ export async function GET(
     for (let i = 0; i < 5; i++) {
       await openai.beta.threads.messages.create(dataset.threadId, {
         role: "user",
-        content: `Can you give one more insight in the same format?
-            ${jsonResp}
+        content: `
+        Generate JSON Output:
+        Your task is to construct an insight from the dataset uploaded in a JSON format. Below is an example of how your output should be structured:
+        ${jsonResp}
           `,
       });
 
