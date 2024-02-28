@@ -18,4 +18,4 @@ jobs:
           node-version: "18"
 
       - name: Run JavaScript file
-        run: node util/refresh.js
+        run: node utils/refresh.js
