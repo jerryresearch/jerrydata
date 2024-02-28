@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/popover";
 import Loading from "../Loading";
 import createChat from "@/lib/chats/createChat";
+import { useToast } from "../ui/use-toast";
 
 type Props = {
   datasets: Dataset[];
@@ -16,6 +17,7 @@ type Props = {
 };
 
 const NewChat = ({ datasets, userId }: Props) => {
+  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [prevTitle, setPrevTitle] = useState("New Chat");
@@ -39,9 +41,14 @@ const NewChat = ({ datasets, userId }: Props) => {
       setIsLoading(true);
       const res = await createChat(userId, data);
       location.replace(`/u/ask-jerry/${res.chat.title}?id=${res.chat._id}`);
-    } catch (error) {
-      console.log(error);
-      console.log("error sending message");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description:
+          "There was an issue creating the chat. Please try again later.",
+      });
+      // console.log(error);
     }
     setIsLoading(false);
   };

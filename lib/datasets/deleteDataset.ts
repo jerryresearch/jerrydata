@@ -4,7 +4,8 @@ export default async function deleteDataset(userId: string, datasetId: string) {
     method: "DELETE",
   });
   if (!res.ok) {
-    console.log("error");
+    const err = await res.json();
+    throw new Error(err.message);
   }
   return res.json();
 }

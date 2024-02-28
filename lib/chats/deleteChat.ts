@@ -4,8 +4,8 @@ export default async function deleteChat(userId: string, chatId: string) {
     method: "DELETE",
   });
   if (!res.ok) {
-    console.log("error");
-    throw new Error("Error deleting chart data");
+    const err = await res.json();
+    throw new Error(err.message);
   }
   return res.json();
 }

@@ -4,10 +4,9 @@ export default async function createReport(userId: string, data: any) {
     method: "POST",
     body: JSON.stringify(data),
   });
-  console.log("done");
   if (!res.ok) {
-    console.log("error");
-    throw new Error();
+    const err = await res.json();
+    throw new Error(err.message);
   }
   return res.json();
 }

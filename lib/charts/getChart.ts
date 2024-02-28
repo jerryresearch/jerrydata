@@ -13,8 +13,8 @@ export default async function getChart(
     }
   );
   if (!res.ok) {
-    console.log("error");
-    // throw new Error("Error getting chart data");
+    const err = await res.json();
+    throw new Error(err.message);
   }
   return res.json();
 }

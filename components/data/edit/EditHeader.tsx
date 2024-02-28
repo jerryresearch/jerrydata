@@ -1,6 +1,7 @@
 "use client";
 
 import MenuBar from "@/components/MenuBar";
+import { useToast } from "@/components/ui/use-toast";
 import updateDataset from "@/lib/datasets/updateDataset";
 import {
   formatLastLoad,
@@ -20,6 +21,7 @@ type Props = {
 };
 
 const EditHeader = ({ dataset, userName, type, updates, userId }: Props) => {
+  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleUpdate = async () => {
@@ -29,9 +31,14 @@ const EditHeader = ({ dataset, userName, type, updates, userId }: Props) => {
         const res = await updateDataset(userId, dataset._id, updates);
         console.log(res);
         location.reload();
-      } catch (error) {
-        console.log("error in updating dataset");
-        alert("error updating");
+      } catch (error: any) {
+        toast({
+          variant: "destructive",
+          title: `Uh oh! ${error.message}.`,
+          description:
+            "There was an issue updating the connection. Please try again later.",
+        });
+        // console.log(error);
       }
       setIsLoading(false);
     }

@@ -10,7 +10,8 @@ export default async function getCharts(userId: string, reportId: string) {
     }
   );
   if (!res.ok) {
-    console.log("error");
+    const err = await res.json();
+    throw new Error(err.message);
   }
   return res.json();
 }

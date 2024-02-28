@@ -12,7 +12,8 @@ export default async function getRecords(
     }
   );
   if (!res.ok) {
-    console.log("error");
+    const err = await res.json();
+    throw new Error(err.message);
   }
   return res.json();
 }

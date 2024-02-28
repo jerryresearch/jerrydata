@@ -10,6 +10,7 @@ type Props = {
 };
 
 import React, { useState } from "react";
+import { useToast } from "../ui/use-toast";
 
 const AutoGenerateModal = ({
   open,
@@ -18,6 +19,7 @@ const AutoGenerateModal = ({
   userId,
   setIsLoading,
 }: Props) => {
+  const { toast } = useToast();
   const [selectedDataset, setSelectedDataset] = useState("");
 
   const handleGenerate = async (id: string) => {
@@ -26,9 +28,14 @@ const AutoGenerateModal = ({
       const response = await autogenerateReport(userId, id);
       console.log(response.message);
       console.log(response.messageList);
-    } catch (error) {
-      console.log("error in generating report");
-      alert("something went wrong");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description:
+          "There was an issue auto-generating dashboard. Please try again later.",
+      });
+      // console.log(error);
     } finally {
       setIsLoading(false);
       onClose();

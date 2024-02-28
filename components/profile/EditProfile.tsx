@@ -6,6 +6,7 @@ import updateProfile from "@/lib/profile/updateProfile";
 import Image from "next/image";
 import uploadImage from "@/lib/profile/uploadImage";
 import removeImage from "@/lib/profile/removeImage";
+import { useToast } from "../ui/use-toast";
 
 type Props = {
   name: string;
@@ -15,6 +16,7 @@ type Props = {
 };
 
 const EditProfile = ({ name, email, userId, image }: Props) => {
+  const { toast } = useToast();
   const [isUpdated, setIsUpdated] = useState(false);
   const [firstName, setFirstName] = useState(name.split(" ")[0]);
   const [lastName, setLastName] = useState(name.split(" ")[1] || "");
@@ -37,8 +39,14 @@ const EditProfile = ({ name, email, userId, image }: Props) => {
       try {
         const res = await uploadImage(userId, formData);
         location.reload();
-      } catch (error) {
-        alert(error);
+      } catch (error: any) {
+        toast({
+          variant: "destructive",
+          title: `Uh oh! ${error.message}.`,
+          description:
+            "There was an issue uploading image. Please try again later.",
+        });
+        // console.log(error);
       }
     }
   };
@@ -47,9 +55,14 @@ const EditProfile = ({ name, email, userId, image }: Props) => {
     try {
       const res = await removeImage(userId);
       location.reload();
-    } catch (error) {
-      console.log("error updating profile");
-      alert(error);
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description:
+          "There was an issue removing the image. Please try again later.",
+      });
+      // console.log(error);
     }
   };
 
@@ -62,9 +75,14 @@ const EditProfile = ({ name, email, userId, image }: Props) => {
     try {
       const res = await updateProfile(userId, data);
       location.reload();
-    } catch (error) {
-      console.log("error updating profile");
-      alert(error);
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description:
+          "There was an issue updating the profile. Please try again later.",
+      });
+      // console.log(error);
     }
   };
 

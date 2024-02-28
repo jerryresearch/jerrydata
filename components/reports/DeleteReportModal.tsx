@@ -1,6 +1,7 @@
 import deleteReport from "@/lib/reports/deleteReport";
 import Image from "next/image";
 import { useState } from "react";
+import { useToast } from "../ui/use-toast";
 
 type Props = {
   open: boolean;
@@ -10,6 +11,7 @@ type Props = {
 };
 
 const DeleteReportModal = ({ open, onClose, report, userId }: Props) => {
+  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleDelete = async () => {
@@ -17,8 +19,14 @@ const DeleteReportModal = ({ open, onClose, report, userId }: Props) => {
     try {
       await deleteReport(userId, report._id);
       location.reload();
-    } catch (error) {
-      console.log("error");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description:
+          "There was an issue deleting the dashboard. Please try again later.",
+      });
+      // console.log(error);
     }
     onClose();
     setIsLoading(false);

@@ -5,6 +5,7 @@ import Header from "./Header";
 import Chart from "./Chart";
 import { toPng } from "html-to-image";
 import generatePDF, { Margin } from "react-to-pdf";
+import { useToast } from "../ui/use-toast";
 
 type Props = {
   charts: Chart[];
@@ -12,6 +13,7 @@ type Props = {
 };
 
 const ChartsContainer = ({ charts, report }: Props) => {
+  const { toast } = useToast();
   const elementRef = useRef(null);
   const options = {
     page: {
@@ -29,8 +31,13 @@ const ChartsContainer = ({ charts, report }: Props) => {
         link.href = dataUrl;
         link.click();
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((error) => {
+        toast({
+          variant: "destructive",
+          title: `Uh oh! ${error.message}.`,
+          description: "Please try again later.",
+        });
+        // console.log(error);
       });
   };
 

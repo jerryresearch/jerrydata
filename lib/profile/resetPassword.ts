@@ -8,8 +8,8 @@ export default async function resetPassword(
     body: JSON.stringify({ newPassword }),
   });
   if (!res.ok) {
-    console.log("error");
-    throw new Error();
+    const err = await res.json();
+    throw new Error(err.message);
   }
   return res.json();
 }

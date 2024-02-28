@@ -23,6 +23,7 @@ import PloarAreaChart from "./PolarAreaChart";
 import HorizontalBarChart from "./HorizontalBarChart";
 import styles from "@/app/user/styles.module.css";
 import Link from "next/link";
+import { useToast } from "../ui/use-toast";
 
 const chartTypes = [
   "Bar",
@@ -39,6 +40,7 @@ type Props = {
 };
 
 const CreateChart = ({ datasets, report }: Props) => {
+  const { toast } = useToast();
   const { data: session } = useSession();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -79,11 +81,16 @@ const CreateChart = ({ datasets, report }: Props) => {
       setIsLoading(true);
       if (chartId != "") {
         await deleteChart(userId, reportId, chartId);
-        console.log("deleted");
+        // console.log("deleted");
       }
       router.replace(pathname.replace("/new", "") + `?id=${reportId}`);
-    } catch (error) {
-      console.log("error");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description: "Please try again later.",
+      });
+      // console.log(error);
     }
   };
 
@@ -114,8 +121,13 @@ const CreateChart = ({ datasets, report }: Props) => {
       setTitle(res.chart.title);
       handleSelectDataset(res.chart.dataset);
       setShowChart(true);
-    } catch (error) {
-      console.log("error chart");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description: "Please try again later.",
+      });
+      // console.log(error);
     }
     setIsLoading(false);
   };
@@ -133,8 +145,14 @@ const CreateChart = ({ datasets, report }: Props) => {
         setTitle(res.title);
         handleSelectDataset(res.dataset);
         setShowChart(true);
-      } catch (error) {
-        console.log("error getting chart data");
+      } catch (error: any) {
+        toast({
+          variant: "destructive",
+          title: `Uh oh! ${error.message}.`,
+          description:
+            "There was an issue retrieving chart. Please try again later.",
+        });
+        // console.log(error);
       }
     };
     if (chartId != "") {

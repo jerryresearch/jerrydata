@@ -53,9 +53,14 @@ const AutoGenerate = ({ id, userId, dataset }: Props) => {
         router.push("/u/connectors");
         router.refresh();
       }
-    } catch (error) {
-      console.log("error in updating dataset");
-      alert("error updating");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description:
+          "Sorry, there was an issue auto-generating. Please try again later.",
+      });
+      // console.log(error);
     } finally {
       setIsLoading(false);
     }

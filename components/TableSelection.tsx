@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import updateDataset from "@/lib/datasets/updateDataset";
 import Header from "./data/Header";
+import { useToast } from "./ui/use-toast";
 
 type Props = {
   name: string;
@@ -21,6 +22,7 @@ type Props = {
 };
 
 const TableSelection = ({ userId, id, type, name, headers }: Props) => {
+  const { toast } = useToast();
   const [searchInput, setSearchInput] = useState("");
 
   const router = useRouter();
@@ -59,9 +61,14 @@ const TableSelection = ({ userId, id, type, name, headers }: Props) => {
       try {
         const res = await updateDataset(userId, id, { headers: myHeaders });
         router.push(`edit-fields?id=${id}&type=${type}`);
-      } catch (error) {
-        console.log("error in updating dataset");
-        alert("error updating");
+      } catch (error: any) {
+        toast({
+          variant: "destructive",
+          title: `Uh oh! ${error.message}.`,
+          description:
+            "There was an issue updating the object. Please try again later.",
+        });
+        // console.log(error);
       }
     } else {
       router.push(`edit-fields?id=${id}`);

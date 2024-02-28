@@ -4,6 +4,7 @@ import createDataset from "@/lib/datasets/postgresql/createDataset";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Header from "../Header";
+import { useToast } from "@/components/ui/use-toast";
 
 type Props = {
   dataset?: Dataset;
@@ -14,6 +15,7 @@ type Props = {
 
 const AddSQLConnection = ({ dataset, id, userId, type }: Props) => {
   const currentStep = 2;
+  const { toast } = useToast();
 
   const [connString, setConnString] = useState(dataset?.sql?.connString || "");
   const [host, setHost] = useState(dataset?.sql?.host || "");
@@ -46,9 +48,14 @@ const AddSQLConnection = ({ dataset, id, userId, type }: Props) => {
       console.log(res);
       console.log(res.message);
       router.push(`select-table?id=${res.dataset._id}&type=${type}`);
-    } catch (error) {
-      console.log("error in updating dataset");
-      alert("error updating");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description:
+          "There was an issue making the connection. Please try again later.",
+      });
+      // console.log(error);
     }
   };
 

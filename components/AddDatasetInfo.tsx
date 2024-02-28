@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import updateDataset from "@/lib/datasets/updateDataset";
 import Loading from "./Loading";
 import Header from "./data/Header";
+import { useToast } from "./ui/use-toast";
 
 type Props = {
   dataset: Dataset;
@@ -14,6 +15,7 @@ type Props = {
 };
 
 const AddDatasetInfo = ({ id, userId, dataset, type }: Props) => {
+  const { toast } = useToast();
   const [name, setName] = useState(dataset.name);
   const [description, setDescription] = useState(dataset.description);
   const [isUpdated, setIsUpdated] = useState(false);
@@ -37,9 +39,14 @@ const AddDatasetInfo = ({ id, userId, dataset, type }: Props) => {
         // const response = await autogenerateQuestions(userId, id);
         // console.log(response.message);
         // console.log(response.responseMessage);
-      } catch (error) {
-        console.log("error in updating dataset");
-        alert("error updating");
+      } catch (error: any) {
+        toast({
+          variant: "destructive",
+          title: `Uh oh! ${error.message}.`,
+          description:
+            "There was an issue updating the object. Please try again later.",
+        });
+        // console.log(error);
       } finally {
         setIsLoading(false);
       }

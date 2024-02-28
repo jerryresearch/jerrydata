@@ -21,6 +21,7 @@ import PloarAreaChart from "./PolarAreaChart";
 import HorizontalBarChart from "./HorizontalBarChart";
 import styles from "@/app/user/styles.module.css";
 import Link from "next/link";
+import { useToast } from "../ui/use-toast";
 
 const chartTypes = [
   "Bar",
@@ -37,6 +38,7 @@ type Props = {
 };
 
 const UpdateChart = ({ datasets, report }: Props) => {
+  const { toast } = useToast();
   const { data: session } = useSession();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -83,7 +85,11 @@ const UpdateChart = ({ datasets, report }: Props) => {
     try {
       setIsLoading(true);
       if (chartId == "") {
-        alert("Try again");
+        toast({
+          variant: "destructive",
+          title: `Uh oh! Something went wrong.`,
+          description: "Please try again later.",
+        });
       }
       const res = await updateChart(userId, reportId, chartId, data);
       setIsEditing(false);
@@ -94,8 +100,15 @@ const UpdateChart = ({ datasets, report }: Props) => {
       setTitle(res.chart.title);
       handleSelectDataset(res.chart.dataset);
       setShowChart(true);
-    } catch (error) {
+    } catch (error: any) {
       console.log("error chart");
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description:
+          "There was an issue updating the chart. Please try again later.",
+      });
+      // console.log(error);
     }
     setIsLoading(false);
   };
@@ -114,8 +127,14 @@ const UpdateChart = ({ datasets, report }: Props) => {
         handleSelectDataset(res.dataset);
         setShowChart(true);
         setIsLoading(false);
-      } catch (error) {
-        console.log("error getting chart data");
+      } catch (error: any) {
+        toast({
+          variant: "destructive",
+          title: `Uh oh! ${error.message}.`,
+          description:
+            "There was an issue retrieving the chart. Please try again later.",
+        });
+        // console.log(error);
       }
     };
     if (chartId != "") {

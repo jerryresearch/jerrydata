@@ -5,7 +5,8 @@ export default async function createDataset(userId: string, body: any) {
     body: JSON.stringify(body),
   });
   if (!res.ok) {
-    console.log("error");
+    const err = await res.json();
+    throw new Error(err.message);
   }
   return res.json();
 }

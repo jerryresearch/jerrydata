@@ -13,6 +13,7 @@ import Loading from "../Loading";
 import sendMessage from "@/lib/chats/sendMessage";
 import updateChat from "@/lib/chats/updateChat";
 import DeleteChatModal from "./DeleteChatModal";
+import { useToast } from "../ui/use-toast";
 
 type Props = {
   datasets: Dataset[];
@@ -22,6 +23,7 @@ type Props = {
 };
 
 const Chat = ({ datasets, chat, messages, userId }: Props) => {
+  const { toast } = useToast();
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -60,9 +62,14 @@ const Chat = ({ datasets, chat, messages, userId }: Props) => {
       const res = await sendMessage(userId, chat._id, { message });
       setMessage("");
       router.refresh();
-    } catch (error) {
-      console.log(error);
-      console.log("error sending message");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description:
+          "There was an issue sending the message. Please try again later.",
+      });
+      // console.log(error);
     }
     setIsLoading(false);
   };
@@ -72,8 +79,14 @@ const Chat = ({ datasets, chat, messages, userId }: Props) => {
       const data = { title };
       const res = await updateChat(userId, chat._id, data);
       location.reload();
-    } catch (error) {
-      console.log("error chart");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description:
+          "There was an issue updating chat name. Please try again later.",
+      });
+      // console.log(error);
     }
   };
 

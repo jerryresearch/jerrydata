@@ -9,12 +9,12 @@ type Props = {
 };
 
 import React, { useState } from "react";
+import { useToast } from "../ui/use-toast";
 
 const AddReportModal = ({ open, onClose, userId }: Props) => {
-  const router = useRouter();
+  const { toast } = useToast();
 
   const [isLoading, setIsLoading] = useState(false);
-
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
 
@@ -25,8 +25,14 @@ const AddReportModal = ({ open, onClose, userId }: Props) => {
       onClose();
       // router.refresh();
       location.reload();
-    } catch (error) {
-      console.log("error in creating report");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description:
+          "There was an issue creating dashboard. Please try again later.",
+      });
+      // console.log(error);
     } finally {
       setIsLoading(false);
     }

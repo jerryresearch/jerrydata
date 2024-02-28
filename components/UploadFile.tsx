@@ -8,6 +8,7 @@ import axios from "axios";
 import Header from "./data/Header";
 import createDataset from "@/lib/datasets/createDataset";
 import getSignedUrl from "@/lib/datasets/getSignedUrl";
+import { useToast } from "./ui/use-toast";
 
 type Props = {
   id: string;
@@ -17,6 +18,7 @@ type Props = {
 };
 
 const UploadFile = ({ id, type, dataset, handleDelete }: Props) => {
+  const { toast } = useToast();
   const { data: session } = useSession();
   const pathName = usePathname();
   const router = useRouter();
@@ -90,9 +92,15 @@ const UploadFile = ({ id, type, dataset, handleDelete }: Props) => {
         setUploadMessage({ message: "Error in file", isError: true });
       }
       setIsLoading(false);
-    } catch (error) {
-      console.error(error);
-      alert("An error occurred during file upload.");
+    } catch (error: any) {
+      setUploadMessage({ message: "Error in file", isError: true });
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description:
+          "There was an issue uploading the file. Please try again later.",
+      });
+      // console.log(error);
       setIsLoading(false);
     }
   };
