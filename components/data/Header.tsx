@@ -36,13 +36,13 @@ const Header = ({
       try {
         await deleteDataset(userId, id);
         console.log("done");
-        location.replace("/connectors");
+        location.replace("/u/connectors");
       } catch (error) {
         alert("error");
         console.log(error);
       }
     } else {
-      location.replace("/connectors");
+      location.replace("/u/connectors");
     }
   };
 
@@ -51,7 +51,7 @@ const Header = ({
       <div className="hidden w-full md:flex justify-between items-center border-b border-[#EEEEFF] py-6 px-[60px]">
         <div className="flex flex-col gap-3">
           <p>
-            <Link href="/connectors" className="text-[#61656C]">
+            <Link href="/u/connectors" className="text-[#61656C]">
               Connectors /
             </Link>
             <Link href="#" className="text-primary">

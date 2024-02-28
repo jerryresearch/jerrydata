@@ -5,8 +5,6 @@ import { authOptions } from "@/utils/authOptions";
 import MobileNav from "@/components/MobileNav";
 
 export const metadata: Metadata = {
-  title: "Profile | Jerrydata",
-  description: "",
   icons: {
     icon: [
       {

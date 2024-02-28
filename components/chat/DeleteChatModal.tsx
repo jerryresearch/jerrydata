@@ -17,7 +17,7 @@ const DeleteChatModal = ({ open, onClose, id, userId, title }: Props) => {
     setIsLoading(true);
     try {
       await deleteChat(userId, id);
-      location.replace("/ask-jerry");
+      location.replace("/u/ask-jerry");
     } catch (error) {
       console.log("error");
     }

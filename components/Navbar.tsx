@@ -35,16 +35,16 @@ const Navbar = ({ name, image }: Props) => {
       <ul className="hidden md:flex gap-[20px] h-full flex-1 justify-center">
         <li>
           <Link
-            href={"/stories"}
+            href={"/u/stories"}
             className={`px-[10px] flex h-full gap-[10px] items-center ${
-              pathname.startsWith("/stories")
+              pathname.startsWith("/u/stories")
                 ? "text-[#080D19] border-b-2 border-primary"
                 : "text-[#61656C]"
             } `}
           >
             <Image
               src={`${
-                pathname.startsWith("/stories")
+                pathname.startsWith("/u/stories")
                   ? "/assets/stories-active.svg"
                   : "/assets/stories.svg"
               }`}
@@ -60,16 +60,16 @@ const Navbar = ({ name, image }: Props) => {
         </li>
         <li>
           <Link
-            href={"/connectors"}
+            href={"/u/connectors"}
             className={`px-[10px] flex h-full gap-[10px] items-center ${
-              pathname.startsWith("/connectors")
+              pathname.startsWith("/u/connectors")
                 ? "text-[#080D19] border-b-2 border-primary"
                 : "text-[#61656C]"
             } `}
           >
             <Image
               src={`${
-                pathname.startsWith("/connectors")
+                pathname.startsWith("/u/connectors")
                   ? "/assets/connectors-active.svg"
                   : "/assets/connectors.svg"
               }`}
@@ -82,16 +82,16 @@ const Navbar = ({ name, image }: Props) => {
         </li>
         <li>
           <Link
-            href={"/dashboards"}
+            href={"/u/dashboards"}
             className={`px-[10px] flex h-full gap-[10px] items-center ${
-              pathname.startsWith("/dashboards")
+              pathname.startsWith("/u/dashboards")
                 ? "text-[#080D19] border-b-2 border-primary"
                 : "text-[#61656C]"
             } `}
           >
             <Image
               src={`${
-                pathname.startsWith("/dashboards")
+                pathname.startsWith("/u/dashboards")
                   ? "/assets/dashboards-active.svg"
                   : "/assets/dashboards.svg"
               }`}
@@ -104,16 +104,16 @@ const Navbar = ({ name, image }: Props) => {
         </li>
         <li>
           <Link
-            href={"/ask-jerry"}
+            href={"/u/ask-jerry"}
             className={`px-[10px] flex h-full gap-[10px] items-center ${
-              pathname.startsWith("/ask-jerry")
+              pathname.startsWith("/u/ask-jerry")
                 ? "text-[#080D19] border-b-2 border-primary"
                 : "text-[#61656C]"
             } `}
           >
             <Image
               src={`${
-                pathname.startsWith("/ask-jerry")
+                pathname.startsWith("/u/ask-jerry")
                   ? "/assets/jerry-active.svg"
                   : "/assets/jerry.svg"
               }`}
@@ -147,7 +147,7 @@ const Navbar = ({ name, image }: Props) => {
           </div>
         </PopoverTrigger>
         <PopoverContent className="w-52 flex flex-col gap-[10px] bg-white">
-          <Link href="/profile" onClick={() => setIsOpen(false)}>
+          <Link href="/u/profile" onClick={() => setIsOpen(false)}>
             Profile
           </Link>
           <div

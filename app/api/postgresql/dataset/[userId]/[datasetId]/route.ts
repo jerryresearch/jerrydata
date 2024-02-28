@@ -169,11 +169,11 @@ export async function POST(
     let csvStream = headers.map((header: any) => header.name).join(",") + "\n";
     csvStream += rw.rows.map((row) => Object.values(row).join(",")).join("\n");
 
-    if (!fs.existsSync("tmp")) {
-      fs.mkdirSync("tmp");
+    if (!fs.existsSync("/tmp")) {
+      fs.mkdirSync("/tmp");
     }
 
-    fs.writeFileSync(path.join("tmp/", `${table}.csv`), csvStream, "utf8");
+    fs.writeFileSync(path.join("/tmp/", `${table}.csv`), csvStream, "utf8");
     const buffer = Buffer.from(csvStream);
 
     // generate random file name to avoid replacing old file with same name
@@ -189,7 +189,7 @@ export async function POST(
     };
 
     const openAPIFile = await openai.files.create({
-      file: fs.createReadStream(path.join("tmp/", `${table}.csv`)),
+      file: fs.createReadStream(path.join("/tmp/", `${table}.csv`)),
       purpose: "assistants",
     });
 
@@ -212,7 +212,7 @@ export async function POST(
       { runValidators: true, new: true }
     );
 
-    fs.unlink(path.join("tmp/", `${table}.csv`), (err) => {
+    fs.unlink(path.join("/tmp/", `${table}.csv`), (err) => {
       if (err) {
         console.error("Error deleting file:", err);
         return;
