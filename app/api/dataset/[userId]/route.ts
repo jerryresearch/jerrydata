@@ -68,11 +68,11 @@ export async function POST(req: Request, { params: { userId } }: Props) {
     let headers: any[] = [];
     let rows: number = 0;
 
-    if (!fs.existsSync("tmp")) {
-      fs.mkdirSync("tmp");
+    if (!fs.existsSync("/tmp")) {
+      fs.mkdirSync("/tmp");
     }
 
-    const writableStream = fs.createWriteStream(path.join("tmp/", name));
+    const writableStream = fs.createWriteStream(path.join("/tmp/", name));
     await new Promise((resolve, reject) => {
       fileData
         .pipe(csv())
@@ -100,7 +100,7 @@ export async function POST(req: Request, { params: { userId } }: Props) {
     });
 
     const openAPIFile = await openai.files.create({
-      file: fs.createReadStream(path.join("tmp/", name)),
+      file: fs.createReadStream(path.join("/tmp/", name)),
       purpose: "assistants",
     });
 
@@ -117,7 +117,7 @@ export async function POST(req: Request, { params: { userId } }: Props) {
       addedBy: userId,
     });
 
-    fs.unlink(path.join("tmp/", name), (err) => {
+    fs.unlink(path.join("/tmp/", name), (err) => {
       if (err) {
         console.error("Error deleting file:", err);
       }
