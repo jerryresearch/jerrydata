@@ -153,11 +153,11 @@ const CreateChart = ({ datasets, report }: Props) => {
       <div className="flex flex-col gap-5 md:gap-0 md:flex-row md:justify-between md:items-center py-5 px-5 md:px-[60px] border-b border-[#EEEEFF]">
         <div className="flex flex-col gap-4">
           <p>
-            <Link href="/dashboards" className="text-[#61656C]">
+            <Link href="/u/dashboards" className="text-[#61656C]">
               Dashboards /
             </Link>
             <Link
-              href={`/dashboards/${report.name}?id=${reportId}`}
+              href={`/u/dashboards/${report.name}?id=${reportId}`}
               className="text-primary"
             >
               {" "}

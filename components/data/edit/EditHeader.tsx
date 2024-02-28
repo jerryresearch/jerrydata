@@ -41,7 +41,7 @@ const EditHeader = ({ dataset, userName, type, updates, userId }: Props) => {
       <div className="w-full flex justify-between items-center border-b border-[#EEEEFF] py-6">
         <div className="flex flex-col gap-3">
           <p>
-            <Link href="/connectors" className="text-[#61656C]">
+            <Link href="/u/connectors" className="text-[#61656C]">
               Connectors /
             </Link>
             <Link href="#" className="text-primary">
@@ -91,7 +91,7 @@ const EditHeader = ({ dataset, userName, type, updates, userId }: Props) => {
         </div>
         <div className="flex gap-4 h-[42px]">
           <Link
-            href="/connectors"
+            href="/u/connectors"
             className="py-1 px-[14px] w-20 flex items-center bg-[#F1F1F1] rounded-[6px] text-[#61656C] font-medium"
           >
             Cancel

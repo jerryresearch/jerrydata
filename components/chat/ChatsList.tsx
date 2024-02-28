@@ -30,7 +30,7 @@ const ChatsList = ({ chats }: Props) => {
     <aside className="flex flex-col h-full w-[280px] py-6 items-center gap-6 border-r border-[#EEEEFF]">
       <div className="px-6 flex flex-col gap-4">
         <Link
-          href={"/ask-jerry"}
+          href={"/u/ask-jerry"}
           className="h-10 px-2 bg-primary text-white rounded-[6px] flex items-center gap-[6px]"
         >
           <Image
@@ -63,7 +63,7 @@ const ChatsList = ({ chats }: Props) => {
           <div className="flex flex-col gap-[10px] pt-10">
             {filteredChats.map((chat, index) => (
               <Link
-                href={`/ask-jerry/${chat.title}?id=${chat._id}`}
+                href={`/u/ask-jerry/${chat.title}?id=${chat._id}`}
                 key={index}
                 className={`flex py-[10px] px-[6px] gap-2 bg-white ${
                   chat._id == chatId && "bg-[#FAFAFA] rounded-[6px]"

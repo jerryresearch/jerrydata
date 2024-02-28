@@ -38,7 +38,7 @@ const NewChat = ({ datasets, userId }: Props) => {
     try {
       setIsLoading(true);
       const res = await createChat(userId, data);
-      location.replace(`/ask-jerry/${res.chat.title}?id=${res.chat._id}`);
+      location.replace(`/u/ask-jerry/${res.chat.title}?id=${res.chat._id}`);
     } catch (error) {
       console.log(error);
       console.log("error sending message");

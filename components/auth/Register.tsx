@@ -50,7 +50,7 @@ const Register = () => {
       await signIn("credentials", {
         email: data.email,
         password: data.password,
-        callbackUrl: "/stories",
+        callbackUrl: "/u/stories",
       });
     } catch (error: any) {
       setIsLoading(false);
@@ -78,7 +78,7 @@ const Register = () => {
           Jerrydata account.
         </div>
         <button
-          onClick={() => signIn("google", { callbackUrl: "/stories" })}
+          onClick={() => signIn("google", { callbackUrl: "/u/stories" })}
           className="lg:w-[420px] h-[42px] bg-white rounded-[6px] border border-[#EEEEFF] py-2 text-[#080D19] font-medium flex items-center justify-center gap-2"
         >
           <span>

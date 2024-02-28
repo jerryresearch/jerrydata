@@ -36,7 +36,7 @@ const AutoGenerate = ({ id, userId, dataset }: Props) => {
           title: "Your stories are getting generated",
           description: "Check after a while!",
         });
-        router.push("/stories");
+        router.push("/u/stories");
         router.refresh();
         // const response = await generateStories(userId, id);
         // console.log(response.insights);
@@ -50,7 +50,7 @@ const AutoGenerate = ({ id, userId, dataset }: Props) => {
           // console.log(response.message);
           // console.log(response.responseMessage);
         }
-        router.push("/connectors");
+        router.push("/u/connectors");
         router.refresh();
       }
     } catch (error) {
