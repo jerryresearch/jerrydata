@@ -36,10 +36,9 @@ const Login = () => {
         redirect: false,
       });
       if (res?.error) {
-        const err = res.error;
         toast({
           variant: "destructive",
-          title: `Uh oh! ${err}.`,
+          title: `Uh oh! Invalid Credentials.`,
           description: "Please try again.",
         });
         // console.log(error);
