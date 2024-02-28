@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import Dataset from "@/models/Dataset";
 import csv from "csv-parser";
 import fs from "fs";
+import path from "path";
 import { OpenAI } from "openai";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 
@@ -67,8 +68,11 @@ export async function POST(req: Request, { params: { userId } }: Props) {
     let headers: any[] = [];
     let rows: number = 0;
 
-    const writableStream = fs.createWriteStream(`${name}.csv`);
+    if (!fs.existsSync("tmp")) {
+      fs.mkdirSync("tmp");
+    }
 
+    const writableStream = fs.createWriteStream(path.join("tmp/", name));
     await new Promise((resolve, reject) => {
       fileData
         .pipe(csv())
@@ -96,7 +100,7 @@ export async function POST(req: Request, { params: { userId } }: Props) {
     });
 
     const openAPIFile = await openai.files.create({
-      file: fs.createReadStream(`${name}.csv`),
+      file: fs.createReadStream(path.join("tmp/", name)),
       purpose: "assistants",
     });
 
@@ -113,7 +117,7 @@ export async function POST(req: Request, { params: { userId } }: Props) {
       addedBy: userId,
     });
 
-    fs.unlink(`${name}.csv`, (err) => {
+    fs.unlink(path.join("tmp/", name), (err) => {
       if (err) {
         console.error("Error deleting file:", err);
       }

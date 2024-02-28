@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import Dataset from "@/models/Dataset";
 import mysql from "mysql2/promise";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import path from "path";
 import crypto from "crypto";
 import fs from "fs";
 import { OpenAI } from "openai";
@@ -156,7 +157,11 @@ export async function POST(
       .map((row) => Object.values(row).join(","))
       .join("\n");
 
-    fs.writeFileSync(`${table}.csv`, csvStream, "utf8");
+    if (!fs.existsSync("tmp")) {
+      fs.mkdirSync("tmp");
+    }
+
+    fs.writeFileSync(path.join("tmp/", `${table}.csv`), csvStream, "utf8");
     const buffer = Buffer.from(csvStream);
 
     // generate random file name to avoid replacing old file with same name
@@ -172,7 +177,7 @@ export async function POST(
     };
 
     const openAPIFile = await openai.files.create({
-      file: fs.createReadStream(`${table}.csv`),
+      file: fs.createReadStream(path.join("tmp/", `${table}.csv`)),
       purpose: "assistants",
     });
 
@@ -195,7 +200,7 @@ export async function POST(
       { runValidators: true, new: true }
     );
 
-    fs.unlink(`${table}.csv`, (err) => {
+    fs.unlink(path.join("tmp/", `${table}.csv`), (err) => {
       if (err) {
         console.error("Error deleting file:", err);
         return;

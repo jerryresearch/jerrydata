@@ -11,6 +11,7 @@ import { Client } from "pg";
 import { OpenAI } from "openai";
 import mysql from "mysql2/promise";
 import fs from "fs";
+import path from "path";
 import csv from "csv-parser";
 import Dataset from "@/models/Dataset";
 import { decrypt } from "@/utils/encryption";
@@ -124,7 +125,11 @@ export async function GET(
           .join("\n");
       }
 
-      fs.writeFileSync(`${table}.csv`, csvStream, "utf8");
+      if (!fs.existsSync("tmp")) {
+        fs.mkdirSync("tmp");
+      }
+
+      fs.writeFileSync(path.join("tmp/", `${table}.csv`), csvStream, "utf8");
       const buffer = Buffer.from(csvStream);
 
       const params = {
@@ -134,7 +139,7 @@ export async function GET(
       };
 
       const openAPIFile = await openai.files.create({
-        file: fs.createReadStream(`${table}.csv`),
+        file: fs.createReadStream(path.join("tmp/", `${table}.csv`)),
         purpose: "assistants",
       });
 
@@ -173,7 +178,7 @@ export async function GET(
         );
       }
 
-      fs.unlink(`${table}.csv`, (err) => {
+      fs.unlink(path.join("tmp/", `${table}.csv`), (err) => {
         if (err) {
           console.error("Error deleting file:", err);
           return;
