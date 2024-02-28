@@ -11,6 +11,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useToast } from "@/components/ui/use-toast";
 
 type Props = {
   tables: any;
@@ -20,6 +21,7 @@ type Props = {
 };
 
 const TableSelection = ({ userId, id, tables, type }: Props) => {
+  const { toast } = useToast();
   const [searchInput, setSearchInput] = useState("");
   const [selectedTable, setSelectedTable] = useState("");
   const [selectedHeaders, setSelectedHeaders] = useState([]);
@@ -62,9 +64,14 @@ const TableSelection = ({ userId, id, tables, type }: Props) => {
         headers,
       });
       router.push(`edit-fields?id=${id}&type=${type}`);
-    } catch (error) {
-      console.log("error in updating dataset");
-      alert("error updating");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description:
+          "There was an issue selecting the table. Please try again later.",
+      });
+      // console.log(error);
     }
   };
 

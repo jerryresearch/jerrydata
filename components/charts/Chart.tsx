@@ -14,12 +14,14 @@ import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { toPng } from "html-to-image";
 import generatePDF, { Margin } from "react-to-pdf";
+import { useToast } from "../ui/use-toast";
 
 type Props = {
   chart: Chart;
 };
 
 const Chart = ({ chart }: Props) => {
+  const { toast } = useToast();
   const { data: session } = useSession();
   const searchParams = useSearchParams();
 
@@ -43,8 +45,14 @@ const Chart = ({ chart }: Props) => {
       data.title = title;
       const res = await updateChart(userId, reportId, chart._id, data);
       setIsEditing(false);
-    } catch (error) {
-      console.log("error chart");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description:
+          "There was an issue updating the name. Please try again later.",
+      });
+      // console.log(error);
     }
   };
 
@@ -57,8 +65,13 @@ const Chart = ({ chart }: Props) => {
         link.href = dataUrl;
         link.click();
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((error: any) => {
+        toast({
+          variant: "destructive",
+          title: `Uh oh! ${error.message}.`,
+          description: "Please try again later.",
+        });
+        // console.log(error);
       });
   };
 

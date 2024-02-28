@@ -2,6 +2,7 @@ import deleteChart from "@/lib/charts/deleteChart";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useToast } from "../ui/use-toast";
 
 type Props = {
   open: boolean;
@@ -20,6 +21,7 @@ const DeleteChartModal = ({
   chartId,
   title,
 }: Props) => {
+  const { toast } = useToast();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -28,8 +30,14 @@ const DeleteChartModal = ({
     try {
       await deleteChart(userId, reportId, chartId);
       router.refresh();
-    } catch (error) {
-      console.log("error");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description:
+          "There was an issue deleting the chart. Please try again later.",
+      });
+      // console.log(error);
     }
     onClose();
     setIsLoading(false);

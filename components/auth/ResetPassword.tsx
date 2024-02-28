@@ -5,8 +5,10 @@ import { useState, FormEvent } from "react";
 import Button from "@/components/Button";
 import Image from "next/image";
 import requestPasswordChange from "@/lib/profile/requestPasswordChange";
+import { useToast } from "../ui/use-toast";
 
 const ResetPassword = () => {
+  const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [isLinkSent, setIsLinkSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -18,8 +20,13 @@ const ResetPassword = () => {
       const res = await requestPasswordChange(email);
       console.log(res);
       setIsLinkSent(true);
-    } catch (error) {
-      console.log("error");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description: "Please try again later.",
+      });
+      // console.log(error);
     } finally {
       setIsLoading(false);
     }

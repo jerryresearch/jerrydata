@@ -7,8 +7,8 @@ export default async function autogenerateReport(
     method: "POST",
   });
   if (!res.ok) {
-    console.log("error");
-    throw new Error();
+    const err = await res.json();
+    throw new Error(err.message);
   }
   return res.json();
 }

@@ -25,13 +25,19 @@ const Datasets = ({ datasets, userId }: Props) => {
   const handleRefresh = async (datasetId: string) => {
     try {
       toast({
-        title: "Your dataset is being refreshed",
+        title: "Your connection is being refreshed",
         description: "Check after a while!",
       });
       const res = await refreshDataset(userId, datasetId);
       location.reload();
-    } catch (error) {
-      console.log("error in creating report");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description:
+          "There was an issue refreshing the connection. Please try again later.",
+      });
+      // console.log(error);
     }
   };
 

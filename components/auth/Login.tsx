@@ -8,6 +8,7 @@ import Link from "next/link";
 import styles from "./styles.module.css";
 import Image from "next/image";
 import { signIn } from "next-auth/react";
+import { useToast } from "../ui/use-toast";
 
 const initialState = {
   email: "",
@@ -15,6 +16,7 @@ const initialState = {
 };
 
 const Login = () => {
+  const { toast } = useToast();
   const searchParams = useSearchParams();
   const router = useRouter();
   const [data, setData] = useState(initialState);
@@ -34,14 +36,24 @@ const Login = () => {
         redirect: false,
       });
       if (res?.error) {
-        alert("Invalid credentials");
+        const err = res.error;
+        toast({
+          variant: "destructive",
+          title: `Uh oh! ${err}.`,
+          description: "Please try again.",
+        });
+        // console.log(error);
         setIsLoading(false);
         return;
       }
       router.replace(searchParams.get("callbackUrl") || "/u/stories");
-    } catch (error) {
-      alert("Error!!!");
-      console.log(error);
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description: "Please try again.",
+      });
+      // console.log(error);
       setIsLoading(false);
     }
   };

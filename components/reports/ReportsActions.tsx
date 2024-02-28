@@ -10,6 +10,7 @@ import Image from "next/image";
 import DeleteReportModal from "./DeleteReportModal";
 import duplicateReport from "@/lib/reports/duplicateReport";
 import EditReportModal from "./EditReportModal";
+import { useToast } from "../ui/use-toast";
 
 type Props = {
   report: Reports;
@@ -17,6 +18,7 @@ type Props = {
 };
 
 const ReportsActions = ({ report, userId }: Props) => {
+  const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [popUpOpen, setPopUpOpen] = useState(false);
@@ -32,8 +34,14 @@ const ReportsActions = ({ report, userId }: Props) => {
     try {
       const res = await duplicateReport(userId, report._id, report);
       location.reload();
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description:
+          "There was an issue deleting the dashboard. Please try again later.",
+      });
+      // console.log(error);
     }
   };
 

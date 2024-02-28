@@ -106,7 +106,7 @@ export async function POST(req: Request, { params: { userId } }: Props) {
 
     // openai file upload todo
     const dataset = await Dataset.create({
-      name,
+      name: name.split(".")[0],
       key,
       datatype,
       openAPIFile,

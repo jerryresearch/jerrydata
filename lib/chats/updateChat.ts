@@ -9,8 +9,8 @@ export default async function updateChat(
     body: JSON.stringify(body),
   });
   if (!res.ok) {
-    console.log("error");
-    throw new Error("Error updating chat data");
+    const err = await res.json();
+    throw new Error(err.message);
   }
   return res.json();
 }

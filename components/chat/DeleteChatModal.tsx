@@ -1,6 +1,7 @@
 import deleteChat from "@/lib/chats/deleteChat";
 import Image from "next/image";
 import { useState } from "react";
+import { useToast } from "../ui/use-toast";
 
 type Props = {
   open: boolean;
@@ -11,6 +12,7 @@ type Props = {
 };
 
 const DeleteChatModal = ({ open, onClose, id, userId, title }: Props) => {
+  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleDelete = async () => {
@@ -18,8 +20,14 @@ const DeleteChatModal = ({ open, onClose, id, userId, title }: Props) => {
     try {
       await deleteChat(userId, id);
       location.replace("/u/ask-jerry");
-    } catch (error) {
-      console.log("error");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description:
+          "There was an issue deleting the chat. Please try again later.",
+      });
+      // console.log(error);
     }
     onClose();
     setIsLoading(false);

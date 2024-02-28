@@ -3,6 +3,7 @@
 import updatePassword from "@/lib/profile/updatePassword";
 import Image from "next/image";
 import { useState } from "react";
+import { useToast } from "../ui/use-toast";
 
 type Props = {
   open: boolean;
@@ -11,6 +12,7 @@ type Props = {
 };
 
 const ChangePasswordModal = ({ open, onClose, userId }: Props) => {
+  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   // const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -27,9 +29,14 @@ const ChangePasswordModal = ({ open, onClose, userId }: Props) => {
       setIsLoading(true);
       const res = await updatePassword(userId, { newPassword });
       location.reload();
-    } catch (error) {
-      console.log("error updating password");
-      alert(error);
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description:
+          "There was an issue updating the password. Please try again later.",
+      });
+      // console.log(error);
     } finally {
       setIsLoading(true);
     }

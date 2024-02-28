@@ -9,6 +9,7 @@ import PieChart from "../charts/PieChart";
 import DoughnutChart from "../charts/DoughnutGraph";
 import PloarAreaChart from "../charts/PolarAreaChart";
 import HorizontalBarChart from "../charts/HorizontalBarChart";
+import { useToast } from "../ui/use-toast";
 
 const data = {
   Asia: {
@@ -54,6 +55,7 @@ type Props = {
 };
 
 const Story = ({ story }: Props) => {
+  const { toast } = useToast();
   const elementRef = useRef(null);
 
   const htmlToImageConvert = () => {
@@ -65,8 +67,13 @@ const Story = ({ story }: Props) => {
         link.href = dataUrl;
         link.click();
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((error) => {
+        toast({
+          variant: "destructive",
+          title: `Uh oh! ${error.message}.`,
+          description: "Please try again later.",
+        });
+        // console.log(error);
       });
   };
 

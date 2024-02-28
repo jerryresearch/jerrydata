@@ -13,6 +13,7 @@ import { useSearchParams } from "next/navigation";
 import duplicateChart from "@/lib/charts/duplicateChart";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { useToast } from "../ui/use-toast";
 
 type Props = {
   chart: Chart;
@@ -21,6 +22,7 @@ type Props = {
 };
 
 const ChartActions = ({ chart, downloadPNG, downloadPDF }: Props) => {
+  const { toast } = useToast();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { data: session } = useSession();
@@ -41,8 +43,14 @@ const ChartActions = ({ chart, downloadPNG, downloadPDF }: Props) => {
       const res = await duplicateChart(userId, reportId, chart._id, chart);
       console.log(res);
       location.reload();
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description:
+          "There was an issue duplicating the object. Please try again later.",
+      });
+      // console.log(error);
     }
   };
 

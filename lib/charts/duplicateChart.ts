@@ -14,8 +14,8 @@ export default async function duplicateChart(
   );
   console.log(res);
   if (!res.ok) {
-    console.log("error");
-    throw new Error();
+    const err = await res.json();
+    throw new Error(err.message);
   }
   return res.json();
 }

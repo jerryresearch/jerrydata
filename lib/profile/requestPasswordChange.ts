@@ -4,8 +4,8 @@ export default async function requestPasswordChange(email: string) {
     body: JSON.stringify({ email }),
   });
   if (!res.ok) {
-    console.log("error");
-    throw new Error();
+    const err = await res.json();
+    throw new Error(err.message);
   }
   return res.json();
 }

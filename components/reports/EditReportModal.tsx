@@ -9,8 +9,10 @@ type Props = {
 };
 
 import React, { useState } from "react";
+import { useToast } from "../ui/use-toast";
 
 const EditReportModal = ({ open, onClose, userId, report }: Props) => {
+  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
   const [name, setName] = useState<string>(report.name);
@@ -23,8 +25,14 @@ const EditReportModal = ({ open, onClose, userId, report }: Props) => {
       const res = await updateReport(userId, report._id, { name, description });
       onClose();
       location.reload();
-    } catch (error) {
-      console.log("error in updating report");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description:
+          "There was an issue updating the dashboard. Please try again later.",
+      });
+      // console.log(error);
     } finally {
       setIsLoading(false);
     }

@@ -10,7 +10,8 @@ export default async function getStories(userId: string) {
     }
   );
   if (!res.ok) {
-    console.log("error");
+    const err = await res.json();
+    throw new Error(err.message);
   }
   return res.json();
 }

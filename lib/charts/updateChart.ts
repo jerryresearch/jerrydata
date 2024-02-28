@@ -10,8 +10,8 @@ export default async function updateChart(
     body: JSON.stringify(body),
   });
   if (!res.ok) {
-    console.log("error");
-    throw new Error("Error updating chart data");
+    const err = await res.json();
+    throw new Error(err.message);
   }
   return res.json();
 }

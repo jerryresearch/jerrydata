@@ -13,8 +13,8 @@ export default async function setTable(
     }
   );
   if (!res.ok) {
-    console.log("error");
-    throw Error("error");
+    const err = await res.json();
+    throw new Error(err.message);
   }
   return res.json();
 }

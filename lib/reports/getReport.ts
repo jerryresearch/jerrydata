@@ -4,8 +4,8 @@ export default async function getReport(userId: string, reportId: string) {
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/report/${userId}/${reportId}`
   );
   if (!res.ok) {
-    console.log("error");
-    throw new Error();
+    const err = await res.json();
+    throw new Error(err.message);
   }
   return res.json();
 }

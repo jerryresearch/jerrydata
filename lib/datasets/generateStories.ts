@@ -5,8 +5,8 @@ export default async function generateStories(
   if (!userId || !datasetId) return null;
   const res = await fetch(`/api/stories/${userId}/${datasetId}`);
   if (!res.ok) {
-    console.log("error");
-    throw new Error();
+    const err = await res.json();
+    throw new Error(err.message);
   }
   return res.json();
 }

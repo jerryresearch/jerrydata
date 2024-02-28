@@ -10,7 +10,8 @@ export default async function getDataset(
     }/api/${type.toLowerCase()}/dataset/${userId}/${datasetId}`
   );
   if (!res.ok) {
-    console.log("error");
+    const err = await res.json();
+    throw new Error(err.message);
   }
   return res.json();
 }

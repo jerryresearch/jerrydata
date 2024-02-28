@@ -10,8 +10,8 @@ export default async function createChart(
   });
   console.log(res);
   if (!res.ok) {
-    console.log("error");
-    throw new Error();
+    const err = await res.json();
+    throw new Error(err.message);
   }
   return res.json();
 }

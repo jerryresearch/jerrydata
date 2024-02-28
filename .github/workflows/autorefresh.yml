@@ -1,0 +1,20 @@
+name: hourly refresh
+
+on:
+  schedule:
+    cron: "0 * * * *"
+
+jobs:
+  auto-refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Run JavaScript file
+        run: node util/refresh.js

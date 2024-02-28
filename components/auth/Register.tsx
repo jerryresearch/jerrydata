@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import styles from "./styles.module.css";
 import { signIn } from "next-auth/react";
+import { useToast } from "../ui/use-toast";
 
 const initialState = {
   name: "",
@@ -14,6 +15,7 @@ const initialState = {
 };
 
 const Register = () => {
+  const { toast } = useToast();
   const [data, setData] = useState(initialState);
   const [isLoading, setIsLoading] = useState(false);
   const [terms, setTerms] = useState(false);
@@ -42,9 +44,8 @@ const Register = () => {
 
       const user = await res.json();
       if (!res.ok) {
-        alert(user.message);
         setIsLoading(false);
-        return;
+        throw new Error(user.message);
       }
 
       await signIn("credentials", {
@@ -54,8 +55,12 @@ const Register = () => {
       });
     } catch (error: any) {
       setIsLoading(false);
-      alert(error);
-      setIsLoading(false);
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description: "Please try again.",
+      });
+      // console.log(error);
     }
   };
 

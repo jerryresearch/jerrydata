@@ -9,8 +9,10 @@ import { usePathname, useRouter } from "next/navigation";
 import validateToken from "@/lib/profile/validateToken";
 import Link from "next/link";
 import resetPassword from "@/lib/profile/resetPassword";
+import { useToast } from "../ui/use-toast";
 
 const CreateNewPassword = () => {
+  const { toast } = useToast();
   const pathname = usePathname();
   const router = useRouter();
   const [password, setPassword] = useState("");
@@ -31,9 +33,13 @@ const CreateNewPassword = () => {
       const res = await resetPassword(token, password);
       console.log(res);
       router.replace("/user/login");
-    } catch (error) {
-      console.log("error updating password");
-      alert(error);
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description: "Please try again later.",
+      });
+      // console.log(error);
     }
   };
 
@@ -44,7 +50,7 @@ const CreateNewPassword = () => {
         const token = items[items.length - 1];
         const res = await validateToken(token);
       } catch (error) {
-        console.log("error");
+        // console.log("error");
         setIsError(true);
       } finally {
         setIsLoading(false);

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import React from "react";
+import { useToast } from "../ui/use-toast";
 
 type Props = {
   step: number;
@@ -23,6 +24,7 @@ const Header = ({
   type,
   id,
 }: Props) => {
+  const { toast } = useToast();
   const pathname = usePathname();
   const ind = pathname.lastIndexOf("/");
   const path = pathname.substring(0, ind);
@@ -37,9 +39,14 @@ const Header = ({
         await deleteDataset(userId, id);
         console.log("done");
         location.replace("/u/connectors");
-      } catch (error) {
-        alert("error");
-        console.log(error);
+      } catch (error: any) {
+        toast({
+          variant: "destructive",
+          title: `Uh oh! ${error.message}.`,
+          description:
+            "There was an issue deleting connection. Please try again later.",
+        });
+        // console.log(error);
       }
     } else {
       location.replace("/u/connectors");

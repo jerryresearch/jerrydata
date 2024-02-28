@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import updateDataset from "@/lib/datasets/updateDataset";
 import Header from "./data/Header";
+import { useToast } from "./ui/use-toast";
 
 const fields = {
   "Column Type": ["Attribute", "Measure"],
@@ -74,6 +75,7 @@ type SelectedAttributes = {
 };
 
 const EditFields = ({ id, userId, headers, type }: Props) => {
+  const { toast } = useToast();
   const [searchInput, setSearchInput] = useState("");
   const [newupdatedheaders, setNewUpdatedHeaders] = useState(
     headers.map((header) => ({
@@ -121,9 +123,14 @@ const EditFields = ({ id, userId, headers, type }: Props) => {
         headers: newupdatedheaders,
       });
       router.push(`add-dataset-info?id=${id}&type=${type}`);
-    } catch (error) {
-      console.log("error in updating dataset");
-      alert("error updating");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: `Uh oh! ${error.message}.`,
+        description:
+          "There was an issue updating the object. Please try again later.",
+      });
+      // console.log(error);
     }
   };
 
