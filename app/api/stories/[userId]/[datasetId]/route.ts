@@ -106,7 +106,7 @@ export async function GET(
       `,
       name: "AutoInsight Analyst",
       tools: [{ type: "code_interpreter" }, { type: "retrieval" }],
-      model: "gpt-4-turbo-preview",
+      model: "gpt-4-1106-preview",
       file_ids: [dataset.openAPIFile.id],
     });
 
@@ -184,6 +184,9 @@ export async function GET(
           res = res.split("```")[1].replace("json", "");
           const insight = JSON.parse(res);
           insights.push(insight);
+        } else {
+          // @ts-ignore
+          console.log(message.content[0].text.value);
         }
       }
     }

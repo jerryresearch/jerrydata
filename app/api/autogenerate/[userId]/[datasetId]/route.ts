@@ -62,7 +62,7 @@ export async function GET(
       `,
       name: "Analytics Assistant",
       tools: [{ type: "code_interpreter" }, { type: "retrieval" }],
-      model: "gpt-4-turbo-preview",
+      model: "gpt-4-1106-preview",
       file_ids: [dataset.openAPIFile.id],
     });
 
