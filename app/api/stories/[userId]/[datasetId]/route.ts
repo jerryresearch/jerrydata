@@ -1,3 +1,5 @@
+export const maxDuration = 300;
+
 import mongoose from "mongoose";
 import { connectToDB } from "@/utils/mongoose";
 import { NextResponse } from "next/server";

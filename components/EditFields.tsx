@@ -282,7 +282,7 @@ const EditFields = ({ id, userId, headers, type }: Props) => {
                 <th className="p-5 font-normal">NP</th>
                 <th className="p-5 font-normal">Name</th>
                 <th className="p-5 font-normal">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between gap-4">
                     <span>Column Type</span>
                     <Image
                       src="/assets/info.svg"
@@ -293,7 +293,7 @@ const EditFields = ({ id, userId, headers, type }: Props) => {
                   </div>
                 </th>
                 <th className="p-5 font-normal">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between gap-4">
                     <span>Default Aggregate</span>
                     <Image
                       src="/assets/info.svg"
@@ -304,7 +304,7 @@ const EditFields = ({ id, userId, headers, type }: Props) => {
                   </div>
                 </th>
                 <th className="p-5 font-normal">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between gap-4">
                     <span>Date Field Type</span>
                     <Image
                       src="/assets/info-icon.svg"
@@ -315,7 +315,7 @@ const EditFields = ({ id, userId, headers, type }: Props) => {
                   </div>
                 </th>
                 <th className="p-5 font-normal">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between gap-4">
                     <span>Default Geo Type</span>
                     <Image
                       src="/assets/info.svg"
