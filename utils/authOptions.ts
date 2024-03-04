@@ -136,6 +136,7 @@ export const authOptions: NextAuthOptions = {
           name: userData.name,
           email: userData.email,
           image: userData.image,
+          generatingStories: userData.generatingStories,
         },
       };
     },

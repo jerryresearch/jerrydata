@@ -8,6 +8,7 @@ import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { OpenAI } from "openai";
 import csv from "csv-parser";
 import Dataset from "@/models/Dataset";
+import User from "@/models/User";
 
 type Props = {
   params: {
@@ -39,11 +40,19 @@ export async function GET(
     if (!userId || !mongoose.isValidObjectId(userId)) {
       return NextResponse.json({ message: "Invalid session" }, { status: 403 });
     }
+    const user = await User.findById(userId);
+    user.generatingStories = true;
+    await user.save();
+
     if (!datasetId || !mongoose.isValidObjectId(datasetId)) {
+      user.generatingStories = true;
+      await user.save();
       return NextResponse.json({ message: "Invalid request" }, { status: 400 });
     }
     const dataset = await Dataset.findOne({ _id: datasetId, addedBy: userId });
     if (!dataset) {
+      user.generatingStories = true;
+      await user.save();
       return NextResponse.json(
         { message: "Dataset not found" },
         { status: 404 }
@@ -299,12 +308,13 @@ export async function GET(
     }
 
     console.log("done");
-    // const stories = await Story.find({ dataset: datasetId });
 
     // return NextResponse.json(
-    //   { insights, messages, stories, charts },
+    //   { insights, messages, charts },
     //   { status: 200 }
     // );
+    user.generatingStories = true;
+    await user.save();
     return NextResponse.json({ message: "done" }, { status: 200 });
   } catch (error) {
     console.log(error);

@@ -30,26 +30,26 @@ const AutoGenerate = ({ id, userId, dataset }: Props) => {
   const handleNext = async () => {
     try {
       setIsLoading(true);
+      if (generateReport) {
+        autogenerateQuestions(userId, id);
+        // const response = await autogenerateQuestions(userId, id);
+        // console.log(response.message);
+        // console.log(response.responseMessage);
+      }
       if (generateStory) {
         generateStories(userId, id);
         toast({
           title: "Your stories are getting generated",
           description: "Check after a while!",
         });
-        router.push("/u/stories");
-        router.refresh();
+        location.replace("/u/stories");
+        // router.refresh();
         // const response = await generateStories(userId, id);
         // console.log(response.insights);
         // console.log(response.stories);
         // console.log(response.charts);
         // console.log(response.messages);
       } else {
-        if (generateReport) {
-          autogenerateQuestions(userId, id);
-          // const response = await autogenerateQuestions(userId, id);
-          // console.log(response.message);
-          // console.log(response.responseMessage);
-        }
         router.push("/u/connectors");
         router.refresh();
       }
