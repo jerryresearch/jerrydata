@@ -61,7 +61,10 @@ export async function POST(req: Request, { params: { userId } }: Props) {
 
     const user = await User.findById(userId);
     if (!user) {
-      return NextResponse.json({ message: "Invalid session" }, { status: 403 });
+      return NextResponse.json(
+        { message: "Invalid request, user not found" },
+        { status: 403 }
+      );
     }
 
     const datasetObj = await Dataset.findById(dataset);
