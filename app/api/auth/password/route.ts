@@ -30,6 +30,7 @@ export async function POST(req: Request) {
 
     const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
     const SENDGRID_FROM_ADDRESS = process.env.SENDGRID_FROM_ADDRESS;
+    const SENDGRID_RESET_TEMPLATE_ID = process.env.SENDGRID_RESET_TEMPLATE_ID;
     if (!SENDGRID_API_KEY || !SENDGRID_FROM_ADDRESS) {
       return NextResponse.json(
         { message: "Sendgrid data missing" },
@@ -42,11 +43,15 @@ export async function POST(req: Request) {
 
     const mailOptions = {
       to: user.email,
-      from: SENDGRID_FROM_ADDRESS, // Use the email address or domain you verified above
-      subject: "Password change request",
-      text: `Hi ${user.name} \nPlease click on the following link ${link} to reset your password. \n\n If you did not request this, please ignore this email and your password will remain unchanged.\n`,
+      from: { name: "Jerrydata", email: SENDGRID_FROM_ADDRESS },
+      templateId: SENDGRID_RESET_TEMPLATE_ID,
+      dynamicTemplateData: {
+        name: user.name,
+        url: link,
+      },
     };
 
+    // @ts-ignore
     await sgMail.send(mailOptions);
     return NextResponse.json(
       { message: "Password reset mail sent" },

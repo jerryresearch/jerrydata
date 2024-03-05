@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import User from "@/models/User";
 import bcrypt from "bcrypt";
 import { connectToDB } from "@/utils/mongoose";
+import sgMail from "@sendgrid/mail";
 
 export async function POST(req: Request) {
   try {
@@ -35,6 +36,21 @@ export async function POST(req: Request) {
       password: hashed_password,
     });
 
+    const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY as string;
+    const SENDGRID_FROM_ADDRESS = process.env.SENDGRID_FROM_ADDRESS;
+    const SENDGRID_ONBOARDING_TEMPLATE_ID =
+      process.env.SENDGRID_ONBOARDING_TEMPLATE_ID;
+
+    sgMail.setApiKey(SENDGRID_API_KEY);
+    const mailOptions = {
+      to: user.email,
+      from: { name: "Jerrydata", email: SENDGRID_FROM_ADDRESS },
+      templateId: SENDGRID_ONBOARDING_TEMPLATE_ID,
+      dynamicTemplateData: { name: user.name },
+    };
+
+    // @ts-ignore
+    await sgMail.send(mailOptions);
     const { password: newPassword, ...rest } = user;
 
     // send the new user details except password
