@@ -30,6 +30,10 @@ const UserSchema = new mongoose.Schema(
       type: Date,
       required: false,
     },
+    generatingStories: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

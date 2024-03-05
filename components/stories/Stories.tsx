@@ -121,7 +121,7 @@ const Stories = ({ datasets, stories }: Props) => {
           ))}
         </CarouselContent>
       </Carousel> */}
-      <div className="bg-[#EEEEFF] h-px"></div>
+      {/* <div className="bg-[#EEEEFF] h-px"></div> */}
       <section className="flex flex-col gap-6 md:flex-row md:justify-between md:items-center">
         <Popover>
           <PopoverTrigger className="flex w-full md:w-[298px] h-[42px] py-2 px-3 justify-between items-center rounded border border-[#EEEEFF] bg-white">

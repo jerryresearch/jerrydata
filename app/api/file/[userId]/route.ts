@@ -1,3 +1,5 @@
+export const maxDuration = 300;
+
 import csv from "csv-parser";
 import { NextResponse } from "next/server";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";

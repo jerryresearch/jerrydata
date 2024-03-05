@@ -1,3 +1,5 @@
+export const maxDuration = 300;
+
 import Chat from "@/models/Chat";
 import mongoose from "mongoose";
 import { connectToDB } from "@/utils/mongoose";

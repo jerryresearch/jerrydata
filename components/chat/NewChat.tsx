@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useRef, useState } from "react";
 import {
   Popover,
   PopoverContent,
@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/popover";
 import Loading from "../Loading";
 import createChat from "@/lib/chats/createChat";
+import lottie from "lottie-web";
 import { useToast } from "../ui/use-toast";
 
 type Props = {
@@ -53,9 +54,24 @@ const NewChat = ({ datasets, userId }: Props) => {
     setIsLoading(false);
   };
 
-  if (isLoading) {
-    return <Loading />;
-  }
+  // if (isLoading) {
+  //   return <Loading />;
+  // }
+
+  const animationContainer = useRef(null);
+
+  useEffect(() => {
+    lottie.loadAnimation({
+      // @ts-ignore
+      container: animationContainer.current,
+      renderer: "svg",
+      loop: true,
+      autoplay: true,
+      path: "/assets/jd_loader_2.json",
+    });
+  }, []);
+
+  // return
 
   return (
     <section className="flex-[1_0_0] flex flex-col self-stretch bg-white">
@@ -188,7 +204,9 @@ const NewChat = ({ datasets, userId }: Props) => {
       </div>
       <div className="flex-[1_0_0] flex flex-col rounded-[6px] p-[30px]">
         <section className="flex-[1_0_0] flex flex-col gap-6 px-[30px] py-4 rounded-[8px] bg-[#FAFAFA] overflow-auto">
-          <div className="flex flex-col gap-6 flex-[1_0_0] justify-end"></div>
+          <div className="flex flex-col gap-6 flex-[1_0_0] justify-end">
+            <div ref={animationContainer} className="w-5 h-5"></div>
+          </div>
           <form
             onSubmit={handleSubmit}
             className="flex sticky bottom-0 border border-[#EEEEFF] rounded-[124px] px-[10px] py-3 bg-white"

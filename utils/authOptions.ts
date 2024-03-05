@@ -3,6 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { connectToDB } from "./mongoose";
 import { verifyPassword } from "./verifyPassword";
+import sgMail from "@sendgrid/mail";
 import User from "@/models/User";
 
 export const authOptions: NextAuthOptions = {
@@ -116,6 +117,24 @@ export const authOptions: NextAuthOptions = {
             email: user.profile.email,
             image: user.profile.picture,
           });
+
+          const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY as string;
+          const SENDGRID_FROM_ADDRESS = process.env.SENDGRID_FROM_ADDRESS;
+          const SENDGRID_ONBOARDING_TEMPLATE_ID =
+            process.env.SENDGRID_ONBOARDING_TEMPLATE_ID;
+
+          sgMail.setApiKey(SENDGRID_API_KEY);
+          const mailOptions = {
+            to: user.profile.email,
+            from: { name: "Jerrydata", email: SENDGRID_FROM_ADDRESS },
+            templateId: SENDGRID_ONBOARDING_TEMPLATE_ID,
+            dynamicTemplateData: {
+              name: user.profile.given_name || user.profile.name,
+            },
+          };
+
+          // @ts-ignore
+          await sgMail.send(mailOptions);
         } catch (err) {
           console.log("Error", err);
           return false;
@@ -136,6 +155,7 @@ export const authOptions: NextAuthOptions = {
           name: userData.name,
           email: userData.email,
           image: userData.image,
+          generatingStories: userData.generatingStories,
         },
       };
     },

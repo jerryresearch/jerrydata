@@ -11,6 +11,7 @@ const Page = async () => {
   const session: any = await getServerSession(authOptions);
   const userId = session?.user?._id || session?.user?.id;
   const name = session?.user?.name;
+  const generatingStories = session?.user?.generatingStories;
 
   const datasetsData: Promise<Dataset[]> = getDatasets(userId);
   const storiesData: Promise<Story[]> = getStories(userId);
@@ -39,11 +40,12 @@ const Page = async () => {
 
       {/* Stories */}
       <section className="mt-6">
-        {stories.length == 0 ? (
-          <EmptyPage />
+        {/* {stories.length == 0 ? (
+          <EmptyPage generatingStories={generatingStories} />
         ) : (
           <Stories datasets={datasets} stories={stories} />
-        )}
+        )} */}
+        <EmptyPage generatingStories={false} />
       </section>
     </section>
   );

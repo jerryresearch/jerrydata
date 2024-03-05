@@ -1,3 +1,5 @@
+export const maxDuration = 300;
+
 import mongoose from "mongoose";
 import { connectToDB } from "@/utils/mongoose";
 import { NextResponse } from "next/server";
@@ -172,7 +174,7 @@ export async function GET(
       `,
             name: "AutoInsight Analyst",
             tools: [{ type: "code_interpreter" }, { type: "retrieval" }],
-            model: "gpt-4-turbo-preview",
+            model: "gpt-4-1106-preview",
             file_ids: [dataset.openAPIFile.id],
           }
         );
@@ -256,7 +258,7 @@ export async function GET(
       `,
         name: "AutoInsight Analyst",
         tools: [{ type: "code_interpreter" }, { type: "retrieval" }],
-        model: "gpt-4-turbo-preview",
+        model: "gpt-4-1106-preview",
         file_ids: [dataset.openAPIFile.id],
       });
 

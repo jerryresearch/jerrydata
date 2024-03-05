@@ -3,9 +3,7 @@ export default async function autogenerateReport(
   datasetId: string
 ) {
   if (!userId || !datasetId) return null;
-  const res = await fetch(`/api/autogenerate/${userId}/${datasetId}`, {
-    method: "POST",
-  });
+  const res = await fetch(`/api/autogenerate/${userId}/${datasetId}`);
   if (!res.ok) {
     const err = await res.json();
     throw new Error(err.message);

@@ -1,8 +1,9 @@
+export const maxDuration = 300;
+
 import mongoose from "mongoose";
 import { connectToDB } from "@/utils/mongoose";
 import { NextResponse } from "next/server";
 import Dataset from "@/models/Dataset";
-import bcrypt from "bcrypt";
 import mysql from "mysql2/promise";
 import { encrypt } from "@/utils/encryption";
 

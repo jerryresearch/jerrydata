@@ -1,3 +1,5 @@
+export const maxDuration = 300;
+
 import mongoose from "mongoose";
 import { connectToDB } from "@/utils/mongoose";
 import { NextResponse } from "next/server";
@@ -127,99 +129,19 @@ export async function GET(
         responseMessage = responseMessage.split("```")[1].replace("json", "");
         dataset.questions = JSON.parse(responseMessage);
         await dataset.save();
-        console.log(dataset.questions);
       }
     }
 
-    return NextResponse.json(
-      { responseMessage, message: messages.data },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.log(error);
-    return NextResponse.json({ message: error }, { status: 500 });
-  }
-}
-
-export async function POST(
-  req: Request,
-  { params: { userId, datasetId } }: Props
-) {
-  try {
-    await connectToDB();
-    if (!userId || !mongoose.isValidObjectId(userId)) {
-      return NextResponse.json({ message: "Invalid session" }, { status: 403 });
-    }
-    if (!datasetId || !mongoose.isValidObjectId(datasetId)) {
-      return NextResponse.json({ message: "Invalid request" }, { status: 400 });
-    }
-    const dataset = await Dataset.findOne({ _id: datasetId, addedBy: userId });
-    if (!dataset) {
+    console.log(dataset.questions?.length, "length");
+    if (!dataset.questions) {
       return NextResponse.json(
-        { message: "Dataset not found" },
-        { status: 404 }
+        { message: "Coundn't load questions" },
+        { status: 200 }
       );
     }
 
-    const assistant = await openai.beta.assistants.create({
-      instructions: `
-        Act as an advanced expert analytics assistant capable of interpreting user queries about data visualization and providing standardized JSON outputs for chart generation, specifically using actual column names from the uploaded dataset.
-
-        Input Sample:
-        Example JSON:
-                [
-                  {"question": "What are the trends over time for key metrics?", "type": "trend_analysis"},
-                  {"question": "How do different categories compare in terms of key metrics?", "type": "comparison_analysis"},
-                  ...
-                ]
-
-        Instructions:
-
-        Interpret User Queries:
-        Analyze each user query to understand the key components necessary for creating a chart.
-        Focus on identifying specific metrics or dimensions mentioned in the query that directly correspond to column headers in the dataset.
-
-        Determine Chart Parameters:
-        Chart Type: Determine the most appropriate type of chart (Charts Available:"bar", "doughnut", "pie", "line", "polar area", "horizontal bar") based on the nature of the data and the user's intent.
-        X and Y Axes:
-        Identify and provide the exact column name from the dataset for the x-axis and y-axis.
-        Ensure that each axis is represented by a single, specific column header, not an array or a combination of headers.
-        The column names should exactly match those in the dataset, without alteration or generalization.
-        Chart Title: Generate a concise and informative title for the chart that accurately reflects the user's intent and the data being visualized.
-
-        Generate Standardized JSON Output:
-        Your response should be a JSON object containing the details necessary for creating the chart, precisely formatted as follows:
-        {
-          "chartType": "<Identified Chart Type>",
-          "xAxis": "<Exact Column Name for X-axis>",
-          "yAxis": "<Exact Column Name for Y-axis>",
-          "title": "<Generated Chart Title>"
-        }
-
-        Exclude Additional Insights:
-        Refrain from providing additional insights or analysis recommendations in your output. Focus solely on the specifics needed for chart details generation.
-
-        Clarity and Precision:
-        Ensure that your responses are clear, unambiguous, and directly address the user's query.
-        Adhere strictly to the JSON structure outlined, maintaining precision in the format and content of your output.
-        User-Centric Approach:
-        Always prioritize the user's analytical needs and the context of their query when generating the output.
-        Your response should facilitate an intuitive and insightful visualization of the data as per the user's request.
-
-        Additional Note on Column Names:
-        Column Name Accuracy: It is critical that the column names provided in the output match exactly with those used in the user's dataset. This ensures that the user can directly use the output for data visualization without needing to interpret or modify the column references.
-      `,
-      name: "Analytics Assistant",
-      tools: [{ type: "code_interpreter" }, { type: "retrieval" }],
-      model: "gpt-4-turbo-preview",
-      file_ids: [dataset.openAPIFile.id],
-    });
-
-    const assistantId = assistant.id;
-    const thread = await openai.beta.threads.create({});
-
     const report = await Report.create({
-      name: `${dataset.name} Report`,
+      name: `${dataset.name} Auto Report`,
       description: "Auto generated report",
       createdBy: userId,
     });
@@ -235,12 +157,6 @@ export async function POST(
 
     // @ts-ignore
     let records = [];
-
-    const headers = dataset.headers
-      // @ts-ignore
-      .filter((header) => !header.isDisabled)
-      // @ts-ignore
-      .map((header) => header.name);
 
     const chartTypes = [
       "bar",
@@ -264,11 +180,28 @@ export async function POST(
         });
     });
 
-    let messageList = [];
+    console.log("in loop");
+
     for (let i = 0; i < dataset.questions.length; i++) {
       await openai.beta.threads.messages.create(thread.id, {
         role: "user",
         content: `
+        Generate Standardized JSON Output:
+        Your response should be a JSON object containing the details necessary for creating the chart, precisely formatted as follows:
+        {
+          "chartType": "<Identified Chart Type>",
+          "xAxis": "<Exact Column Name for X-axis>",
+          "yAxis": "<Exact Column Name for Y-axis>",
+          "title": "<Generated Chart Title>"
+        }
+
+        Chart Type: Determine the most appropriate type of chart (Charts Available:"bar", "doughnut", "pie", "line", "polar area", "horizontal bar") based on the nature of the data and the user's intent.
+        X and Y Axes:
+        Identify and provide the exact column name from the dataset for the x-axis and y-axis.
+        Ensure that each axis is represented by a single, specific column header, not an array or a combination of headers.
+        The column names should exactly match those in the dataset, without alteration or generalization.
+        Chart Title: Generate a concise and informative title for the chart that accurately reflects the user's intent and the data being visualized.
+
         Question: ${dataset.questions[i].question}.
         Type: ${dataset.questions[i].type}
         
@@ -290,9 +223,6 @@ export async function POST(
       console.log("runStatus", runStatus);
       const messages = await openai.beta.threads.messages.list(thread.id);
       const message = messages.data[0];
-
-      // @ts-ignore
-      messageList.push(message.content[0].text.value);
 
       let chart;
       if (
@@ -349,13 +279,15 @@ export async function POST(
           yData,
           createdBy: userId,
         });
+        console.log("chart created!!!");
+      } else {
+        console.log("nope");
       }
     }
 
     console.log("done");
-    const messages = await openai.beta.threads.messages.list(thread.id);
     return NextResponse.json(
-      { message: messages, messageList },
+      { responseMessage, message: messages.data },
       { status: 200 }
     );
   } catch (error) {
