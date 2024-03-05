@@ -15,11 +15,10 @@ const MessageSchema = new mongoose.Schema(
     content: {
       type: String,
     },
-    // imageIds: [
-    //   {
-    //     type: String,
-    //   },
-    // ],
+    mode: {
+      type: String,
+      enum: ["Dissect", "Exploratory"],
+    },
     chartType: {
       type: String,
       enum: ["bar", "doughnut", "pie", "line", "polar area", "horizontal bar"],

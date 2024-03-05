@@ -40,11 +40,12 @@ const Page = async () => {
 
       {/* Stories */}
       <section className="mt-6">
-        {stories.length == 0 ? (
+        {/* {stories.length == 0 ? (
           <EmptyPage generatingStories={generatingStories} />
         ) : (
           <Stories datasets={datasets} stories={stories} />
-        )}
+        )} */}
+        <EmptyPage generatingStories={false} />
       </section>
     </section>
   );

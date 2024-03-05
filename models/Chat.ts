@@ -6,7 +6,11 @@ const ChatSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    assistant: {
+    exploratoryAssistant: {
+      type: mongoose.Schema.Types.Mixed,
+      required: true,
+    },
+    dissectAssistant: {
       type: mongoose.Schema.Types.Mixed,
       required: true,
     },

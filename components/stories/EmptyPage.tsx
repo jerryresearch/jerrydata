@@ -19,16 +19,18 @@ const EmptyPage = ({ generatingStories }: Props) => {
       renderer: "svg",
       loop: true,
       autoplay: true,
-      path: "/assets/stories_loader.json",
+      path: generatingStories
+        ? "/assets/stories_loader.json"
+        : "/assets/connect_loader.json",
     });
-  }, []);
+  }, [generatingStories]);
 
   if (generatingStories) {
     return (
       <div className="flex flex-col items-center gap-6 p-8 rounded-[6px] bg-white border border-[#EEEEFF]">
         <div className="md:w-[519px] flex flex-col items-center text-center text-[#080D19] gap-2">
           <div className="w-12 h-12 rounded-full bg-[#fafafa] flex items-center justify-center">
-            <div ref={animationContainer} className="w-6 h-6"></div>
+            <div ref={animationContainer} className="w-6 h-6 opacity-50"></div>
           </div>
           <p className="font-medium text-2xl">
             Sit Tight! Your Stories Are Brewing.
@@ -44,7 +46,10 @@ const EmptyPage = ({ generatingStories }: Props) => {
 
   return (
     <div className="flex flex-col items-center gap-6 p-8 rounded-[6px] bg-white border border-[#EEEEFF]">
-      <div className="md:w-[519px] flex flex-col text-center text-[#080D19] gap-2">
+      <div className="md:w-[519px] flex flex-col items-center text-center text-[#080D19] gap-2">
+        <div className="w-12 h-12 rounded-full bg-[#fafafa] flex items-center justify-center">
+          <div ref={animationContainer} className="w-6 h-6 opacity-50"></div>
+        </div>
         <p className="font-medium text-2xl">
           Connect a Source for Fresh Stories
         </p>
