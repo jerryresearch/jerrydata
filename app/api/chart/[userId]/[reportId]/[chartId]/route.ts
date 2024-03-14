@@ -198,7 +198,6 @@ export async function PUT(
         runValidators: true,
       }
     );
-    console.log(updatedChart.xAxis);
     return NextResponse.json(
       { chart: updatedChart, message: "chart updated" },
       { status: 201 }
