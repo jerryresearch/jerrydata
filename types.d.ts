@@ -69,13 +69,22 @@ type Message = {
   _id: string;
   role: string;
   type: string;
-  chartType: string;
   content: string;
-  title: string;
-  xAxis: string;
-  yAxis: string;
-  xData: any[];
-  yData: any[];
+  mode: string;
+  how?: string;
+  why?: string;
+  what?: string;
+  suggestion?: string;
+  query?: string;
+  description?: string;
+  assumptions?: string;
+  result?: any[];
+  chartType?: string;
+  title?: string;
+  xAxis?: string;
+  yAxis?: string;
+  xData?: any[];
+  yData?: any[];
   chat: string;
 };
 

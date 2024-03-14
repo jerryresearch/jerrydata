@@ -19,6 +19,27 @@ const MessageSchema = new mongoose.Schema(
       type: String,
       enum: ["Dissect", "Exploratory"],
     },
+    query: {
+      type: String,
+    },
+    description: {
+      type: String,
+    },
+    assumptions: {
+      type: String,
+    },
+    how: {
+      type: String,
+    },
+    why: {
+      type: String,
+    },
+    what: {
+      type: String,
+    },
+    suggestion: {
+      type: String,
+    },
     chartType: {
       type: String,
       enum: ["bar", "doughnut", "pie", "line", "polar area", "horizontal bar"],

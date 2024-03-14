@@ -1,10 +1,10 @@
-export default async function createChart(
+export default async function getAssumptions(
   userId: string,
-  reportId: string,
+  chatId: string,
   data: any
 ) {
-  if (!userId || !reportId) return null;
-  const res = await fetch(`/api/chart/${userId}/${reportId}`, {
+  if (!userId || !chatId) return null;
+  const res = await fetch(`/api/chat/${userId}/${chatId}/assumptions`, {
     method: "POST",
     body: JSON.stringify(data),
   });

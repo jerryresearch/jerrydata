@@ -24,7 +24,11 @@ const ChatSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    thread: {
+    exploratoryThread: {
+      type: mongoose.Schema.Types.Mixed,
+      required: true,
+    },
+    dissectThread: {
       type: mongoose.Schema.Types.Mixed,
       required: true,
     },

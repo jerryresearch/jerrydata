@@ -13,25 +13,12 @@ const ChatsList = ({ chats }: Props) => {
   const searchParams = useSearchParams();
   const chatId = searchParams.get("id") || "";
 
-  const [filteredChats, setFilteredChats] = useState(chats);
-  const handleSearch = (query: string) => {
-    if (query == "") {
-      setFilteredChats(chats);
-    } else {
-      setFilteredChats(
-        chats.filter((chat) =>
-          chat.title.toLowerCase().includes(query.toLowerCase())
-        )
-      );
-    }
-  };
-
   return (
-    <aside className="flex flex-col h-full w-[280px] py-6 items-center gap-6 border-r border-[#EEEEFF]">
-      <div className="px-6 flex flex-col gap-4">
+    <aside className="flex flex-col h-full w-[280px] items-center gap-4 border-r border-[#EEEEFF]">
+      <div className="px-6 py-4 flex items-center w-full border-b border-[#EEEEFF]">
         <Link
           href={"/u/ask-jerry"}
-          className="h-10 px-2 bg-primary text-white rounded-[6px] flex items-center gap-[6px]"
+          className="h-[41px] px-2 bg-primary w-full text-white rounded-[6px] flex items-center gap-[6px]"
         >
           <Image
             src="/assets/plus-icon.svg"
@@ -41,44 +28,20 @@ const ChatsList = ({ chats }: Props) => {
           />
           <span>New Chat</span>
         </Link>
-        <div className="h-10 px-2 border border-[#EEEEFF] rounded-[6px] flex items-center gap-[10px]">
-          <Image
-            src="/assets/search-icon.svg"
-            alt="add new chat"
-            width={20}
-            height={20}
-          />
-          <input
-            type="text"
-            placeholder="Search chat"
-            onChange={(e) => handleSearch(e.target.value)}
-            className="focus:outline-none w-full"
-          />
-        </div>
       </div>
-      <div className="h-px border border-[#EEEEFF] w-full"></div>
       <div className="px-6 w-full overflow-auto">
-        <div className="flex flex-col gap-[14px] text-[#080D19]">
-          <h1 className="font-medium fixed bg-white">Recent chats</h1>
-          <div className="flex flex-col gap-[10px] pt-10">
-            {filteredChats.map((chat, index) => (
-              <Link
-                href={`/u/ask-jerry/${chat.title}?id=${chat._id}`}
-                key={index}
-                className={`flex py-[10px] px-[6px] gap-2 bg-white ${
-                  chat._id == chatId && "bg-[#FAFAFA] rounded-[6px]"
-                }`}
-              >
-                {/* <Image
-                  src="/assets/message-icon.svg"
-                  alt="message icon"
-                  width={20}
-                  height={20}
-                /> */}
-                <span className="truncate">{chat.title}</span>
-              </Link>
-            ))}
-          </div>
+        <div className="flex flex-col gap-[6px] bg-white">
+          {chats.map((chat, index) => (
+            <Link
+              href={`/u/ask-jerry/${chat.title}?id=${chat._id}`}
+              key={index}
+              className={`py-[6px] px-[10px] gap-2 h-[42] rounded-[6px] hover:bg-[#FAFAFA] ${
+                chat._id == chatId ? "bg-[#FAFAFA]" : "bg-white"
+              }`}
+            >
+              <span className="truncate text-[#080D19]">{chat.title}</span>
+            </Link>
+          ))}
         </div>
       </div>
     </aside>

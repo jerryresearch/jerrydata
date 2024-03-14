@@ -69,17 +69,23 @@ export async function POST(
       return NextResponse.json({ message: "Invalid chat" }, { status: 404 });
     }
 
-    const { message } = await req.json();
+    const { message, mode } = await req.json();
 
     const chat = await Chat.findOne({ _id: chatId, createdBy: userId });
     const dataset = await Dataset.findById(chat.dataset);
-    const assistantId = chat.assistant.id;
 
-    await openai.beta.threads.messages.create(chat.thread.id, {
+    const assistantId =
+      mode === "Exploratory"
+        ? chat.exploratoryAssistant.id
+        : chat.dissectAssistant.id;
+    const threadId =
+      mode === "Exploratory"
+        ? chat.exploratoryThread.id
+        : chat.dissectThread.id;
+
+    await openai.beta.threads.messages.create(threadId, {
       role: "user",
-      content:
-        message +
-        " If possible, generate the JSON object that includes the fields chartType, xAxis, yAxis, title.",
+      content: message,
     });
 
     await Message.create({
@@ -87,10 +93,11 @@ export async function POST(
       type: "text",
       content: message,
       chat: chat._id,
+      mode,
     });
 
     // Run the Assistant
-    let myRun = await openai.beta.threads.runs.create(chat.thread.id, {
+    let myRun = await openai.beta.threads.runs.create(threadId, {
       assistant_id: assistantId,
       // instructions: "In the result, if possible, give a javascript object",
     });
@@ -99,7 +106,7 @@ export async function POST(
     console.log("fetch resp");
     while (runStatus === "queued" || runStatus === "in_progress") {
       await delay(1000); // 1 seconds delay
-      myRun = await openai.beta.threads.runs.retrieve(chat.thread.id, myRun.id);
+      myRun = await openai.beta.threads.runs.retrieve(threadId, myRun.id);
       runStatus = myRun.status;
     }
 
@@ -112,109 +119,73 @@ export async function POST(
     console.log("runStatus", runStatus);
 
     // Retrieve the Messages added by the Assistant to the Thread
-    const messages = await openai.beta.threads.messages.list(chat.thread.id);
-
-    // let images = [];
-    // let messageContent = "";
-
-    // if (Array.isArray(messages.data[0].content)) {
-    //   const content = messages.data[0].content;
-    //   for (let i = 0; i < content.length; i++) {
-    //     const item = content[i];
-    //     if (item.type == "image_file") {
-    //       const response = await openai.files.content(item.image_file.file_id);
-    //       const image_data = await response.arrayBuffer();
-    //       const image_data_buffer = Buffer.from(image_data).toString("base64");
-    //       images.push(image_data_buffer);
-    //     } else if (item.type == "text") {
-    //       messageContent += `
-    //       ${item.text.value}
-    //       `;
-    //     }
-    //   }
-    //   await Message.create({
-    //     role: "assistant",
-    //     content: messageContent,
-    //     imageIds: images,
-    //     chat: chat._id,
-    //   });
-    // } else {
-    //   messageContent = "Something went wrong";
-    //   await Message.create({
-    //     role: "assistant",
-    //     content: messageContent,
-    //     chat: chat._id,
-    //   });
-    // }
-
+    const messages = await openai.beta.threads.messages.list(threadId);
     const responseMessage =
-      Array.isArray(messages.data[0].content) &&
       messages.data[0].content[0]?.type === "text"
         ? messages.data[0].content[0].text.value
         : "No text content found";
 
-    console.log(responseMessage);
+    let newMessage;
     const resArray = responseMessage.split("```");
     if (resArray.length >= 3) {
       let obj = resArray[1].replace("json", "");
-      let { chartType, xAxis, yAxis, title } = JSON.parse(obj);
+      let { how, why, what, suggestion } = JSON.parse(obj);
 
-      const getObjectParams = {
-        Bucket: process.env.AWS_FILES_BUCKET_NAME,
-        Key: dataset.key,
-      };
+      // const getObjectParams = {
+      //   Bucket: process.env.AWS_FILES_BUCKET_NAME,
+      //   Key: datasetObj.key,
+      // };
 
-      const command = new GetObjectCommand(getObjectParams);
-      const resp = await s3.send(command);
-      const fileData: any = resp.Body;
+      // const command = new GetObjectCommand(getObjectParams);
+      // const resp = await s3.send(command);
+      // const fileData: any = resp.Body;
 
-      let xData: any[] = [];
-      let yData: any[] = [];
+      // let xData: any[] = [];
+      // let yData: any[] = [];
 
-      await new Promise((resolve, reject) => {
-        fileData
-          .pipe(csv())
-          .on("data", (row: any) => {
-            xData.push(row[xAxis]);
-            yData.push(row[yAxis]);
-          })
-          .on("end", () => {
-            resolve("done");
-          })
-          .on("error", (error: Error) => {
-            reject(error);
-          });
-      });
+      // await new Promise((resolve, reject) => {
+      //   fileData
+      //     .pipe(csv())
+      //     .on("data", (row: any) => {
+      //       xData.push(row[xAxis]);
+      //       yData.push(row[yAxis]);
+      //     })
+      //     .on("end", () => {
+      //       resolve("done");
+      //     })
+      //     .on("error", (error: Error) => {
+      //       reject(error);
+      //     });
+      // });
 
-      const aggregatedData = xData.reduce((acc, curr, index) => {
-        if (acc[curr]) {
-          acc[curr] += parseInt(yData[index]);
-        } else {
-          acc[curr] = parseInt(yData[index]);
-        }
-        return acc;
-      }, {});
+      // const aggregatedData = xData.reduce((acc, curr, index) => {
+      //   if (acc[curr]) {
+      //     acc[curr] += parseInt(yData[index]);
+      //   } else {
+      //     acc[curr] = parseInt(yData[index]);
+      //   }
+      //   return acc;
+      // }, {});
 
       // Extract aggregated xData and yData
-      xData = Object.keys(aggregatedData);
-      yData = Object.values(aggregatedData);
+      // xData = Object.keys(aggregatedData);
+      // yData = Object.values(aggregatedData);
 
-      await Message.create({
+      newMessage = await Message.create({
         role: "assistant",
-        type: "chart",
-        title,
-        content: resArray[0],
-        chartType,
-        xAxis,
-        yAxis,
-        xData,
-        yData,
+        type: "text",
+        content: obj,
+        how,
+        why,
+        what,
+        suggestion,
+        mode,
         chat: chat._id,
       });
-      console.log("chart done");
+      console.log("created exploratory");
     } else {
       console.log("message done");
-      await Message.create({
+      newMessage = await Message.create({
         role: "assistant",
         type: "text",
         content: responseMessage,
@@ -222,17 +193,7 @@ export async function POST(
       });
     }
 
-    const messagesList = await Message.find({ chat: chatId });
-
-    return NextResponse.json(
-      {
-        chat,
-        messages: messagesList,
-        asstMessages: messages,
-        message: "chat created",
-      },
-      { status: 201 }
-    );
+    return NextResponse.json({ message: newMessage }, { status: 201 });
   } catch (error) {
     console.log(error);
     return NextResponse.json({ message: error }, { status: 500 });
@@ -291,23 +252,29 @@ export async function DELETE(
     }
 
     const chat = await Chat.findOne({ _id: chatId, createdBy: userId });
-    const assistantId = chat.assistant.id;
+    // const assistantId = chat.assistant.id;
 
-    const threadDeleted = await openai.beta.threads.del(chat.thread.id);
-    if (!threadDeleted.deleted) {
-      return NextResponse.json(
-        { message: "Thread cannot be deleted, try again" },
-        { status: 500 }
-      );
-    }
+    // const threadDeleted = await openai.beta.threads.del(chat.thread.id);
+    // if (!threadDeleted.deleted) {
+    //   return NextResponse.json(
+    //     { message: "Thread cannot be deleted, try again" },
+    //     { status: 500 }
+    //   );
+    // }
 
-    const assistantDeleted = await openai.beta.assistants.del(assistantId);
-    if (!assistantDeleted.deleted) {
-      return NextResponse.json(
-        { message: "Assistant cannot be deleted, try again" },
-        { status: 500 }
-      );
-    }
+    await openai.beta.threads.del(chat.exploratoryThread.id);
+    await openai.beta.threads.del(chat.dissectThread.id);
+
+    await openai.beta.assistants.del(chat.exploratoryAssistant.id);
+    await openai.beta.assistants.del(chat.dissectAssistant.id);
+
+    // const assistantDeleted = await openai.beta.assistants.del(assistantId);
+    // if (!assistantDeleted.deleted) {
+    //   return NextResponse.json(
+    //     { message: "Assistant cannot be deleted, try again" },
+    //     { status: 500 }
+    //   );
+    // }
 
     const deletedChat = await Chat.findByIdAndDelete(chatId);
     return NextResponse.json(

@@ -95,36 +95,35 @@ export async function POST(req: Request, { params: { userId } }: Props) {
       `,
       name: "SQL Assistant",
       tools: [{ type: "code_interpreter" }, { type: "retrieval" }],
-      model: "gpt-4-1106-preview",
+      // model: "gpt-4-1106-preview",
+      model: "gpt-3.5-turbo-1106",
       file_ids: [datasetObj.openAPIFile.id],
     });
 
     const exploratoryAssistant = await openai.beta.assistants.create({
       instructions: `
-        You are an assistant that writes only speaks json. Strictly do not write normal text.
         You specialize in conducting deep data analysis within "Exploratory Mode," aimed at uncovering underlying patterns, diagnosing causes, and identifying actionable opportunities within complex datasets.
         In this mode, your task is to generate an actual analysis that answers critical "How," "Why," and "What" questions, and culminates in a strategic "Suggestion" based on the insights derived. This involves synthesizing data into coherent narratives that reveal the intricacies of business dynamics, customer behavior, market trends, and operational efficiencies.
         Your output should not only address the posed inquiries but also provide a detailed examination of the data, leveraging advanced analytics techniques and SQL queries where applicable. This approach ensures a comprehensive understanding of the dataset, empowering users with the knowledge to make informed strategic decisions.
         Adhere to best practices in data analysis and SQL syntax, ensuring all suggestions are optimized for actionable insights, without compromising data security or integrity.
         Always return your output in valid JSON format, containing a detailed analysis that encompasses responses to "How," "Why," "What," and includes a practical, data-backed "Suggestion" for actionable steps forward.
-        
-        EXAMPLE:
-        INPUT: "Perform an exploratory analysis to understand the factors affecting sales performance in Q1 2021."
-        OUTPUT: 
-        {
-          "analysis": {
-            "how": "Seasonal trends, such as post-holiday sales dips, significantly impacted overall sales performance in Q1, as evidenced by a 15% decrease in sales volume compared to Q4 of the previous year.",
-            "why": "Certain product categories, specifically outdoor and leisure, outperformed others due to increased consumer interest in outdoor activities, aligning with public health guidelines.",
-            "what": "Analysis of marketing campaign effectiveness revealed that digital campaigns had a 20% higher engagement rate and directly correlated with a spike in sales for the targeted products.",
-            "suggestion": "To mitigate the impact of seasonal trends on sales, diversify the product portfolio to include items with year-round appeal. Increase investment in digital marketing campaigns for high-engagement product categories, particularly before the onset of Q2 to capitalize on the outdoor activity trend."
-          }
-        }
       `,
       name: "Exploratory Assistant",
       tools: [{ type: "code_interpreter" }, { type: "retrieval" }],
-      model: "gpt-4-1106-preview",
+      // model: "gpt-4-1106-preview",
+      model: "gpt-3.5-turbo-1106",
       file_ids: [datasetObj.openAPIFile.id],
     });
+
+    // EXAMPLE:
+    //     INPUT: "Perform an exploratory analysis to understand the factors affecting sales performance in Q1 2021."
+    //     OUTPUT:
+    //     {
+    //       "how": "Seasonal trends, such as post-holiday sales dips, significantly impacted overall sales performance in Q1, as evidenced by a 15% decrease in sales volume compared to Q4 of the previous year.",
+    //       "why": "Certain product categories, specifically outdoor and leisure, outperformed others due to increased consumer interest in outdoor activities, aligning with public health guidelines.",
+    //       "what": "Analysis of marketing campaign effectiveness revealed that digital campaigns had a 20% higher engagement rate and directly correlated with a spike in sales for the targeted products.",
+    //       "suggestion": "To mitigate the impact of seasonal trends on sales, diversify the product portfolio to include items with year-round appeal. Increase investment in digital marketing campaigns for high-engagement product categories, particularly before the onset of Q2 to capitalize on the outdoor activity trend."
+    //     }
 
     // const assistant = await openai.beta.assistants.create({
     //   instructions: `
@@ -153,47 +152,43 @@ export async function POST(req: Request, { params: { userId } }: Props) {
     //   file_ids: [datasetObj.openAPIFile.id],
     // });
 
-    const thread = await openai.beta.threads.create({});
-
-    // Step 1: Add Messages to the Thread
-    await openai.beta.threads.messages.create(thread.id, {
-      role: "user",
-      content: message,
-    });
+    const dissectThread = await openai.beta.threads.create({});
+    const exploratoryThread = await openai.beta.threads.create({});
 
     const chat = await Chat.create({
       title,
       dissectAssistant,
       exploratoryAssistant,
       dataset,
-      thread,
+      exploratoryThread,
+      dissectThread,
       createdBy: userId,
     });
 
-    await Message.create({
-      role: "user",
-      type: "text",
-      content: message,
-      chat: chat._id,
-      mode,
-    });
+    // const assistantId =
+    //   mode === "Exploratory" ? exploratoryAssistant.id : dissectAssistant.id;
+    // const threadId =
+    //   mode === "Exploratory" ? exploratoryThread.id : dissectThread.id;
 
-    const assistantId =
-      mode === "Exploratory" ? exploratoryAssistant.id : dissectAssistant.id;
+    // // Step 1: Add Messages to the Thread
+    // await openai.beta.threads.messages.create(threadId, {
+    //   role: "user",
+    //   content: message,
+    // });
 
-    // Step 2: Run the Assistant
-    let myRun = await openai.beta.threads.runs.create(thread.id, {
-      assistant_id: assistantId,
-      // instructions: "In the result, if possible, give a javascript object",
-    });
+    // // Step 2: Run the Assistant
+    // let myRun = await openai.beta.threads.runs.create(threadId, {
+    //   assistant_id: assistantId,
+    //   // instructions: "In the result, if possible, give a javascript object",
+    // });
 
-    let runStatus = myRun.status;
-    console.log("fetch resp");
-    while (runStatus === "queued" || runStatus === "in_progress") {
-      await delay(1000); // 1 second delay
-      myRun = await openai.beta.threads.runs.retrieve(thread.id, myRun.id);
-      runStatus = myRun.status;
-    }
+    // let runStatus = myRun.status;
+    // console.log("fetch resp");
+    // while (runStatus === "queued" || runStatus === "in_progress") {
+    //   await delay(1000); // 1 second delay
+    //   myRun = await openai.beta.threads.runs.retrieve(threadId, myRun.id);
+    //   runStatus = myRun.status;
+    // }
 
     // if (!(runStatus === "completed")) {
     //   return NextResponse.json(
@@ -201,95 +196,96 @@ export async function POST(req: Request, { params: { userId } }: Props) {
     //     { status: 500 }
     //   );
     // }
-    console.log("runStatus", runStatus);
+    // console.log("runStatus", runStatus);
 
     // Step 4: Retrieve the Messages added by the Assistant to the Thread
-    const messages = await openai.beta.threads.messages.list(thread.id);
+    // const messages = await openai.beta.threads.messages.list(threadId);
 
-    const responseMessage =
-      Array.isArray(messages.data[0].content) &&
-      messages.data[0].content[0]?.type === "text"
-        ? messages.data[0].content[0].text.value
-        : "No text content found";
+    // Array.isArray(messages.data[0].content) &&
+    // const responseMessage =
+    //   messages.data[0].content[0]?.type === "text"
+    //     ? messages.data[0].content[0].text.value
+    //     : "No text content found";
 
     // console.log(responseMessage);
-    const resArray = responseMessage.split("```");
-    if (resArray.length >= 3) {
-      let obj = resArray[1].replace("json", "");
-      let { chartType, xAxis, yAxis, title } = JSON.parse(obj);
+    // const resArray = responseMessage.split("```");
+    // if (resArray.length >= 3) {
+    //   let obj = resArray[1].replace("json", "");
+    //   let { how, why, what, suggestion } = JSON.parse(obj);
 
-      const getObjectParams = {
-        Bucket: process.env.AWS_FILES_BUCKET_NAME,
-        Key: datasetObj.key,
-      };
+    // const getObjectParams = {
+    //   Bucket: process.env.AWS_FILES_BUCKET_NAME,
+    //   Key: datasetObj.key,
+    // };
 
-      const command = new GetObjectCommand(getObjectParams);
-      const resp = await s3.send(command);
-      const fileData: any = resp.Body;
+    // const command = new GetObjectCommand(getObjectParams);
+    // const resp = await s3.send(command);
+    // const fileData: any = resp.Body;
 
-      let xData: any[] = [];
-      let yData: any[] = [];
+    // let xData: any[] = [];
+    // let yData: any[] = [];
 
-      await new Promise((resolve, reject) => {
-        fileData
-          .pipe(csv())
-          .on("data", (row: any) => {
-            xData.push(row[xAxis]);
-            yData.push(row[yAxis]);
-          })
-          .on("end", () => {
-            resolve("done");
-          })
-          .on("error", (error: Error) => {
-            reject(error);
-          });
-      });
+    // await new Promise((resolve, reject) => {
+    //   fileData
+    //     .pipe(csv())
+    //     .on("data", (row: any) => {
+    //       xData.push(row[xAxis]);
+    //       yData.push(row[yAxis]);
+    //     })
+    //     .on("end", () => {
+    //       resolve("done");
+    //     })
+    //     .on("error", (error: Error) => {
+    //       reject(error);
+    //     });
+    // });
 
-      const aggregatedData = xData.reduce((acc, curr, index) => {
-        if (acc[curr]) {
-          acc[curr] += parseInt(yData[index]);
-        } else {
-          acc[curr] = parseInt(yData[index]);
-        }
-        return acc;
-      }, {});
+    // const aggregatedData = xData.reduce((acc, curr, index) => {
+    //   if (acc[curr]) {
+    //     acc[curr] += parseInt(yData[index]);
+    //   } else {
+    //     acc[curr] = parseInt(yData[index]);
+    //   }
+    //   return acc;
+    // }, {});
 
-      // Extract aggregated xData and yData
-      xData = Object.keys(aggregatedData);
-      yData = Object.values(aggregatedData);
+    // Extract aggregated xData and yData
+    // xData = Object.keys(aggregatedData);
+    // yData = Object.values(aggregatedData);
 
-      await Message.create({
-        role: "assistant",
-        type: "chart",
-        title,
-        content: resArray[0],
-        chartType,
-        xAxis,
-        yAxis,
-        xData,
-        yData,
-        chat: chat._id,
-      });
-      console.log("chart done");
-    } else {
-      console.log("message done");
-      await Message.create({
-        role: "assistant",
-        type: "text",
-        content: responseMessage,
-        chat: chat._id,
-      });
-    }
+    //   await Message.create({
+    //     role: "assistant",
+    //     type: "text",
+    //     content: obj,
+    //     how,
+    //     why,
+    //     what,
+    //     suggestion,
+    //     mode,
+    //     chat: chat._id,
+    //   });
+    //   console.log("created exploratory");
+    // } else {
+    //   console.log("message done");
+    //   await Message.create({
+    //     role: "assistant",
+    //     type: "text",
+    //     content: responseMessage,
+    //     chat: chat._id,
+    //   });
+    // }
 
-    const messagesList = await Message.find({ chat: chat._id });
+    // const newMessage = await Message.create({
+    //   role: "assistant",
+    //   type: "text",
+    //   content: responseMessage,
+    //   chat: chat._id,
+    //   mode,
+    // });
 
+    console.log("chat created");
     return NextResponse.json(
-      {
-        chat,
-        messages: messagesList,
-        asstMessages: messages,
-        message: "chat created",
-      },
+      { chat, message: "chat created" },
       { status: 201 }
     );
   } catch (error) {
