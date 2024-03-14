@@ -6,6 +6,7 @@ export default async function getChat(userId: string, chatId: string) {
       headers: {
         "Content-Type": "application/json",
       },
+      cache: "no-cache",
     }
   );
   if (!res.ok) {

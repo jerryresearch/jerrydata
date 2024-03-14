@@ -4,4 +4,4 @@ const start = async () => {
   console.log(data);
 };
 
-start();
+// start();

@@ -45,8 +45,6 @@ const AddSQLConnection = ({ dataset, id, userId, type }: Props) => {
         password,
         connString,
       });
-      console.log(res);
-      console.log(res.message);
       router.push(`select-table?id=${res.dataset._id}&type=${type}`);
     } catch (error: any) {
       toast({

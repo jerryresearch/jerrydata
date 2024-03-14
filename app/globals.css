@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ol {
+  @apply list-decimal list-inside space-y-2;
+} */
+
 @layer base {
   :root {
     background-color: white;

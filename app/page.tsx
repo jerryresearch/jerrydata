@@ -57,17 +57,17 @@ export default async function Home() {
             `,
           }}
         ></script>
-        <script
+        {/* <script
           type="text/javascript"
           dangerouslySetInnerHTML={{
             __html: `
             function(o,c){var n = c.documentElement,t = " w-mod-";n.className += t + "js",("ontouchstart" in o ||o.DocumentTouch && c instanceof DocumentTouch) &&(n.className += t + "touch")})(window, document);
           `,
           }}
-        ></script>
+        ></script> */}
 
         {/* Move the script tag to the bottom */}
-        <script src="/static/js/webflow.js" type="text/javascript"></script>
+        {/* <script src="/static/js/webflow.js" type="text/javascript"></script> */}
       </React.Fragment>
     </>
   );
