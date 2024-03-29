@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-page-custom-font */
+/* eslint-disable @next/next/no-sync-scripts */
 import "./globals.css";
 import type { Metadata } from "next";
 import NextAuthProvider from "@/components/NextAuthProvider";
@@ -14,8 +16,8 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: "/images/favicon.png",
-        href: "/images/favicon.png",
+        url: "/static/images/favicon.png",
+        href: "/static/images/favicon.png",
       },
     ],
   },
@@ -29,6 +31,57 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <meta charSet="utf-8" />
+        <title>
+          Jerrydata | AI-Driven Story-Based Business Intelligence Platform
+        </title>
+        <meta
+          content="Are you tired of drowning in data and struggling to find the insights that matter? Say goodbye to endless visualizations and hello to actionable stories that drive real results."
+          name="description"
+        />
+        <meta
+          content="Jerrydata | AI-Driven Story-Based Business Intelligence Platform"
+          property="og:title"
+        />
+        <meta
+          content="Are you tired of drowning in data and struggling to find the insights that matter? Say goodbye to endless visualizations and hello to actionable stories that drive real results."
+          property="og:description"
+        />
+        <meta
+          content="https://uploads-ssl.webflow.com/65cda09b8c28f4e0438a9447/65ce19db95a90ec89fe3bba1_open-graph.webp"
+          property="og:image"
+        />
+        <meta
+          content="Jerrydata | AI-Driven Story-Based Business Intelligence Platform"
+          property="twitter:title"
+        />
+        <meta
+          content="Are you tired of drowning in data and struggling to find the insights that matter? Say goodbye to endless visualizations and hello to actionable stories that drive real results."
+          property="twitter:description"
+        />
+        <meta
+          content="https://uploads-ssl.webflow.com/65cda09b8c28f4e0438a9447/65ce19db95a90ec89fe3bba1_open-graph.webp"
+          property="twitter:image"
+        />
+        <meta property="og:type" content="website" />
+        <meta content="summary_large_image" name="twitter:card" />
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+        <link href="https://fonts.googleapis.com" rel="preconnect" />
+        <link
+          href="https://fonts.gstatic.com"
+          rel="preconnect"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Protest+Revolution&display=swap"
+          rel="stylesheet"
+        ></link>
+        <link
+          href="/static/images/favicon.png"
+          rel="shortcut icon"
+          type="image/x-icon"
+        />
+        <link href="/static/images/webclip.png" rel="apple-touch-icon" />
         <Script
           id="google-tag-manager"
           type="text/javascript"
